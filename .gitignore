@@ -7,6 +7,10 @@ dist/
 coverage/
 .DS_Store
 
-# OFAC source snapshots (27MB+, fetched at build time; hashes recorded in data/PROVENANCE.md)
-data/*.XML
-data/*.xml
+# OFAC full-list snapshots are 27MB+ and re-fetchable; their hashes are recorded in
+# data/PROVENANCE.md and data/archive/index.json, which is what actually proves provenance.
+data/SDN.XML
+data/archive/sdn-*.xml
+
+# Delta files are ~130KB and ARE the replay evidence for the release leg -- keep them.
+# (no ignore rule for data/archive/delta-*.xml, by design)

@@ -1,0 +1,20 @@
+{
+  "delta": [
+    {
+      "bytes": 131862,
+      "fetched_utc": "2026-08-12T22:12:37+00:00",
+      "file": "delta-20260812T221237+0000-9403f40d9496.xml",
+      "sha256": "9403f40d949617405bdcddd25bb1f3784ce6ba25a7137101d5b27742ddeb05bc",
+      "url": "https://sanctionslistservice.ofac.treas.gov/changes/latest"
+    }
+  ],
+  "sdn": [
+    {
+      "bytes": 28809039,
+      "fetched_utc": "2026-08-12T22:12:37+00:00",
+      "file": "sdn-20260812T221237+0000-ac00228a6834.xml",
+      "sha256": "ac00228a68345e5c0d7174713cf97e5d5a8efe7cec5c2f540ed87106f49f7474",
+      "url": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
+    }
+  ]
+}

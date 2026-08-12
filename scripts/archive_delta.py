@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Poll OFAC and archive every publication, keyed by content hash.
+
+WHY THIS EXISTS
+---------------
+Interdict's headline claim is unattended operation: Cloud Scheduler polls OFAC and the agent acts
+without anyone watching. Scheduler run history is the evidence for that claim and it cannot be
+backfilled.
+
+Until Cloud Scheduler is deployable, this script is the stopgap. It does NOT produce the judged
+artifact -- only the real Scheduler running in Google Cloud does that. What it does guarantee is
+that no OFAC publication is *lost* in the meantime: every delta and every full-list snapshot is
+captured, hashed, and timestamped locally, so once the pipeline is live it can be replayed over the
+complete sequence rather than starting from whenever billing happened to be enabled.
+
+Content-hash keying means re-polling is free and idempotent: an unchanged publication is recognised
+and not re-stored, so this can run every 6 hours indefinitely without duplicating anything.
+
+USAGE
+    python3 scripts/archive_delta.py                     # poll once
+    python3 scripts/archive_delta.py --dir data/archive  # custom archive root
+"""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import hashlib
+import json
+import sys
+import urllib.request
+from pathlib import Path
+
+SOURCES = {
+    # name              url                                                                     ext
+    "delta": ("https://sanctionslistservice.ofac.treas.gov/changes/latest", "xml"),
+    "sdn": ("https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML", "xml"),
+}
+UA = "interdict-archiver/1.0 (hackathon project; contact via repo)"
+TIMEOUT = 180
+
+
+def fetch(url: str) -> bytes:
+    """Fetch following redirects. OFAC 302s to a presigned S3 URL that expires in 1h --
+    never cache the redirect target, only the source URL."""
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # follows redirects by default
+        return resp.read()
+
+
+def already_have(index: dict, name: str, digest: str) -> bool:
+    return any(e["sha256"] == digest for e in index.get(name, []))
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--dir", type=Path, default=Path("data/archive"))
+    args = ap.parse_args()
+
+    root: Path = args.dir
+    root.mkdir(parents=True, exist_ok=True)
+    index_path = root / "index.json"
+    index: dict = json.loads(index_path.read_text()) if index_path.exists() else {}
+
+    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    new_count = 0
+    failures = 0
+
+    for name, (url, ext) in SOURCES.items():
+        try:
+            body = fetch(url)
+        except Exception as exc:  # a transient OFAC/network failure must never kill the poll
+            print(f"  {name:6} FETCH FAILED: {exc}", file=sys.stderr)
+            failures += 1
+            continue
+
+        digest = hashlib.sha256(body).hexdigest()
+        if already_have(index, name, digest):
+            print(f"  {name:6} unchanged ({digest[:12]}, {len(body):,} bytes)")
+            continue
+
+        out = root / f"{name}-{now.replace(':', '').replace('-', '')}-{digest[:12]}.{ext}"
+        out.write_bytes(body)
+        index.setdefault(name, []).append(
+            {"sha256": digest, "bytes": len(body), "fetched_utc": now, "file": out.name, "url": url}
+        )
+        new_count += 1
+        print(f"  {name:6} NEW -> {out.name} ({len(body):,} bytes)")
+
+    index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
+    print(f"{now}  new={new_count}  failures={failures}  archive={root}")
+
+    # Non-zero only if everything failed -- a partial poll is still a successful poll.
+    return 1 if failures == len(SOURCES) else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

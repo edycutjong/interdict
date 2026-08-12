@@ -1,0 +1,3189 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sanctionsData xmlns="https://www.treasury.gov/ofac/DeltaFile/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.treasury.gov/ofac/DeltaFile/1.0 https://www.treasury.gov/ofac/downloads/sanctions/1.0/DeltaFile.xsd">
+  <publicationInfo>
+    <datePublished>2026-08-07T00:00:00-04:00</datePublished>
+    <publicationType>Standard Action</publicationType>
+  </publicationInfo>
+  <referenceValues />
+  <featureTypes />
+  <entities>
+    <entity id="11753" action="remove">
+      <generalInfo>
+        <identityId>5287</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="5287" refId="1550" datePublished="2010-01-14">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="8490" refId="212">SDNT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="4027" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <names>
+        <name id="20486">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="5287">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Mario German</formattedFirstName>
+              <formattedLastName>SATIZABAL RENGIFO</formattedLastName>
+              <formattedFullName>SATIZABAL RENGIFO, Mario German</formattedFullName>
+              <nameParts>
+                <namePart id="8052">
+                  <type refId="1521">First Name</type>
+                  <value>Mario German</value>
+                </namePart>
+                <namePart id="8051">
+                  <type refId="1520">Last Name</type>
+                  <value>SATIZABAL RENGIFO</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="12552">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="12602">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>PELO DE COBRE</formattedLastName>
+              <formattedFullName>PELO DE COBRE</formattedFullName>
+              <nameParts>
+                <namePart id="18538">
+                  <type refId="1520">Last Name</type>
+                  <value>PELO DE COBRE</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="17812">
+          <country refId="11066">Colombia</country>
+          <translations>
+            <translation id="6800">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="7292">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>4456</versionId>
+          <value>04 Mar 1970</value>
+          <valueDate id="2221">
+            <fromDateBegin>1970-03-04</fromDateBegin>
+            <fromDateEnd>1970-03-04</fromDateEnd>
+            <toDateBegin>1970-03-04</toDateBegin>
+            <toDateEnd>1970-03-04</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="7293">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>4457</versionId>
+          <value>Buga, Valle, Colombia</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="6156">
+          <type refId="1570">Cedula No.</type>
+          <name nameId="20486" nameTranslationId="5287">SATIZABAL RENGIFO, Mario German</name>
+          <documentNumber>14892890</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11066">Colombia</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="11812" action="remove">
+      <generalInfo>
+        <identityId>5244</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="22010" refId="1550" datePublished="2010-03-02">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="8585" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="6054" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="10143" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="20443">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="5244">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Rubi Yiceth</formattedFirstName>
+              <formattedLastName>AYALA BARRERA</formattedLastName>
+              <formattedFullName>AYALA BARRERA, Rubi Yiceth</formattedFullName>
+              <nameParts>
+                <namePart id="55135">
+                  <type refId="1521">First Name</type>
+                  <value>Rubi Yiceth</value>
+                </namePart>
+                <namePart id="55134">
+                  <type refId="1520">Last Name</type>
+                  <value>AYALA BARRERA</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="33647" />
+      </addresses>
+      <features>
+        <feature id="7372">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>4414</versionId>
+          <value>13 Feb 1982</value>
+          <valueDate id="2195">
+            <fromDateBegin>1982-02-13</fromDateBegin>
+            <fromDateEnd>1982-02-13</fromDateEnd>
+            <toDateBegin>1982-02-13</toDateBegin>
+            <toDateEnd>1982-02-13</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="6256">
+          <type refId="1570">Cedula No.</type>
+          <name nameId="20443" nameTranslationId="5244">AYALA BARRERA, Rubi Yiceth</name>
+          <documentNumber>52784570</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11066">Colombia</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="5256">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="11862">HERJEZ LTDA.</relatedEntity>
+          <quality refId="1540">High</quality>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="16580" action="remove">
+      <generalInfo>
+        <identityId>8324</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13668" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17313" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2493" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="2760" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25176">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18463">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Heriberto</formattedFirstName>
+              <formattedLastName>ZAZUETA GODOY</formattedLastName>
+              <formattedFullName>ZAZUETA GODOY, Heriberto</formattedFullName>
+              <nameParts>
+                <namePart id="31523">
+                  <type refId="1521">First Name</type>
+                  <value>Heriberto</value>
+                </namePart>
+                <namePart id="31522">
+                  <type refId="1520">Last Name</type>
+                  <value>ZAZUETA GODOY</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="25177">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="18464">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>CAPI BETO</formattedLastName>
+              <formattedFullName>CAPI BETO</formattedFullName>
+              <nameParts>
+                <namePart id="31524">
+                  <type refId="1520">Last Name</type>
+                  <value>CAPI BETO</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25080">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="13302">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33071">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Jose Aguilar Barraza 328</value>
+                </addressPart>
+                <addressPart id="33072">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Al Poniente de la Colonia Jorge Almeda</value>
+                </addressPart>
+                <addressPart id="33073">
+                  <type refId="1454">CITY</type>
+                  <value>Culiacan</value>
+                </addressPart>
+                <addressPart id="33074">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Sinaloa</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+        <address id="25108">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="13631">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33096">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Av. Naciones Unidas # 5759</value>
+                </addressPart>
+                <addressPart id="33097">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Casa 34</value>
+                </addressPart>
+                <addressPart id="33098">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Col. Parque Regency</value>
+                </addressPart>
+                <addressPart id="33099">
+                  <type refId="1454">CITY</type>
+                  <value>Zapopan</value>
+                </addressPart>
+                <addressPart id="33101">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>44110</value>
+                </addressPart>
+                <addressPart id="33100">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Jalisco</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="15063">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>12802</versionId>
+          <value>03 Feb 1960</value>
+          <valueDate id="10543">
+            <fromDateBegin>1960-02-03</fromDateBegin>
+            <fromDateEnd>1960-02-03</fromDateEnd>
+            <toDateBegin>1960-02-03</toDateBegin>
+            <toDateEnd>1960-02-03</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+        <feature id="15064">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>12803</versionId>
+          <value>Culiacan, Sinaloa, Mexico</value>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="9170">
+          <type refId="1600">C.U.R.P.</type>
+          <name nameId="25176" nameTranslationId="18463">ZAZUETA GODOY, Heriberto</name>
+          <documentNumber>ZAGH600203HSLZDR07</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="1407">
+          <type refId="15003">Owned or Controlled By</type>
+          <relatedEntity entityId="16643">COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</relatedEntity>
+        </relationship>
+        <relationship id="1365">
+          <type refId="15003">Owned or Controlled By</type>
+          <relatedEntity entityId="16607">PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</relatedEntity>
+        </relationship>
+        <relationship id="1366">
+          <type refId="15003">Owned or Controlled By</type>
+          <relatedEntity entityId="16608">TAIPEN, S.A. DE C.V.</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="16581" action="remove">
+      <generalInfo>
+        <identityId>8325</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13669" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17314" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2494" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="2761" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25178">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18465">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Leopoldo</formattedFirstName>
+              <formattedLastName>ZAZUETA GOMEZ</formattedLastName>
+              <formattedFullName>ZAZUETA GOMEZ, Leopoldo</formattedFullName>
+              <nameParts>
+                <namePart id="31526">
+                  <type refId="1521">First Name</type>
+                  <value>Leopoldo</value>
+                </namePart>
+                <namePart id="31525">
+                  <type refId="1520">Last Name</type>
+                  <value>ZAZUETA GOMEZ</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25524">
+          <translations>
+            <translation id="15293">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="15065">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>12804</versionId>
+          <value>04 Feb 1940</value>
+          <valueDate id="10545">
+            <fromDateBegin>1940-02-04</fromDateBegin>
+            <fromDateEnd>1940-02-04</fromDateEnd>
+            <toDateBegin>1940-02-04</toDateBegin>
+            <toDateEnd>1940-02-04</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+        <feature id="15066">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>12805</versionId>
+          <value>San Ignacio, Sinaloa, Mexico</value>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="9171">
+          <type refId="1600">C.U.R.P.</type>
+          <name nameId="25178" nameTranslationId="18465">ZAZUETA GOMEZ, Leopoldo</name>
+          <documentNumber>ZAGL400204HSLZMP06</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="1391">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="16607">PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="16582" action="remove">
+      <generalInfo>
+        <identityId>8326</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13670" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17315" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2495" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="2762" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25179">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18466">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Demetrio</formattedFirstName>
+              <formattedLastName>ROMERO ZEVADA</formattedLastName>
+              <formattedFullName>ROMERO ZEVADA, Demetrio</formattedFullName>
+              <nameParts>
+                <namePart id="31528">
+                  <type refId="1521">First Name</type>
+                  <value>Demetrio</value>
+                </namePart>
+                <namePart id="31527">
+                  <type refId="1520">Last Name</type>
+                  <value>ROMERO ZEVADA</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25083">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="13310">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33075">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Nogalitos No. 17</value>
+                </addressPart>
+                <addressPart id="33076">
+                  <type refId="1454">CITY</type>
+                  <value>Quila</value>
+                </addressPart>
+                <addressPart id="33077">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Sinaloa</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="15067">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>12806</versionId>
+          <value>09 Apr 1973</value>
+          <valueDate id="10549">
+            <fromDateBegin>1973-04-09</fromDateBegin>
+            <fromDateEnd>1973-04-09</fromDateEnd>
+            <toDateBegin>1973-04-09</toDateBegin>
+            <toDateEnd>1973-04-09</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+        <feature id="15068">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>12807</versionId>
+          <value>Culiacan, Sinaloa, Mexico</value>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="9172">
+          <type refId="1600">C.U.R.P.</type>
+          <name nameId="25179" nameTranslationId="18466">ROMERO ZEVADA, Demetrio</name>
+          <documentNumber>ROZD730409HSLMVM09</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="1405">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="16643">COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</relatedEntity>
+        </relationship>
+        <relationship id="1406">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="16607">PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="16607" action="remove">
+      <generalInfo>
+        <identityId>8351</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13695" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17340" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2519" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="2886" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25210">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18497">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</formattedLastName>
+              <formattedFullName>PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</formattedFullName>
+              <nameParts>
+                <namePart id="31603">
+                  <type refId="1525">Entity Name</type>
+                  <value>PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25110">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="13633">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33637">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Avenida Puerto Mazatlan 6</value>
+                </addressPart>
+                <addressPart id="33638">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Colonia Parque Industrial Alfredo V Bonfil</value>
+                </addressPart>
+                <addressPart id="33639">
+                  <type refId="1454">CITY</type>
+                  <value>Mazatlan</value>
+                </addressPart>
+                <addressPart id="33641">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>CP 82050</value>
+                </addressPart>
+                <addressPart id="33640">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Sinaloa</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <identityDocuments>
+        <identityDocument id="9184">
+          <type refId="1643">Folio Mercantil No.</type>
+          <name nameId="25210" nameTranslationId="18497">PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</name>
+          <documentNumber>9974-2</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+        <identityDocument id="9395">
+          <type refId="1573">R.F.C.</type>
+          <name nameId="25210" nameTranslationId="18497">PRODUCCION PESQUERA DONA MARIELA, S.A. DE C.V.</name>
+          <documentNumber>PPD0103129Q2</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="16608" action="remove">
+      <generalInfo>
+        <identityId>8352</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13696" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17341" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2520" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="2887" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25211">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18498">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>TAIPEN, S.A. DE C.V.</formattedLastName>
+              <formattedFullName>TAIPEN, S.A. DE C.V.</formattedFullName>
+              <nameParts>
+                <namePart id="31604">
+                  <type refId="1525">Entity Name</type>
+                  <value>TAIPEN, S.A. DE C.V.</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="25212">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="18499">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>TAI PEN</formattedLastName>
+              <formattedFullName>TAI PEN</formattedFullName>
+              <nameParts>
+                <namePart id="34043">
+                  <type refId="1525">Entity Name</type>
+                  <value>TAI PEN</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25112">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="13632">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33107">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Av. Juan Palomar y Arias # 569</value>
+                </addressPart>
+                <addressPart id="33108">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Col. Jardines Universidad</value>
+                </addressPart>
+                <addressPart id="33109">
+                  <type refId="1454">CITY</type>
+                  <value>Zapopan</value>
+                </addressPart>
+                <addressPart id="33111">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>45110</value>
+                </addressPart>
+                <addressPart id="33110">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Jalisco</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <identityDocuments>
+        <identityDocument id="9185">
+          <type refId="1643">Folio Mercantil No.</type>
+          <name nameId="25211" nameTranslationId="18498">TAIPEN, S.A. DE C.V.</name>
+          <documentNumber>33288-1</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="16643" action="remove">
+      <generalInfo>
+        <identityId>8387</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="13770" refId="1550" datePublished="2014-05-15">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="17376" refId="203">SDNTK</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="2878" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="3236" refId="1849">Foreign Narcotics Kingpin Designation Act</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="25244">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="18531">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</formattedLastName>
+              <formattedFullName>COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</formattedFullName>
+              <nameParts>
+                <namePart id="32118">
+                  <type refId="1525">Entity Name</type>
+                  <value>COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="25163">
+          <country refId="11143">Mexico</country>
+          <translations>
+            <translation id="12778">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="33632">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Puerto de Mazatlan 6 D</value>
+                </addressPart>
+                <addressPart id="33633">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Parque Industrial Alfredo V. Bonfil</value>
+                </addressPart>
+                <addressPart id="33634">
+                  <type refId="1454">CITY</type>
+                  <value>Mazatlan</value>
+                </addressPart>
+                <addressPart id="33636">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>82050</value>
+                </addressPart>
+                <addressPart id="33635">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Sinaloa</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <identityDocuments>
+        <identityDocument id="9394">
+          <type refId="1573">R.F.C.</type>
+          <name nameId="25244" nameTranslationId="18531">COMERCIALIZADORA Y FRIGORIFICOS DE LA PERLA DEL PACIFICO, S.A. DE C.V.</name>
+          <documentNumber>CFP001109UM7</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11143">Mexico</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58239" action="add">
+      <generalInfo>
+        <identityId>49723</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60931" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63770" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50920" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50100" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90093">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90840">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>ABAN TETHER EXCHANGE</formattedLastName>
+              <formattedFullName>ABAN TETHER EXCHANGE</formattedFullName>
+              <nameParts>
+                <namePart id="150872">
+                  <type refId="1525">Entity Name</type>
+                  <value>Aban Tether Exchange</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90971">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫صرافی آبان تتر‬</formattedLastName>
+              <formattedFullName>‫صرافی آبان تتر‬</formattedFullName>
+              <nameParts>
+                <namePart id="151060">
+                  <type refId="1525">Entity Name</type>
+                  <value>صرافی آبان تتر</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90094">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90841">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>ABANTETHER</formattedLastName>
+              <formattedFullName>ABANTETHER</formattedFullName>
+              <nameParts>
+                <namePart id="150873">
+                  <type refId="1525">Entity Name</type>
+                  <value>Abantether</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90095">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90842">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>ABAN TABADEL ARSABARAN</formattedLastName>
+              <formattedFullName>ABAN TABADEL ARSABARAN</formattedFullName>
+              <nameParts>
+                <namePart id="150874">
+                  <type refId="1525">Entity Name</type>
+                  <value>Aban Tabadel Arsabaran</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89485">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68432">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123768">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Ground Floor, No. 8, Gozar Merdad Alley, Qods Town (West)</value>
+                </addressPart>
+                <addressPart id="123769">
+                  <type refId="1454">CITY</type>
+                  <value>Tehran</value>
+                </addressPart>
+                <addressPart id="123770">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>1465663166</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100114">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97669</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99930">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97485</versionId>
+          <value>26 Aug 2020</value>
+          <valueDate id="154777">
+            <fromDateBegin>2020-08-26</fromDateBegin>
+            <fromDateEnd>2020-08-26</fromDateEnd>
+            <toDateBegin>2020-08-26</toDateBegin>
+            <toDateEnd>2020-08-26</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99931">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97486</versionId>
+          <value>Financial and Insurance Activities</value>
+          <valueRefId>92776</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99932">
+          <type featureTypeId="14">Website</type>
+          <versionId>97487</versionId>
+          <value>abantether.com</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52883">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90093" nameTranslationId="90840">ABAN TETHER EXCHANGE</name>
+          <documentNumber>14009392670</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11109">Iran</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58258" action="add">
+      <generalInfo>
+        <identityId>49737</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60953" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63796" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50931" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50113" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90118">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90866">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>CRYPTO HOME DMCC</formattedLastName>
+              <formattedFullName>CRYPTO HOME DMCC</formattedFullName>
+              <nameParts>
+                <namePart id="150898">
+                  <type refId="1525">Entity Name</type>
+                  <value>CRYPTO HOME DMCC</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90969">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫كريبتو هوم م.د.م.س‬</formattedLastName>
+              <formattedFullName>‫كريبتو هوم م.د.م.س‬</formattedFullName>
+              <nameParts>
+                <namePart id="151058">
+                  <type refId="1525">Entity Name</type>
+                  <value>كريبتو هوم م.د.م.س</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89613">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68500">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123789">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>DMCC Business Centre</value>
+                </addressPart>
+                <addressPart id="123790">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>BA1024</value>
+                </addressPart>
+                <addressPart id="123791">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="99986">
+          <type featureTypeId="989">Digital Currency Address - BNB</type>
+          <versionId>97541</versionId>
+          <value>bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99984">
+          <type featureTypeId="345">Digital Currency Address - ETH</type>
+          <versionId>97539</versionId>
+          <value>0xbb69e01921b17cd22080968bcc96ba6115da6062</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99983">
+          <type featureTypeId="992">Digital Currency Address - TRX</type>
+          <versionId>97538</versionId>
+          <value>TTVJuXWCusAURrpNShiypauagEH1N4CrxV</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99985">
+          <type featureTypeId="344">Digital Currency Address - XBT</type>
+          <versionId>97540</versionId>
+          <value>1G1V1b9s9uPsFCNL15ibZk44xsVygKsP2u</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99987">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97542</versionId>
+          <value>08 Mar 2022</value>
+          <valueDate id="154822">
+            <fromDateBegin>2022-03-08</fromDateBegin>
+            <fromDateEnd>2022-03-08</fromDateEnd>
+            <toDateBegin>2022-03-08</toDateBegin>
+            <toDateEnd>2022-03-08</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99988">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97543</versionId>
+          <value>Financial and Insurance Activities</value>
+          <valueRefId>92776</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100119">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97674</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52962">
+          <type refId="1619">Commercial Registry Number</type>
+          <name nameId="90118" nameTranslationId="90866">CRYPTO HOME DMCC</name>
+          <documentNumber>DMCC192801</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52911">
+          <type refId="91412">Company Number</type>
+          <name nameId="90118" nameTranslationId="90866">CRYPTO HOME DMCC</name>
+          <documentNumber>AE0120005822</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52963">
+          <type refId="91504">License</type>
+          <name nameId="90118" nameTranslationId="90866">CRYPTO HOME DMCC</name>
+          <documentNumber>DMCC-839525</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58259" action="add">
+      <generalInfo>
+        <identityId>49738</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60954" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63797" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50932" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50114" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90119">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90867">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>NFT HOME DMCC</formattedLastName>
+              <formattedFullName>NFT HOME DMCC</formattedFullName>
+              <nameParts>
+                <namePart id="150899">
+                  <type refId="1525">Entity Name</type>
+                  <value>NFT HOME DMCC</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90970">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫إن إف تي هوم م.د.م.س‬</formattedLastName>
+              <formattedFullName>‫إن إف تي هوم م.د.م.س‬</formattedFullName>
+              <nameParts>
+                <namePart id="151059">
+                  <type refId="1525">Entity Name</type>
+                  <value>إن إف تي هوم م.د.م.س</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90179">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90934">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>NFT HOME DMSC</formattedLastName>
+              <formattedFullName>NFT HOME DMSC</formattedFullName>
+              <nameParts>
+                <namePart id="150996">
+                  <type refId="1525">Entity Name</type>
+                  <value>NFT Home DMSC</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89504">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68450">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123704">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="99989">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97544</versionId>
+          <value>19 May 2022</value>
+          <valueDate id="154824">
+            <fromDateBegin>2022-05-19</fromDateBegin>
+            <fromDateEnd>2022-05-19</fromDateEnd>
+            <toDateBegin>2022-05-19</toDateBegin>
+            <toDateEnd>2022-05-19</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99993">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97548</versionId>
+          <value>Wholesale and retail trade</value>
+          <valueRefId>92777</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100120">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97675</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52964">
+          <type refId="1619">Commercial Registry Number</type>
+          <name nameId="90119" nameTranslationId="90867">NFT HOME DMCC</name>
+          <documentNumber>DMCC193420</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52965">
+          <type refId="91504">License</type>
+          <name nameId="90119" nameTranslationId="90867">NFT HOME DMCC</name>
+          <documentNumber>DMCC-846344</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58266" action="add">
+      <generalInfo>
+        <identityId>49753</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60969" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63828" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50939" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50126" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90134">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90882">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Shima</formattedFirstName>
+              <formattedLastName>SHARIFI</formattedLastName>
+              <formattedFullName>SHARIFI, Shima</formattedFullName>
+              <nameParts>
+                <namePart id="150919">
+                  <type refId="1521">First Name</type>
+                  <value>Shima</value>
+                </namePart>
+                <namePart id="150918">
+                  <type refId="1520">Last Name</type>
+                  <value>Sharifi</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90899">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫شیما شریفی‬</formattedLastName>
+              <formattedFullName>‫شیما شریفی‬</formattedFullName>
+              <nameParts>
+                <namePart id="150944">
+                  <type refId="1521">First Name</type>
+                  <value>شیما</value>
+                </namePart>
+                <namePart id="150943">
+                  <type refId="1520">Last Name</type>
+                  <value>شریفی</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89534">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68459">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100060">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97615</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100028">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>97583</versionId>
+          <value>28 Jun 1992</value>
+          <valueDate id="154864">
+            <fromDateBegin>1992-06-28</fromDateBegin>
+            <fromDateEnd>1992-06-28</fromDateEnd>
+            <toDateBegin>1992-06-28</toDateBegin>
+            <toDateEnd>1992-06-28</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100030">
+          <type featureTypeId="224">Gender</type>
+          <versionId>97585</versionId>
+          <value>Female</value>
+          <valueRefId>91527</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100029">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97584</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100031">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>97586</versionId>
+          <value>Tehran, Iran</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52921">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90134" nameTranslationId="90882">SHARIFI, Shima</name>
+          <documentNumber>0014985241</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11109">Iran</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58267" action="add">
+      <generalInfo>
+        <identityId>49754</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60970" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63829" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50940" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50127" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90135">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90883">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Saeed</formattedFirstName>
+              <formattedLastName>GHASEMPOUR</formattedLastName>
+              <formattedFullName>GHASEMPOUR, Saeed</formattedFullName>
+              <nameParts>
+                <namePart id="150921">
+                  <type refId="1521">First Name</type>
+                  <value>Saeed</value>
+                </namePart>
+                <namePart id="150920">
+                  <type refId="1520">Last Name</type>
+                  <value>Ghasempour</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90901">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫سعید قاسم پور‬</formattedLastName>
+              <formattedFullName>‫سعید قاسم پور‬</formattedFullName>
+              <nameParts>
+                <namePart id="150948">
+                  <type refId="1521">First Name</type>
+                  <value>سعید</value>
+                </namePart>
+                <namePart id="150947">
+                  <type refId="1520">Last Name</type>
+                  <value>قاسم پور</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90150">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90900">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Sa'id</formattedFirstName>
+              <formattedLastName>GHASEMPUR</formattedLastName>
+              <formattedFullName>GHASEMPUR, Sa'id</formattedFullName>
+              <nameParts>
+                <namePart id="150946">
+                  <type refId="1521">First Name</type>
+                  <value>Sa'id</value>
+                </namePart>
+                <namePart id="150945">
+                  <type refId="1520">Last Name</type>
+                  <value>Ghasempur</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89536">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68460">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100062">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97617</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100032">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>97587</versionId>
+          <value>10 Feb 1980</value>
+          <valueDate id="154868">
+            <fromDateBegin>1980-02-10</fromDateBegin>
+            <fromDateEnd>1980-02-10</fromDateEnd>
+            <toDateBegin>1980-02-10</toDateBegin>
+            <toDateEnd>1980-02-10</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100034">
+          <type featureTypeId="224">Gender</type>
+          <versionId>97589</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100061">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97616</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100033">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>97588</versionId>
+          <value>Babol, Iran</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52922">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90135" nameTranslationId="90883">GHASEMPOUR, Saeed</name>
+          <documentNumber>2060455065</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11109">Iran</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="25580">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity action="update" entityId="13138" />
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58268" action="add">
+      <generalInfo>
+        <identityId>49755</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60971" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63830" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50941" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50128" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90136">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90884">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>ALPS INTERNATIONAL L.L.C-FZ</formattedLastName>
+              <formattedFullName>ALPS INTERNATIONAL L.L.C-FZ</formattedFullName>
+              <nameParts>
+                <namePart id="150922">
+                  <type refId="1525">Entity Name</type>
+                  <value>Alps International L.L.C-FZ</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89538">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68461">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123712">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100035">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97590</versionId>
+          <value>20 Dec 2022</value>
+          <valueDate id="154872">
+            <fromDateBegin>2022-12-20</fromDateBegin>
+            <fromDateEnd>2022-12-20</fromDateEnd>
+            <toDateBegin>2022-12-20</toDateBegin>
+            <toDateEnd>2022-12-20</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52923">
+          <type refId="91504">License</type>
+          <name nameId="90136" nameTranslationId="90884">ALPS INTERNATIONAL L.L.C-FZ</name>
+          <documentNumber>2205337.01</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52924">
+          <type refId="91504">License</type>
+          <name nameId="90136" nameTranslationId="90884">ALPS INTERNATIONAL L.L.C-FZ</name>
+          <documentNumber>DE7365</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58269" action="add">
+      <generalInfo>
+        <identityId>49756</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60972" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63831" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50942" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50129" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90137">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90885">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Peivand</formattedFirstName>
+              <formattedLastName>MOHAMMAD</formattedLastName>
+              <formattedFullName>MOHAMMAD, Peivand</formattedFullName>
+              <nameParts>
+                <namePart id="150924">
+                  <type refId="1521">First Name</type>
+                  <value>Peivand</value>
+                </namePart>
+                <namePart id="150923">
+                  <type refId="1520">Last Name</type>
+                  <value>Mohammad</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90138">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90886">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Peyvand</formattedFirstName>
+              <formattedLastName>MOHAMMAD</formattedLastName>
+              <formattedFullName>MOHAMMAD, Peyvand</formattedFullName>
+              <nameParts>
+                <namePart id="150926">
+                  <type refId="1521">First Name</type>
+                  <value>Peyvand</value>
+                </namePart>
+                <namePart id="150925">
+                  <type refId="1520">Last Name</type>
+                  <value>Mohammad</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89603">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68494">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100158">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97713</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100157">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>97712</versionId>
+          <value>21 Jan 1991</value>
+          <valueDate id="155081">
+            <fromDateBegin>1991-01-21</fromDateBegin>
+            <fromDateEnd>1991-01-21</fromDateEnd>
+            <toDateBegin>1991-01-21</toDateBegin>
+            <toDateEnd>1991-01-21</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100156">
+          <type featureTypeId="224">Gender</type>
+          <versionId>97711</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100036">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97591</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100037">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>97592</versionId>
+          <value>Iran</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52925">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90137" nameTranslationId="90885">MOHAMMAD, Peivand</name>
+          <documentNumber>0013132229</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11109">Iran</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="25588">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="57173">FARAB SOROUSH AFAGH QESHM COMPANY</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58270" action="add">
+      <generalInfo>
+        <identityId>49757</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60973" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63832" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50943" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50130" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90139">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90887">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>OVIEDO OVERSEAS COMPANY LIMITED</formattedLastName>
+              <formattedFullName>OVIEDO OVERSEAS COMPANY LIMITED</formattedFullName>
+              <nameParts>
+                <namePart id="150927">
+                  <type refId="1525">Entity Name</type>
+                  <value>Oviedo Overseas Company Limited</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89541">
+          <country refId="11065">China</country>
+          <translations>
+            <translation id="68462">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123780">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Room 11, 8/F, On Cheong Factory Building</value>
+                </addressPart>
+                <addressPart id="123781">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>No. 19 Tai Yip Street</value>
+                </addressPart>
+                <addressPart id="123782">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Kwun Tong</value>
+                </addressPart>
+                <addressPart id="123783">
+                  <type refId="1454">CITY</type>
+                  <value>Hong Kong</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100038">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97593</versionId>
+          <value>09 Sep 2025</value>
+          <valueDate id="154882">
+            <fromDateBegin>2025-09-09</fromDateBegin>
+            <fromDateEnd>2025-09-09</fromDateEnd>
+            <toDateBegin>2025-09-09</toDateBegin>
+            <toDateEnd>2025-09-09</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52926">
+          <type refId="91760">Business Registration Number</type>
+          <name nameId="90139" nameTranslationId="90887">OVIEDO OVERSEAS COMPANY LIMITED</name>
+          <documentNumber>78761549</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58271" action="add">
+      <generalInfo>
+        <identityId>49758</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60974" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63833" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50944" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50131" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90140">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90888">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>CAILAFANG PTE. LTD.</formattedLastName>
+              <formattedFullName>CAILAFANG PTE. LTD.</formattedFullName>
+              <nameParts>
+                <namePart id="150928">
+                  <type refId="1525">Entity Name</type>
+                  <value>Cailafang Pte. Ltd.</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89543">
+          <country refId="11184">Singapore</country>
+          <translations>
+            <translation id="68463">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123741">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>60, Paya Lebar Square</value>
+                </addressPart>
+                <addressPart id="123742">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>54, Paya Lebar Road</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100039">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97594</versionId>
+          <value>15 Jan 2024</value>
+          <valueDate id="154886">
+            <fromDateBegin>2024-01-15</fromDateBegin>
+            <fromDateEnd>2024-01-15</fromDateEnd>
+            <toDateBegin>2024-01-15</toDateBegin>
+            <toDateEnd>2024-01-15</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52927">
+          <type refId="91761">Registration Number</type>
+          <name nameId="90140" nameTranslationId="90888">CAILAFANG PTE. LTD.</name>
+          <documentNumber>202402130H</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11184">Singapore</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58272" action="add">
+      <generalInfo>
+        <identityId>49759</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60975" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63834" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50945" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50132" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90141">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90889">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>TITAN EXCHANGE</formattedLastName>
+              <formattedFullName>TITAN EXCHANGE</formattedFullName>
+              <nameParts>
+                <namePart id="150929">
+                  <type refId="1525">Entity Name</type>
+                  <value>Titan Exchange</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90142">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90890">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>TITAN LAND PETROCHEMICALS TRADING L.L.C</formattedLastName>
+              <formattedFullName>TITAN LAND PETROCHEMICALS TRADING L.L.C</formattedFullName>
+              <nameParts>
+                <namePart id="150930">
+                  <type refId="1525">Entity Name</type>
+                  <value>Titan Land Petrochemicals Trading L.L.C</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90143">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90891">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>TITAN ENERGY PETROLEUM PRODUCTS TRADING CO. L.L.C</formattedLastName>
+              <formattedFullName>TITAN ENERGY PETROLEUM PRODUCTS TRADING CO. L.L.C</formattedFullName>
+              <nameParts>
+                <namePart id="150931">
+                  <type refId="1525">Entity Name</type>
+                  <value>Titan Energy Petroleum Products Trading Co. L.L.C</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89545">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68464">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123720">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <identityDocuments>
+        <identityDocument id="52928">
+          <type refId="91504">License</type>
+          <name nameId="90141" nameTranslationId="90889">TITAN EXCHANGE</name>
+          <documentNumber>1288764</documentNumber>
+          <isValid>true</isValid>
+          <issuingLocation>Dubai</issuingLocation>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52929">
+          <type refId="91504">License</type>
+          <name nameId="90141" nameTranslationId="90889">TITAN EXCHANGE</name>
+          <documentNumber>820100</documentNumber>
+          <isValid>true</isValid>
+          <issuingLocation>Dubai</issuingLocation>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52940">
+          <type refId="91504">License</type>
+          <name nameId="90141" nameTranslationId="90889">TITAN EXCHANGE</name>
+          <documentNumber>BC2364</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52941">
+          <type refId="91504">License</type>
+          <name nameId="90141" nameTranslationId="90889">TITAN EXCHANGE</name>
+          <documentNumber>DA7564</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="25578">
+          <type refId="15001">Providing support to</type>
+          <relatedEntity action="update" entityId="13138" />
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58274" action="add">
+      <generalInfo>
+        <identityId>49761</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60977" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63836" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50947" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50134" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90146">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90894">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>AYDENIZ GENERAL TRADING L.L.C</formattedLastName>
+              <formattedFullName>AYDENIZ GENERAL TRADING L.L.C</formattedFullName>
+              <nameParts>
+                <namePart id="150936">
+                  <type refId="1525">Entity Name</type>
+                  <value>Aydeniz General Trading L.L.C</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89549">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68466">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123721">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Office 1205, Riggat Al Buteen</value>
+                </addressPart>
+                <addressPart id="123722">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100046">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97601</versionId>
+          <value>18 Jul 2023</value>
+          <valueDate id="154908">
+            <fromDateBegin>2023-07-18</fromDateBegin>
+            <fromDateEnd>2023-07-18</fromDateEnd>
+            <toDateBegin>2023-07-18</toDateBegin>
+            <toDateEnd>2023-07-18</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52933">
+          <type refId="91504">License</type>
+          <name nameId="90146" nameTranslationId="90894">AYDENIZ GENERAL TRADING L.L.C</name>
+          <documentNumber>1210220</documentNumber>
+          <isValid>true</isValid>
+          <issuingLocation>Dubai</issuingLocation>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52934">
+          <type refId="91504">License</type>
+          <name nameId="90146" nameTranslationId="90894">AYDENIZ GENERAL TRADING L.L.C</name>
+          <documentNumber>CH5145</documentNumber>
+          <isValid>true</isValid>
+          <issuingLocation>Dubai</issuingLocation>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58275" action="add">
+      <generalInfo>
+        <identityId>49762</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60978" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63837" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50948" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50135" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90147">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90895">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>BLUE DASH GENERAL TRADING COMPANY LIMITED</formattedLastName>
+              <formattedFullName>BLUE DASH GENERAL TRADING COMPANY LIMITED</formattedFullName>
+              <nameParts>
+                <namePart id="150937">
+                  <type refId="1525">Entity Name</type>
+                  <value>Blue Dash General Trading Company Limited</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89551">
+          <country refId="11065">China</country>
+          <translations>
+            <translation id="68467">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123794">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Unit 32, 3/F, Block A, The K-Star, Manning Industrial Building 118</value>
+                </addressPart>
+                <addressPart id="123795">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>How Ming St, Kwun Tong</value>
+                </addressPart>
+                <addressPart id="123796">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Kowloon</value>
+                </addressPart>
+                <addressPart id="123797">
+                  <type refId="1454">CITY</type>
+                  <value>Hong Kong</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100048">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97603</versionId>
+          <value>31 Jul 2019</value>
+          <valueDate id="154918">
+            <fromDateBegin>2019-07-31</fromDateBegin>
+            <fromDateEnd>2019-07-31</fromDateEnd>
+            <toDateBegin>2019-07-31</toDateBegin>
+            <toDateEnd>2019-07-31</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52936">
+          <type refId="91760">Business Registration Number</type>
+          <name nameId="90147" nameTranslationId="90895">BLUE DASH GENERAL TRADING COMPANY LIMITED</name>
+          <documentNumber>71017662</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52935">
+          <type refId="91412">Company Number</type>
+          <name nameId="90147" nameTranslationId="90895">BLUE DASH GENERAL TRADING COMPANY LIMITED</name>
+          <documentNumber>2858512</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58276" action="add">
+      <generalInfo>
+        <identityId>49763</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60979" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63838" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50949" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50136" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90148">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90896">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>GLEAMING HK TRADING LIMITED</formattedLastName>
+              <formattedFullName>GLEAMING HK TRADING LIMITED</formattedFullName>
+              <nameParts>
+                <namePart id="150938">
+                  <type refId="1525">Entity Name</type>
+                  <value>Gleaming HK Trading Limited</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89553">
+          <country refId="11065">China</country>
+          <translations>
+            <translation id="68468">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123798">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Unit 33A, 3/F, The K-Star, Manning Industrial Center</value>
+                </addressPart>
+                <addressPart id="123799">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>116-118, How Ming St, Kwun Tong</value>
+                </addressPart>
+                <addressPart id="123800">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Kowloon</value>
+                </addressPart>
+                <addressPart id="123801">
+                  <type refId="1454">CITY</type>
+                  <value>Hong Kong</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100050">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97605</versionId>
+          <value>09 Jun 2020</value>
+          <valueDate id="154924">
+            <fromDateBegin>2020-06-09</fromDateBegin>
+            <fromDateEnd>2020-06-09</fromDateEnd>
+            <toDateBegin>2020-06-09</toDateBegin>
+            <toDateEnd>2020-06-09</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52938">
+          <type refId="91760">Business Registration Number</type>
+          <name nameId="90148" nameTranslationId="90896">GLEAMING HK TRADING LIMITED</name>
+          <documentNumber>71948314</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52937">
+          <type refId="91412">Company Number</type>
+          <name nameId="90148" nameTranslationId="90896">GLEAMING HK TRADING LIMITED</name>
+          <documentNumber>2950107</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58277" action="add">
+      <generalInfo>
+        <identityId>49764</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60980" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63839" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50950" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50137" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90149">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90897">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Amir</formattedFirstName>
+              <formattedLastName>HENDI</formattedLastName>
+              <formattedFullName>HENDI, Amir</formattedFullName>
+              <nameParts>
+                <namePart id="150940">
+                  <type refId="1521">First Name</type>
+                  <value>Amir</value>
+                </namePart>
+                <namePart id="150939">
+                  <type refId="1520">Last Name</type>
+                  <value>Hendi</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90898">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫امیر هندی‬</formattedLastName>
+              <formattedFullName>‫امیر هندی‬</formattedFullName>
+              <nameParts>
+                <namePart id="150942">
+                  <type refId="1521">First Name</type>
+                  <value>امیر</value>
+                </namePart>
+                <namePart id="150941">
+                  <type refId="1520">Last Name</type>
+                  <value>هندی</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89555">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68469">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100056">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97611</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100052">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>97607</versionId>
+          <value>05 Nov 1982</value>
+          <valueDate id="154926">
+            <fromDateBegin>1982-11-05</fromDateBegin>
+            <fromDateEnd>1982-11-05</fromDateEnd>
+            <toDateBegin>1982-11-05</toDateBegin>
+            <toDateEnd>1982-11-05</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100055">
+          <type featureTypeId="224">Gender</type>
+          <versionId>97610</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100054">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97609</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100053">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>97608</versionId>
+          <value>Tehran, Iran</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52939">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90149" nameTranslationId="90897">HENDI, Amir</name>
+          <documentNumber>0074773585</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11109">Iran</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="25579">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="58272">TITAN EXCHANGE</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58284" action="add">
+      <generalInfo>
+        <identityId>49771</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60987" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63858" refId="91166">IRGC</sanctionsProgram>
+        <sanctionsProgram id="63851" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50957" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50144" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90165">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90918">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Siavash</formattedFirstName>
+              <formattedLastName>KAYVANPOUR</formattedLastName>
+              <formattedFullName>KAYVANPOUR, Siavash</formattedFullName>
+              <nameParts>
+                <namePart id="150976">
+                  <type refId="1521">First Name</type>
+                  <value>Siavash</value>
+                </namePart>
+                <namePart id="150975">
+                  <type refId="1520">Last Name</type>
+                  <value>Kayvanpour</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90166">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90919">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Siavash</formattedFirstName>
+              <formattedLastName>HASHEM</formattedLastName>
+              <formattedFullName>HASHEM, Siavash</formattedFullName>
+              <nameParts>
+                <namePart id="150978">
+                  <type refId="1521">First Name</type>
+                  <value>Siavash</value>
+                </namePart>
+                <namePart id="150977">
+                  <type refId="1520">Last Name</type>
+                  <value>Hashem</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90167">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90920">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Siavash</formattedFirstName>
+              <formattedLastName>KAIVANPOUR</formattedLastName>
+              <formattedFullName>KAIVANPOUR, Siavash</formattedFullName>
+              <nameParts>
+                <namePart id="150980">
+                  <type refId="1521">First Name</type>
+                  <value>Siavash</value>
+                </namePart>
+                <namePart id="150979">
+                  <type refId="1520">Last Name</type>
+                  <value>Kaivanpour</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90168">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90921">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Siyawesh</formattedFirstName>
+              <formattedLastName>KIWAN PORT</formattedLastName>
+              <formattedFullName>KIWAN PORT, Siyawesh</formattedFullName>
+              <nameParts>
+                <namePart id="150982">
+                  <type refId="1521">First Name</type>
+                  <value>Siyawesh</value>
+                </namePart>
+                <namePart id="150981">
+                  <type refId="1520">Last Name</type>
+                  <value>Kiwan Port</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89570">
+          <country refId="11109">Iran</country>
+          <translations>
+            <translation id="68477">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123758">
+                  <type refId="1454">CITY</type>
+                  <value>Kish</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+        <address id="89571">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68478">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123759">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100180">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>97735</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100084">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>97639</versionId>
+          <value>12 Jul 1979</value>
+          <valueDate id="154987">
+            <fromDateBegin>1979-07-12</fromDateBegin>
+            <fromDateEnd>1979-07-12</fromDateEnd>
+            <toDateBegin>1979-07-12</toDateBegin>
+            <toDateEnd>1979-07-12</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100090">
+          <type featureTypeId="345">Digital Currency Address - ETH</type>
+          <versionId>97645</versionId>
+          <value>0x8d79c73daae8630c88de372ba8f57592fa987607</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100091">
+          <type featureTypeId="992">Digital Currency Address - TRX</type>
+          <versionId>97646</versionId>
+          <value>TPgxjjB6AJeMSQFngbUM6dMMxPHa9GEtYa</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100092">
+          <type featureTypeId="344">Digital Currency Address - XBT</type>
+          <versionId>97647</versionId>
+          <value>15Zt2mKuQ5Qy6DEXfDcbtsEVneoGQQXrS4</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100093">
+          <type featureTypeId="344">Digital Currency Address - XBT</type>
+          <versionId>97648</versionId>
+          <value>1BUXxhcwzFukm9CUxnhag85sSXDkMRbXse</value>
+          <isPrimary>false</isPrimary>
+        </feature>
+        <feature id="100086">
+          <type featureTypeId="224">Gender</type>
+          <versionId>97641</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100087">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97642</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100088">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97643</versionId>
+          <value>Dominica</value>
+          <valueRefId>11078</valueRefId>
+          <isPrimary>false</isPrimary>
+        </feature>
+        <feature id="100089">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>97644</versionId>
+          <value>Afghanistan</value>
+          <valueRefId>11029</valueRefId>
+          <isPrimary>false</isPrimary>
+        </feature>
+        <feature id="100085">
+          <type featureTypeId="9">Place of Birth</type>
+          <versionId>97640</versionId>
+          <value>Iran</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100115">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97670</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52954">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90165" nameTranslationId="90918">KAYVANPOUR, Siavash</name>
+          <documentNumber>784-1979-5841714-5</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52955">
+          <type refId="1571">Passport</type>
+          <name nameId="90165" nameTranslationId="90918">KAYVANPOUR, Siavash</name>
+          <documentNumber>RA003752</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11078">Dominica</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58285" action="add">
+      <generalInfo>
+        <identityId>49772</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60988" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63852" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50958" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50145" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90169">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90923">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT GENERAL TRADING LLC</formattedLastName>
+              <formattedFullName>SHELBIT GENERAL TRADING LLC</formattedFullName>
+              <nameParts>
+                <namePart id="150984">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit General Trading LLC</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90924">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫شيلبيت للتجارة العامة ش.ذ.م.م‬</formattedLastName>
+              <formattedFullName>‫شيلبيت للتجارة العامة ش.ذ.م.م‬</formattedFullName>
+              <nameParts>
+                <namePart id="150985">
+                  <type refId="1525">Entity Name</type>
+                  <value>شيلبيت للتجارة العامة ش.ذ.م.م</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90170">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90925">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT EXCHANGE</formattedLastName>
+              <formattedFullName>SHELBIT EXCHANGE</formattedFullName>
+              <nameParts>
+                <namePart id="150986">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit Exchange</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90171">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90926">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT</formattedLastName>
+              <formattedFullName>SHELBIT</formattedFullName>
+              <nameParts>
+                <namePart id="150987">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89573">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68479">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123760">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100116">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97671</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52956">
+          <type refId="91761">Registration Number</type>
+          <name nameId="90169" nameTranslationId="90923">SHELBIT GENERAL TRADING LLC</name>
+          <documentNumber>3334083</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58287" action="add">
+      <generalInfo>
+        <identityId>49774</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60990" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63854" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50960" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50147" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90173">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90928">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHPS SHELBIT</formattedLastName>
+              <formattedFullName>SHPS SHELBIT</formattedFullName>
+              <nameParts>
+                <namePart id="150990">
+                  <type refId="1525">Entity Name</type>
+                  <value>SHPS Shelbit</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90175">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90930">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT EXCHANGE</formattedLastName>
+              <formattedFullName>SHELBIT EXCHANGE</formattedFullName>
+              <nameParts>
+                <namePart id="150992">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit Exchange</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89576">
+          <country refId="11093">Georgia</country>
+          <translations>
+            <translation id="68480">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123879">
+                  <type refId="1454">CITY</type>
+                  <value>Tblisi</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100098">
+          <type featureTypeId="345">Digital Currency Address - ETH</type>
+          <versionId>97653</versionId>
+          <value>0xe05f529f5284d75624eba386cb716928c3b54a2a</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100106">
+          <type featureTypeId="345">Digital Currency Address - ETH</type>
+          <versionId>97661</versionId>
+          <value>0x6b69e2a7545c166417a80c61a77562052bffa9c5</value>
+          <isPrimary>false</isPrimary>
+        </feature>
+        <feature id="100100">
+          <type featureTypeId="1167">Digital Currency Address - SOL</type>
+          <versionId>97655</versionId>
+          <value>6wjqWWra8ombzaw6VHrG5xpQ972jCYF6bbHiFCbWmr4U</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100104">
+          <type featureTypeId="992">Digital Currency Address - TRX</type>
+          <versionId>97659</versionId>
+          <value>TXN3hVukebhyYR31YPCYd7aJAvmUeXu1ab</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100102">
+          <type featureTypeId="344">Digital Currency Address - XBT</type>
+          <versionId>97657</versionId>
+          <value>bc1qjzk63wwatq2f638psymq3qapn00aqgksyx56l3t8eg7zuuccwasq498khf</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100105">
+          <type featureTypeId="344">Digital Currency Address - XBT</type>
+          <versionId>97660</versionId>
+          <value>bc1qz654h5qcqzalv6ltpxsk4ksdcc3e20wkedqntgnarv3a0t2e2p7scr48pl</value>
+          <isPrimary>false</isPrimary>
+        </feature>
+        <feature id="100095">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97650</versionId>
+          <value>29 Apr 2025</value>
+          <valueDate id="155005">
+            <fromDateBegin>2025-04-29</fromDateBegin>
+            <fromDateEnd>2025-04-29</fromDateEnd>
+            <toDateBegin>2025-04-29</toDateBegin>
+            <toDateEnd>2025-04-29</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100097">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97652</versionId>
+          <value>Other business support service activities n.e.c.</value>
+          <valueRefId>92105</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100118">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97673</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100096">
+          <type featureTypeId="14">Website</type>
+          <versionId>97651</versionId>
+          <value>www.shelbit.com</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52957">
+          <type refId="91761">Registration Number</type>
+          <name nameId="90173" nameTranslationId="90928">SHPS SHELBIT</name>
+          <documentNumber>400430477</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11093">Georgia</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+    <entity id="58288" action="add">
+      <generalInfo>
+        <identityId>49775</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60991" refId="1550" datePublished="2026-08-07">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63855" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50961" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50148" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90176">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90931">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</formattedLastName>
+              <formattedFullName>SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</formattedFullName>
+              <nameParts>
+                <namePart id="150993">
+                  <type refId="1525">Entity Name</type>
+                  <value>SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="90936">
+              <isPrimary>false</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</formattedLastName>
+              <formattedFullName>SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</formattedFullName>
+              <nameParts>
+                <namePart id="151000">
+                  <type refId="1525">Entity Name</type>
+                  <value>SHELBIT TECHNOLOGIES LTD SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ W LIKWIDACJI</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90177">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90932">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT TECHNOLOGIES LTD</formattedLastName>
+              <formattedFullName>SHELBIT TECHNOLOGIES LTD</formattedFullName>
+              <nameParts>
+                <namePart id="150994">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit Technologies Ltd</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90178">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="90933">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>SHELBIT LTD</formattedLastName>
+              <formattedFullName>SHELBIT LTD</formattedFullName>
+              <nameParts>
+                <namePart id="150995">
+                  <type refId="1525">Entity Name</type>
+                  <value>Shelbit Ltd</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89579">
+          <country refId="11167">Poland</country>
+          <translations>
+            <translation id="68482">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="123766">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>22B 21A Bartycka 00-716</value>
+                </addressPart>
+                <addressPart id="123767">
+                  <type refId="1454">CITY</type>
+                  <value>Warsaw</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100108">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97663</versionId>
+          <value>24 Aug 2023</value>
+          <valueDate id="155013">
+            <fromDateBegin>2023-08-24</fromDateBegin>
+            <fromDateEnd>2023-08-24</fromDateEnd>
+            <toDateBegin>2023-08-24</toDateBegin>
+            <toDateEnd>2023-08-24</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100109">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97664</versionId>
+          <value>Other monetary intermediation</value>
+          <valueRefId>92063</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100117">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>97672</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="52960">
+          <type refId="91760">Business Registration Number</type>
+          <name nameId="90176" nameTranslationId="90931">SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</name>
+          <documentNumber>526184547</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11167">Poland</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52961">
+          <type refId="91761">Registration Number</type>
+          <name nameId="90176" nameTranslationId="90931">SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</name>
+          <documentNumber>0001053647</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11167">Poland</issuingCountry>
+        </identityDocument>
+        <identityDocument id="52959">
+          <type refId="1596">Tax ID No.</type>
+          <name nameId="90176" nameTranslationId="90931">SHELBIT TECHNOLOGIES LTD SPOLKA Z OGRANICZONA ODPOWIEDZIALNOSCIA W LIKWIDACJI</name>
+          <documentNumber>5214033324</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11167">Poland</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+  </entities>
+</sanctionsData>
