@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════════
+ INTERDICT — pitch deck · All Things Agentic Hackathon (Devpost)
+ Track: Fortified Enterprise Fleet · 10 slides · Swiss International, dark
+═══════════════════════════════════════════════════════════════════════
+ NAVIGATION
+   → / Space ......... next slide
+   ← ................. previous slide
+   ESC ............... slide overview grid (click a slide to jump)
+   P ................. presenter mode (speaker notes panel, dims chrome,
+                       cursor hides after 2s idle)
+   C ................. contrast debug mode (outlines text elements —
+                       verify projector visibility before presenting)
+
+ PRINT TO PDF
+   Cmd+P / Ctrl+P → destination "Save as PDF" → layout Landscape →
+   margins None → background graphics ON. One slide per page, 10 pages.
+
+ SWAPPING PLACEHOLDERS
+   Every image placeholder is preceded by an HTML comment:
+       <!- - SWAP: replace with <filename>.png - ->
+   Drop the real screenshot in assets/ and change the src. Placeholder
+   backgrounds match the slide background so unswapped images blend in.
+
+ REBRAND
+   All colors/fonts are CSS variables in the :root block below —
+   full restyle in 30 seconds.
+═══════════════════════════════════════════════════════════════════════
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interdict — pitch deck</title>
+<!-- Web fonts are an enhancement only; system stack below keeps the deck ~95% intact offline -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════ DESIGN TOKENS — edit here to rebrand ══════════════ */
+:root{
+  --color-bg:        #0c0f16;   /* near-black slate — never pure #000 */
+  --color-bg-raise:  #121722;   /* cards / frames */
+  --color-bg-sink:   #090b11;   /* code wells, terminal bodies */
+  --color-primary:   #e7ecf4;   /* primary text */
+  --color-muted:     #94a3b8;   /* metadata grey */
+  --color-faint:     #556174;   /* hairlines-adjacent text */
+  --color-accent:    #f59e0b;   /* amber — the interdiction color. ≤5% of pixels */
+  --color-accent-dim:rgba(245,158,11,.14);
+  --color-line:      #232b3a;   /* hairlines */
+  --font-display: "Inter Tight","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI",system-ui,sans-serif;
+  --font-body:    "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI Variable","Segoe UI",system-ui,sans-serif;
+  --font-mono:    "JetBrains Mono","SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+/* ══════════════ RESET / STAGE ══════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--color-bg);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:var(--font-body);color:var(--color-primary);overflow:hidden}
+body.hide-cursor,body.hide-cursor *{cursor:none!important}
+
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--color-bg)}
+#stage{position:relative;width:1920px;height:1080px;flex:none;transform-origin:center center}
+
+/* ══════════════ SLIDES ══════════════ */
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;
+  opacity:0;visibility:hidden;transition:opacity .35s ease;background:var(--color-bg)}
+.slide.active{opacity:1;visibility:visible}
+.s-wrap{position:relative;width:1920px;height:1080px;padding:96px 120px}
+
+/* typographic system — Swiss International */
+.kicker{font-family:var(--font-mono);font-size:17px;font-weight:500;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--color-accent);margin-bottom:28px}
+.kicker .k-dim{color:var(--color-faint)}
+h1{font-family:var(--font-display);font-weight:900;font-size:92px;line-height:1.02;
+  letter-spacing:-.025em;color:var(--color-primary)}
+h2{font-family:var(--font-display);font-weight:800;font-size:80px;line-height:1.04;
+  letter-spacing:-.022em}
+h3{font-family:var(--font-display);font-weight:700;font-size:34px;line-height:1.15;
+  letter-spacing:-.01em}
+.subhead{font-family:var(--font-display);font-weight:600;font-size:36px;line-height:1.3;
+  color:var(--color-muted)}
+p.body{font-size:22px;line-height:1.55;color:var(--color-muted);max-width:760px}
+.mono{font-family:var(--font-mono)}
+.amber{color:var(--color-accent)}
+.hairline{border:0;border-top:1px solid var(--color-line)}
+
+/* footer meta strip on content slides */
+.foot{position:absolute;left:120px;right:120px;bottom:56px;display:flex;gap:28px;
+  align-items:center;font-family:var(--font-mono);font-size:16px;color:var(--color-faint)}
+.foot .rule{flex:1;height:1px;background:var(--color-line)}
+
+/* terminal frame (product surface = CLI / agent console) */
+.terminal-frame{background:var(--color-bg-sink);border:1px solid var(--color-line);
+  border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.terminal-bar{display:flex;align-items:center;gap:10px;padding:13px 18px;
+  background:var(--color-bg-raise);border-bottom:1px solid var(--color-line)}
+.terminal-bar .dot{width:12px;height:12px;border-radius:50%;background:#2c3547}
+.terminal-bar .t-title{margin-left:10px;font-family:var(--font-mono);font-size:14px;
+  color:var(--color-faint);letter-spacing:.04em}
+.terminal-frame img{display:block;width:100%;height:auto;background:var(--color-bg-sink)}
+
+/* code well */
+.code{font-family:var(--font-mono);font-size:19px;line-height:1.75;color:var(--color-muted);
+  background:var(--color-bg-sink);border:1px solid var(--color-line);border-radius:12px;
+  padding:30px 34px;white-space:pre}
+.code .c-dim{color:var(--color-faint)}
+.code .c-hi{color:var(--color-accent);font-weight:700}
+.code .c-txt{color:var(--color-primary)}
+
+/* numbered demo callouts (Stripe/Linear style) */
+.callout{display:flex;gap:14px;align-items:flex-start}
+.callout .num{flex:none;width:34px;height:34px;border-radius:50%;background:var(--color-accent);
+  color:#131109;font-family:var(--font-mono);font-weight:700;font-size:17px;
+  display:flex;align-items:center;justify-content:center;margin-top:2px}
+.callout .c-body{font-size:19px;line-height:1.4;color:var(--color-muted)}
+.callout .c-body strong{color:var(--color-primary);font-weight:600}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--color-line);
+  border-radius:999px;padding:9px 20px;font-family:var(--font-mono);font-size:16px;
+  color:var(--color-muted);background:var(--color-bg-raise)}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--color-accent)}
+
+/* speaker notes hidden on stage */
+.speaker-notes{display:none}
+
+/* ══════════════ UI CHROME ══════════════ */
+#counter{position:fixed;right:34px;bottom:26px;font-family:var(--font-mono);font-size:15px;
+  color:var(--color-faint);letter-spacing:.14em;z-index:60;transition:opacity .3s}
+#hint{position:fixed;left:34px;bottom:26px;font-family:var(--font-mono);font-size:13px;
+  color:var(--color-faint);opacity:.55;z-index:60;transition:opacity .3s}
+body.presenter #counter,body.presenter #hint{opacity:.28}
+
+/* presenter mode */
+#presenterPanel{position:fixed;left:0;right:0;bottom:0;height:20vh;min-height:150px;
+  background:#070910;border-top:1px solid var(--color-line);z-index:70;display:none;
+  padding:26px 44px;overflow:auto}
+body.presenter #presenterPanel{display:block}
+#presenterPanel .pp-label{font-family:var(--font-mono);font-size:13px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--color-accent);margin-bottom:10px}
+#presenterPanel .pp-notes{font-size:19px;line-height:1.55;color:var(--color-primary);max-width:1200px}
+#presenterPanel .pp-next{margin-top:12px;font-family:var(--font-mono);font-size:15px;color:var(--color-faint)}
+
+/* overview grid (ESC) */
+body.overview .slide{opacity:1;visibility:visible;transition:transform .3s ease,opacity .3s ease;
+  cursor:pointer;border:1px solid var(--color-line)}
+body.overview .slide.active{border:2px solid var(--color-accent)}
+
+/* ══════════════ CONTRAST DEBUG ══════════════ */
+/* Press C to toggle contrast debug mode — outlines every text element so you
+   can verify projector visibility from across the room before submitting. */
+.contrast-check{outline:1px dashed rgba(245,158,11,.6)}
+body.debug-contrast :is(h1,h2,h3,p,li,td,th,.kicker,.subhead,.chip,.code,.stat,.c-body,.foot,.big-num){
+  outline:1px dashed rgba(245,158,11,.6);outline-offset:2px}
+
+/* ══════════════ COVER ANIMATION ══════════════ */
+/* one subtle animated element: a terminal line types once (~4s), then rests
+   with a blinking cursor — blinking cursor on the cover only */
+#typeline{font-family:var(--font-mono);font-size:23px;color:var(--color-muted)}
+#typeline .prompt{color:var(--color-accent)}
+#typeline .caret{display:inline-block;width:12px;height:26px;background:var(--color-accent);
+  vertical-align:-4px;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* stat blocks */
+.stat .stat-n{font-family:var(--font-display);font-weight:900;font-size:64px;
+  letter-spacing:-.02em;line-height:1;color:var(--color-primary)}
+.stat .stat-l{margin-top:10px;font-family:var(--font-mono);font-size:16px;color:var(--color-faint);
+  line-height:1.45}
+.big-num{font-family:var(--font-display);font-weight:900;letter-spacing:-.03em;line-height:.95}
+
+/* decision rows (slide 7) */
+.d-row{display:grid;grid-template-columns:300px 380px 1fr;gap:36px;align-items:start;
+  padding:30px 0;border-top:1px solid var(--color-line)}
+.d-row:last-of-type{border-bottom:1px solid var(--color-line)}
+.d-verb{font-family:var(--font-display);font-weight:800;font-size:42px;letter-spacing:-.01em}
+.d-verb .d-tag{display:block;margin-top:8px;font-family:var(--font-mono);font-weight:500;
+  font-size:15px;letter-spacing:.08em;color:var(--color-faint)}
+.d-acts{font-size:20px;line-height:1.45;color:var(--color-muted);padding-top:8px}
+.d-grade{font-size:19px;line-height:1.5;color:var(--color-muted);padding-top:8px}
+.d-grade strong{color:var(--color-primary);font-weight:600}
+.hold-pill{display:inline-block;padding:3px 14px;border-radius:6px;background:var(--color-accent);
+  color:#131109;font-family:var(--font-mono);font-weight:700;font-size:15px;letter-spacing:.06em}
+.clear-pill{display:inline-block;padding:3px 14px;border-radius:6px;border:1.5px solid var(--color-accent);
+  color:var(--color-accent);font-family:var(--font-mono);font-weight:700;font-size:15px;letter-spacing:.06em}
+
+/* probability bars (slide 8) */
+.pbar{display:grid;grid-template-columns:260px 1fr 110px;gap:22px;align-items:center;margin-top:20px}
+.pbar .pb-l{font-family:var(--font-mono);font-size:16px;color:var(--color-muted)}
+.pbar .pb-track{height:26px;background:var(--color-bg-sink);border:1px solid var(--color-line);
+  border-radius:6px;overflow:hidden}
+.pbar .pb-fill{height:100%;background:#3b4356;border-radius:5px 0 0 5px}
+.pbar .pb-fill.hi{background:var(--color-accent)}
+.pbar .pb-v{font-family:var(--font-display);font-weight:800;font-size:30px;text-align:right}
+
+/* checklists (slide 9) */
+.vlist{list-style:none}
+.vlist li{position:relative;padding:15px 0 15px 40px;border-top:1px solid var(--color-line);
+  font-size:20px;line-height:1.45;color:var(--color-muted)}
+.vlist li:last-child{border-bottom:1px solid var(--color-line)}
+.vlist li strong{color:var(--color-primary);font-weight:600}
+.vlist li::before{content:"✓";position:absolute;left:2px;top:14px;font-family:var(--font-mono);
+  font-weight:700;color:var(--color-accent)}
+.vlist.plain li::before{content:"—";color:var(--color-faint)}
+
+/* ══════════════ PRINT ══════════════ */
+@page{size:16in 9in landscape;margin:0}
+@media print{
+  html,body{overflow:visible;background:var(--color-bg)}
+  #viewport{position:static;display:block}
+  #stage{width:auto;height:auto;transform:none!important}
+  .slide{position:relative;inset:auto;opacity:1!important;visibility:visible!important;
+    width:16in;height:9in;page-break-after:always;page-break-inside:avoid;break-inside:avoid;
+    border:none!important}
+  .slide:last-of-type{page-break-after:auto}
+  .s-wrap{transform:scale(.8);transform-origin:top left}   /* 1920px → 16in @96dpi */
+  #counter,#hint,#presenterPanel{display:none!important}
+  #typeline .caret{animation:none}
+  html,body,.slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- ════════════════════ SLIDE 1 · COVER ════════════════════ -->
+<section class="slide" id="s1">
+  <div class="s-wrap">
+    <div style="position:absolute;top:96px;left:120px;display:flex;gap:16px">
+      <span class="chip">Built for the All Things Agentic Hackathon</span>
+      <span class="chip" style="color:var(--color-primary)">Track · Fortified Enterprise Fleet</span>
+    </div>
+    <div style="position:absolute;left:120px;top:330px;max-width:1400px">
+      <h1 style="font-size:176px;letter-spacing:-.035em">INTERDICT</h1>
+      <div class="subhead" style="margin-top:34px;font-size:42px;color:var(--color-primary);font-weight:700">
+        When Treasury moves, the money stops itself.</div>
+      <p class="body" style="margin-top:26px;max-width:900px">A four-agent sanctions-interdiction
+        fleet that re-screens an entire counterparty book every time OFAC publishes — unattended,
+        and graded against sources we do not control.</p>
+    </div>
+    <div id="typeline" style="position:absolute;left:120px;bottom:150px">
+      <span class="prompt">$</span> <span id="typed"></span><span class="caret"></span>
+    </div>
+    <div class="foot">
+      <span>OFAC SDN · live feed</span><div class="rule"></div>
+      <span>Gemini · ADK · Cloud Run · Cloud SQL · Pub/Sub · Cloud Scheduler</span>
+    </div>
+  </div>
+  <aside class="speaker-notes">Interdict watches the Treasury sanctions list so a tiny NGO doesn't
+    have to. Everything in this deck is checkable against Treasury, the Federal Register, or
+    OpenSanctions — none of which we control. Start with who this is for.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 2 · HOOK ════════════════════ -->
+<section class="slide" id="s2">
+  <div class="s-wrap">
+    <div class="kicker">The market failure</div>
+    <div class="big-num" style="font-size:290px;margin-top:40px">$30,000<span class="amber">/yr</span></div>
+    <div class="subhead" style="margin-top:44px;max-width:1450px;font-size:44px;line-height:1.25;color:var(--color-primary)">
+      That is where sanctions screening starts for a bank —<br>
+      and the vendors <span class="amber" style="font-weight:800">will not sell it to a 12-person NGO at any price.</span>
+    </div>
+    <p class="body" style="margin-top:36px;max-width:1100px">Same strict-liability statute as the
+      bank. Zero compliance department. Firco, LexisNexis, ComplyAdvantage — none of them return
+      her call.</p>
+    <div class="foot"><span>02 · hook</span><div class="rule"></div><span>strict liability · 31 CFR</span></div>
+  </div>
+  <aside class="speaker-notes">Sanctions compliance is a solved problem — if you're a bank.
+    The statute is strict liability: intent doesn't matter, a wrong payment is a violation. The
+    tooling market simply does not serve small organizations. That gap is the product.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 3 · PROBLEM ════════════════════ -->
+<section class="slide" id="s3">
+  <div class="s-wrap">
+    <div class="kicker">The unlikely hero <span class="k-dim">· the operator this fleet was built for</span></div>
+    <div style="display:grid;grid-template-columns:860px 1fr;gap:80px;margin-top:10px">
+      <div>
+        <h2>The delta is her liability.</h2>
+        <p class="body" style="margin-top:34px">Amara runs grants at a 12-person humanitarian NGO
+          moving money toward three sanctioned regions. The morning Treasury updates the SDN list,
+          every queued disbursement — grantees, field partners, vendors, payees — becomes her
+          personal federal exposure.</p>
+        <p class="body" style="margin-top:22px">A true hit must be held and reported within
+          <strong style="color:var(--color-primary)">10 business days</strong>. A delisting means
+          blocked funds must be released. Today she does it by hand — or not at all.</p>
+      </div>
+      <div>
+        <!-- the "live feel" element: the real delta publication, verified 2026-08-12 -->
+        <div class="code" style="font-size:18px">
+<span class="c-dim">GET</span> sanctionslistservice.ofac.treas.gov<span class="c-dim">/changes/latest</span>
+<span class="c-dim">→ 200 · XML · ns treasury.gov/ofac/DeltaFile/1.0</span>
+
+datePublished    <span class="c-txt">2026-08-07T00:00:00-04:00</span>
+publicationType  <span class="c-txt">Standard Action</span>
+entities         <span class="c-txt">26</span>
+  action=<span class="c-hi">"add"</span>     <span class="c-txt">18</span>
+  action=<span class="c-hi">"remove"</span>   <span class="c-txt">8</span></div>
+        <div style="margin-top:18px;font-family:var(--font-mono);font-size:15px;color:var(--color-faint)">
+          A real OFAC publication. Deltas land at any hour — the feed carries explicit
+          add / remove actions, and each one changes what Amara may legally pay.</div>
+      </div>
+    </div>
+    <div class="foot"><span>03 · problem</span><div class="rule"></div><span>every US person is strictly liable — headcount is irrelevant</span></div>
+  </div>
+  <aside class="speaker-notes">Name the stakes plainly: the same statute that binds JPMorgan binds
+    Amara. The delta on screen is real — Aug 7, 18 additions, 8 removals. Both directions matter:
+    additions freeze money she was about to send; removals free money she's been blocking.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 4 · SOLUTION ════════════════════ -->
+<section class="slide" id="s4">
+  <div class="s-wrap">
+    <div class="kicker">The solution <span class="k-dim">· one flow, done to the bottom</span></div>
+    <h2 style="max-width:1500px">The whole book, re-screened unattended.</h2>
+    <p class="body" style="margin-top:26px;max-width:1250px">On every OFAC delta, Interdict
+      re-screens all ~5,000 counterparties: true hits held, lookalikes cleared with written
+      reasons, funds released on delisting, the 10-day blocking report drafted.</p>
+    <div class="mono" style="margin-top:40px;font-size:21px;color:var(--color-muted);letter-spacing:.02em">
+      DELTA LANDS <span class="amber">→</span> FULL-BOOK RE-SCREEN <span class="amber">→</span>
+      <span class="hold-pill">HOLD</span> <span style="color:var(--color-faint)">|</span>
+      <span class="clear-pill">CLEAR</span> <span class="amber">→</span> RELEASE ON DELISTING
+      <span class="amber">→</span> 10-DAY REPORT
+    </div>
+    <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:60px;margin-top:52px;align-items:start">
+      <div class="terminal-frame">
+        <div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="t-title">interdict · evidence console — labeled synthetic ledger</span></div>
+        <!-- SWAP: replace with console-hold-event.png (evidence console showing a HOLD placed and the disbursement parked) -->
+        <img src="https://placehold.co/1020x430/090b11/44506a?text=Evidence+console+%E2%80%94+HOLD+placed%2C+disbursement+parked"
+             alt="Evidence console — HOLD placed, disbursement parked" width="1020" height="430">
+      </div>
+      <div>
+        <div class="stat"><div class="stat-n">every 6<span class="amber">h</span></div>
+          <div class="stat-l">Cloud Scheduler polls OFAC — no human in the loop; run history is the
+            logged proof of weeks of unattended operation</div></div>
+        <div class="stat" style="margin-top:36px"><div class="stat-n">4 decisions</div>
+          <div class="stat-l">HOLD · CLEAR · RELEASE · REPORT — each executes without a click, each
+            graded by an external oracle (slide 07)</div></div>
+      </div>
+    </div>
+    <div class="foot"><span>04 · solution</span><div class="rule"></div><span>the agent is the product — the console is one evidence view</span></div>
+  </div>
+  <aside class="speaker-notes">One flow, nothing else — no dashboard product, no multi-list
+    coverage, no notification suite. The scheduler is the heartbeat: real Treasury publications
+    trigger the system, so "little to no hand-holding" shows up as logged run history, not a claim.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 5 · HOW IT WORKS ════════════════════ -->
+<section class="slide" id="s5">
+  <div class="s-wrap">
+    <div class="kicker">Architecture <span class="k-dim">· four agents · two planes · one guard</span></div>
+    <h2 style="font-size:64px">Deterministic code decides what executes.</h2>
+    <div style="margin-top:34px">
+      <!-- architecture diagram — pure SVG, real labels, real data flow -->
+      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: four ADK agents on Cloud Run with an oracle guard at the routing boundary">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
+          <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#f59e0b"/></marker>
+        </defs>
+        <!-- external world -->
+        <rect x="10" y="20" width="300" height="200" rx="10" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
+        <text x="30" y="52" fill="#556174" font-size="14" letter-spacing="2">EXTERNAL — NOT OURS</text>
+        <text x="30" y="88" fill="#e7ecf4" font-size="17" font-weight="700">OFAC SLS</text>
+        <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 records</text>
+        <text x="30" y="138" fill="#94a3b8" font-size="14">/changes/latest delta</text>
+        <text x="30" y="162" fill="#94a3b8" font-size="14">302 → presigned S3</text>
+        <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
+        <!-- scheduler + ingest -->
+        <rect x="10" y="270" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
+        <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">Cloud Scheduler</text>
+        <text x="30" y="330" fill="#94a3b8" font-size="14">poll every 6h · unattended</text>
+        <rect x="10" y="390" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
+        <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest · Cloud Run job</text>
+        <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch → Pub/Sub</text>
+        <line x1="160" y1="220" x2="160" y2="270" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <line x1="160" y1="360" x2="160" y2="390" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <line x1="310" y1="435" x2="470" y2="435" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <text x="325" y="425" fill="#556174" font-size="13">rescreen-tasks</text>
+        <!-- orchestrator (center) -->
+        <rect x="470" y="240" width="430" height="260" rx="12" fill="#121722" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · ADK · thin</text>
+        <rect x="495" y="298" width="380" height="120" rx="8" fill="rgba(245,158,11,.14)" stroke="#f59e0b"/>
+        <text x="513" y="328" fill="#f59e0b" font-size="16" font-weight="700">ORACLE GUARD — at the routing boundary</text>
+        <text x="513" y="354" fill="#e7ecf4" font-size="14">schema · citation-vs-record · disagreement</text>
+        <text x="513" y="376" fill="#e7ecf4" font-size="14">loop cap ≤2 round-trips → QUARANTINE</text>
+        <text x="513" y="398" fill="#e7ecf4" font-size="14">fail-closed: quarantined money stays HELD</text>
+        <text x="495" y="448" fill="#94a3b8" font-size="14">A2A skill: screen_counterparty()</text>
+        <text x="495" y="472" fill="#94a3b8" font-size="14">sole writer of decisions · tx + outbox</text>
+        <!-- matcher -->
+        <rect x="1010" y="120" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
+        <text x="1035" y="158" fill="#e7ecf4" font-size="19" font-weight="700">matcher-agent · NO LLM</text>
+        <text x="1035" y="186" fill="#94a3b8" font-size="14">deterministic plane — always right</text>
+        <text x="1035" y="208" fill="#94a3b8" font-size="14">Jaro-Winkler + transliteration · weak-alias</text>
+        <text x="1035" y="230" fill="#94a3b8" font-size="14">checkpointed full-book re-screen</text>
+        <!-- adjudicator -->
+        <rect x="1010" y="390" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
+        <text x="1035" y="428" fill="#e7ecf4" font-size="19" font-weight="700">adjudicator-agent · Gemini</text>
+        <text x="1035" y="456" fill="#94a3b8" font-size="14">Vertex AI · structured responseSchema</text>
+        <text x="1035" y="478" fill="#94a3b8" font-size="14">written rationale · DOB corroboration</text>
+        <text x="1035" y="500" fill="#94a3b8" font-size="14">weak-alias downweighting · cited_fields[]</text>
+        <!-- routing arrows -->
+        <line x1="900" y1="300" x2="1010" y2="200" stroke="#f59e0b" marker-end="url(#arA)"/>
+        <text x="905" y="238" fill="#f59e0b" font-size="13">A2A: score()</text>
+        <line x1="1010" y1="230" x2="900" y2="330" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <line x1="900" y1="430" x2="1010" y2="440" stroke="#f59e0b" marker-end="url(#arA)"/>
+        <text x="905" y="418" fill="#f59e0b" font-size="13">A2A: adjudicate()</text>
+        <line x1="1010" y1="470" x2="900" y2="465" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <!-- disburser -->
+        <rect x="470" y="20" width="430" height="110" rx="12" fill="#121722" stroke="#232b3a"/>
+        <text x="495" y="58" fill="#e7ecf4" font-size="19" font-weight="700">disburser-agent · ADK</text>
+        <text x="495" y="86" fill="#94a3b8" font-size="14">the real A2A consumer — asks before it pays</text>
+        <text x="495" y="108" fill="#94a3b8" font-size="14">SA-signed OIDC · audience-checked</text>
+        <line x1="685" y1="130" x2="685" y2="240" stroke="#94a3b8" marker-end="url(#ar)" marker-start="url(#ar)"/>
+        <text x="700" y="195" fill="#556174" font-size="13">A2A · verdict before release</text>
+        <!-- gemma -->
+        <rect x="1440" y="390" width="230" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
+        <text x="1462" y="428" fill="#e7ecf4" font-size="17" font-weight="700">Gemma</text>
+        <text x="1462" y="454" fill="#94a3b8" font-size="14">memo-armor: screens</text>
+        <text x="1462" y="476" fill="#94a3b8" font-size="14">free text for injection</text>
+        <text x="1462" y="498" fill="#94a3b8" font-size="14">before Gemini reads it</text>
+        <line x1="1440" y1="455" x2="1390" y2="455" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <!-- oracles -->
+        <rect x="1440" y="120" width="230" height="130" rx="12" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
+        <text x="1462" y="152" fill="#556174" font-size="13" letter-spacing="1">EXTERNAL ORACLES</text>
+        <text x="1462" y="180" fill="#e7ecf4" font-size="15" font-weight="700">yente · OpenSanctions</text>
+        <text x="1462" y="202" fill="#94a3b8" font-size="13">/match/us_ofac_sdn only</text>
+        <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
+        <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+        <text x="1398" y="172" fill="#556174" font-size="12">graded daily</text>
+        <!-- cloud sql -->
+        <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
+        <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Cloud SQL · Postgres 16</text>
+        <text x="760" y="542" fill="#94a3b8" font-size="14">idempotent holds (UNIQUE) · hash-chained append-only ledger · outbox · quarantine · rescreen_batches</text>
+        <line x1="685" y1="500" x2="685" y2="512" stroke="#94a3b8" marker-end="url(#ar)"/>
+      </svg>
+    </div>
+    <p class="body" style="margin-top:22px;max-width:1560px;font-size:20px">
+      <strong style="color:var(--color-primary)">Failure tolerance is the routing itself:</strong>
+      a looping adjudicator hits a hard 2-round-trip cap (counter in Postgres, not in any agent) and
+      lands in a quarantine terminal state; a hallucinated passport number fails citation-vs-record
+      validation at the boundary before anything executes.</p>
+    <div class="foot"><span>05 · architecture</span><div class="rule"></div><span>Gemini explains and judges — deterministic code decides what executes</span></div>
+  </div>
+  <aside class="speaker-notes">The FEF sub-question asks how the system recovers when a worker
+    loops or hallucinates. Because the planes are separate agents, the oracle guard IS the
+    inter-agent routing logic, not a function call. And it fails closed — a confused agent can
+    never move money.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 6 · LIVE DEMO / HERO MOMENT ════════════════════ -->
+<section class="slide" id="s6">
+  <div class="s-wrap">
+    <div class="kicker">The hero moment <span class="k-dim">· one unedited take</span></div>
+    <h2 style="font-size:64px">One delta. Both directions.</h2>
+    <p class="body" style="margin-top:18px;max-width:1300px">A real OFAC delta lands unattended.
+      The whole book is re-screened. A true hit is held — the money stops. A lookalike is cleared
+      with a written rationale a judge can check against sources we do not control.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;margin-top:44px">
+      <div>
+        <div class="callout" style="margin-bottom:16px"><span class="num">1</span>
+          <div class="c-body"><strong>HOLD</strong> — true hit; every queued disbursement to the
+            counterparty parks, idempotently</div></div>
+        <div class="terminal-frame">
+          <div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="t-title">hold event · ledger entry</span></div>
+          <!-- SWAP: replace with demo-hold-true-hit.png (terminal/console log of a HOLD firing on a true SDN hit) -->
+          <img src="https://placehold.co/520x300/090b11/44506a?text=HOLD+%E2%80%94+true+hit%2C+money+parked"
+               alt="HOLD fired on a true SDN hit" width="520" height="300">
+        </div>
+      </div>
+      <div>
+        <div class="callout" style="margin-bottom:16px"><span class="num">2</span>
+          <div class="c-body"><strong>CLEAR</strong> — lookalike auto-cleared; written rationale
+            cites weak-alias category + DOB flags from the feed itself</div></div>
+        <div class="terminal-frame">
+          <div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="t-title">adjudication · rationale + cited_fields</span></div>
+          <!-- SWAP: replace with demo-clear-rationale.png (adjudicator rationale for clearing a lookalike, cited fields visible) -->
+          <img src="https://placehold.co/520x300/090b11/44506a?text=CLEAR+%E2%80%94+written+rationale%2C+cited+fields"
+               alt="CLEAR with written rationale and cited fields" width="520" height="300">
+        </div>
+      </div>
+      <div>
+        <div class="callout" style="margin-bottom:16px"><span class="num">3</span>
+          <div class="c-body"><strong>RELEASE</strong> — a delisting frees blocked funds; OFAC's own
+            Recent Actions page on screen names the removal</div></div>
+        <div class="terminal-frame">
+          <div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="t-title">release · vs OFAC Recent Actions</span></div>
+          <!-- SWAP: replace with demo-release-recent-actions.png (release event side-by-side with OFAC Recent Actions page naming the removal) -->
+          <img src="https://placehold.co/520x300/090b11/44506a?text=RELEASE+%E2%80%94+delisting+frees+funds"
+               alt="RELEASE fired on a real delisting" width="520" height="300">
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:38px;display:flex;gap:16px;align-items:center">
+      <span class="chip mono">make challenge NAME='any name you type' — adjudicated unseen, on camera</span>
+      <span class="chip">every verdict checkable on treasury.gov · yente · the Federal Register</span>
+    </div>
+    <div class="foot"><span>06 · demo</span><div class="rule"></div><span>video: unedited execution, hard cap 4:00 — every synthetic layer labeled on screen</span></div>
+  </div>
+  <aside class="speaker-notes">This is the one moment to retell: Treasury publishes, and without
+    anyone touching anything the right money stops and the right money keeps moving — with reasons
+    in writing. The challenge harness means judges don't watch our demo, they generate their own.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 7 · FOUR DECISIONS ════════════════════ -->
+<section class="slide" id="s7">
+  <div class="s-wrap">
+    <div class="kicker">Autonomy, graded <span class="k-dim">· no self-grading anywhere</span></div>
+    <h2 style="font-size:62px;margin-bottom:38px">Four decisions, four external graders.</h2>
+    <div class="d-row">
+      <div class="d-verb"><span class="hold-pill" style="font-size:22px;padding:6px 20px">HOLD</span>
+        <span class="d-tag">money stops</span></div>
+      <div class="d-acts">Adjudicated true hit parks the counterparty and every queued disbursement — idempotent by database constraint.</div>
+      <div class="d-grade">Judge cross-checks name / DOB / passport on <strong>treasury.gov</strong>;
+        <span class="mono">make challenge</span> reproduces it on any name.</div>
+    </div>
+    <div class="d-row">
+      <div class="d-verb"><span class="clear-pill" style="font-size:22px;padding:6px 20px">CLEAR</span>
+        <span class="d-tag">payment proceeds</span></div>
+      <div class="d-acts">Lookalikes cleared with a written rationale — weak-alias downweighting per OFAC's own guidance, using the <strong style="color:var(--color-primary)">4,393 real weak aliases</strong> in the live list.</div>
+      <div class="d-grade">Daily agreement table vs <strong>OpenSanctions yente</strong> and
+        <strong>OFAC Sanctions List Search</strong> — whole book, every disagreement documented.</div>
+    </div>
+    <div class="d-row">
+      <div class="d-verb">RELEASE<span class="d-tag">money moves again</span></div>
+      <div class="d-acts">A delisting delta autonomously releases blocked funds and retires the hold.</div>
+      <div class="d-grade">Live if a sentinel fires (~88% odds — slide 08); guaranteed fallback: a
+        <strong>labeled replay</strong> of the real Aug 7 removals with the
+        <strong>Federal Register notice</strong> on screen. Never implied live.</div>
+    </div>
+    <div class="d-row">
+      <div class="d-verb">REPORT<span class="d-tag">statutory artifact</span></div>
+      <div class="d-acts">Drafts the OFAC blocking report against the real 10-business-day clock; filed to the append-only ledger.</div>
+      <div class="d-grade">Report fields verify against the <strong>public SDN record</strong>;
+        transmission to OFAC stays human — stated honestly.</div>
+    </div>
+    <div class="foot"><span>07 · decisions</span><div class="rule"></div><span>each decision acts without a human click — and each has an oracle we don't control</span></div>
+  </div>
+  <aside class="speaker-notes">The design rule: no capability is judged by us. Holds grade against
+    Treasury's record, clears against two independent screening oracles, releases against the
+    Federal Register. The 4,393 weak aliases are real feed data — that's what makes false-positive
+    clearing demonstrable rather than staged.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 8 · WHY US / THE SEALED PROOF ════════════════════ -->
+<section class="slide" id="s8">
+  <div class="s-wrap">
+    <div class="kicker">The anti-plant proof <span class="k-dim">· why the release leg can't be staged</span></div>
+    <h2 style="font-size:62px">Sealed before Treasury moved.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:70px;margin-top:40px">
+      <div>
+        <div style="border:1px solid var(--color-accent);border-radius:14px;padding:34px 38px;background:var(--color-accent-dim)">
+          <div class="mono" style="font-size:15px;letter-spacing:.18em;color:var(--color-accent);margin-bottom:16px">SENTINEL BOOK · SEALED &amp; COMMITTED 2026-08-13</div>
+          <div style="font-family:var(--font-display);font-weight:800;font-size:40px;letter-spacing:-.01em">400 currently-listed SDN names</div>
+          <div class="mono" style="margin-top:18px;font-size:17px;color:var(--color-primary);word-break:break-all">
+            sha256&nbsp;<span class="amber">66eb151c</span>c7473024ed3f9fb4f43700edde828a5ab53d7122e6145c58e72b9b1b</div>
+          <div style="margin-top:16px;font-size:18px;line-height:1.5;color:var(--color-muted)">
+            Byte-for-byte deterministic — no RNG, selection by SHA-256 of each entry's uid.
+            If OFAC later delists anyone in this book, the release fires on a name nobody could
+            have known. <strong style="color:var(--color-primary)">Git history is the proof.</strong></div>
+        </div>
+        <p class="body" style="margin-top:26px;font-size:19px">Measured base rate: 396 removals
+          across 7 OFAC publications — bursty, 96% from two events. So the book is
+          program-stratified: 250 SDNTK (4.5× removal enrichment) · 100 IRAQ2 (13×) · 50 hash-driven remainder.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:6px">P(a live release fires in a quiet window)</h3>
+        <div class="pbar"><span class="pb-l">uniform 400 sentinels</span>
+          <div class="pb-track"><div class="pb-fill" style="width:28%"></div></div>
+          <span class="pb-v" style="color:var(--color-muted)">~28%</span></div>
+        <div class="pbar"><span class="pb-l">program-stratified 400</span>
+          <div class="pb-track"><div class="pb-fill hi" style="width:88%"></div></div>
+          <span class="pb-v amber">~88%</span></div>
+        <hr class="hairline" style="margin:36px 0 26px">
+        <h3 style="margin-bottom:18px">Release proof — three sources, zero ours</h3>
+        <ul class="vlist plain">
+          <li><strong>OFAC delta XML</strong> — explicit <span class="mono">action="remove"</span> entities</li>
+          <li><strong>OFAC Recent Actions page</strong> — names each removal verbatim, with DOB and place of birth</li>
+          <li><strong>OpenSanctions mirror</strong> — the removed party is independently absent from <span class="mono">us_ofac_sdn</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><span>08 · proof</span><div class="rule"></div><span>stratification is disclosed; program membership is public and fixed at seal time — weighting cannot steer the outcome</span></div>
+  </div>
+  <aside class="speaker-notes">The easy demo is hindsight replay — pre-seed a name you already know
+    was removed. We sealed the book and its hash in git before any later publication existed, and
+    stratified by public program membership, which raises the odds without touching which names
+    fire. If nothing fires, the fallback replay is labeled as replay — never implied live.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 9 · TRACTION + HONESTY ════════════════════ -->
+<section class="slide" id="s9">
+  <div class="s-wrap">
+    <div class="kicker">Where it stands <span class="k-dim">· clean machine, no credentials, no API key</span></div>
+    <h2 style="font-size:62px">Day 2 of 19. Already verified.</h2>
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:80px;margin-top:36px">
+      <div>
+        <ul class="vlist">
+          <li><strong>19,199 SDN records</strong> live-parsed from Treasury's feed — published 08/07/2026, 27&nbsp;MB in ~5s</li>
+          <li><strong>4,393 real weak aliases</strong> (<span class="mono">category=weak</span>) — the false-positive-clearing engine, nothing synthesized</li>
+          <li><strong>Delta feed verified</strong> — explicit <span class="mono">add / remove</span> actions; 18 / 8 on Aug 7</li>
+          <li><strong>yente oracle validated</strong> — German transliteration “Wladimir Wladimirowitsch Putin” → <strong>1.000</strong>; clean control name → <strong>0 results</strong></li>
+          <li><strong><span class="mono">&lt;publshInformation&gt;</span></strong> — OFAC's own schema typo, pinned by a unit test: unfakeable proof the feed is real</li>
+          <li><strong>Sentinel book sealed</strong> — 400 entries, SHA-256 committed before any subsequent delta</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom:18px">Synthetic — and it says so</h3>
+        <ul class="vlist plain">
+          <li>The counterparty ledger is <strong>synthetic</strong>, seeded from public records with per-row provenance — labeled on screen the instant it appears</li>
+          <li>Sentinels carry <span class="mono">sentinel: true</span> in-product and are disclosed in the README</li>
+          <li>The replay fallback is <strong>never presented as live</strong></li>
+          <li>Judge-runnable, not judge-told: <span class="mono">make challenge NAME='…'</span> · <span class="mono">make reproduce</span></li>
+        </ul>
+        <p class="body" style="margin-top:24px;font-size:19px">Every audit this idea survived failed
+          other designs on <em>implied</em> liveness. Disclosure plus reproduction is the design,
+          not the apology.</p>
+      </div>
+    </div>
+    <div class="foot"><span>09 · status</span><div class="rule"></div><span>target by Aug 31: ~2 weeks of Cloud Scheduler runs fired by genuine Treasury publications — logged, not asserted</span></div>
+  </div>
+  <aside class="speaker-notes">Every number on the left came from a clean-machine verification run
+    before real build work started. And we lead with what's synthetic instead of burying it —
+    calibrated honesty plus a reproduction path is worth more here than a prettier claim.</aside>
+</section>
+
+<!-- ════════════════════ SLIDE 10 · THE ASK ════════════════════ -->
+<section class="slide" id="s10">
+  <div class="s-wrap">
+    <div class="kicker">The ask</div>
+    <h2 style="font-size:84px;max-width:1500px">Grade us against Treasury.</h2>
+    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:80px;margin-top:44px">
+      <div>
+        <div class="code" style="font-size:20px">
+<span class="c-hi">$</span> <span class="c-txt">make challenge NAME=</span><span class="c-hi">'any name you type'</span>
+<span class="c-dim">  # created, queued, adjudicated unseen — with written reasons</span>
+
+<span class="c-hi">$</span> <span class="c-txt">make reproduce</span>
+<span class="c-dim">  # verifies the sealed book hash · fetches the live OFAC list</span>
+<span class="c-dim">  # runs the flow · prints the oracle agreement table</span></div>
+        <ul class="vlist plain" style="margin-top:28px">
+          <li>Cross-check any <strong>HOLD</strong> on treasury.gov — name, DOB, passport</li>
+          <li>Cross-check the <strong>RELEASE</strong> against OFAC Recent Actions, Federal Register 2026-16153, and OpenSanctions</li>
+          <li>Verify the sentinel book's git timestamp predates every later delta</li>
+        </ul>
+      </div>
+      <div>
+        <div style="display:flex;gap:28px;align-items:flex-start">
+          <!-- SWAP: replace with repo-qr.png (QR code linking to the public build repo) -->
+          <img src="https://placehold.co/210x210/121722/44506a?text=QR+%E2%86%92+repo"
+               alt="QR code to the Interdict repository" width="210" height="210"
+               style="border-radius:14px;border:1px solid var(--color-line)">
+          <!-- SWAP: replace with team-photo.png (builder photo) -->
+          <img src="https://placehold.co/210x210/121722/44506a?text=builder"
+               alt="Builder photo" width="210" height="210"
+               style="border-radius:14px;border:1px solid var(--color-line)">
+        </div>
+        <div class="mono" style="margin-top:26px;font-size:17px;color:var(--color-muted);line-height:2">
+          solo build · edy.cu@live.com<br>
+          Fortified Enterprise Fleet<br>
+          All Things Agentic Hackathon</div>
+      </div>
+    </div>
+    <div style="position:absolute;left:120px;bottom:110px;font-family:var(--font-display);
+      font-weight:800;font-size:38px;letter-spacing:-.01em">
+      If anything were staged, <span class="amber">the git history would convict us.</span></div>
+    <div class="foot"><span>10 · ask</span><div class="rule"></div><span>interdict</span></div>
+  </div>
+  <aside class="speaker-notes">Don't take our word for any of it. Type a name, run the challenge,
+    check the verdict against Treasury's own site. The whole system was designed so that the judge
+    is the grader of record — that's the ask: run it, and grade it against the government.</aside>
+</section>
+
+</div></div>
+
+<div id="counter">01 / 10</div>
+<div id="hint">← → navigate · ESC overview · P presenter · C contrast</div>
+<div id="presenterPanel">
+  <div class="pp-label">Speaker notes</div>
+  <div class="pp-notes" id="ppNotes"></div>
+  <div class="pp-next" id="ppNext"></div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var N = slides.length, cur = 0, overview = false;
+  var stage = document.getElementById('stage');
+  var counter = document.getElementById('counter');
+  var ppNotes = document.getElementById('ppNotes');
+  var ppNext = document.getElementById('ppNext');
+
+  /* ---------- stage scaling: fixed 1920×1080, letterbox the browser ---------- */
+  function fitStage(){
+    var availH = window.innerHeight * (document.body.classList.contains('presenter') ? 0.8 : 1);
+    var s = Math.min(window.innerWidth / 1920, availH / 1080);
+    stage.style.transform = 'scale(' + s + ')';
+    stage.style.marginBottom = document.body.classList.contains('presenter')
+      ? (window.innerHeight * 0.2) + 'px' : '0';
+  }
+  window.addEventListener('resize', fitStage);
+
+  /* ---------- navigation ---------- */
+  function titleOf(i){
+    var h = slides[i].querySelector('h1,h2');
+    return h ? h.textContent.replace(/\s+/g,' ').trim() : 'Slide ' + (i+1);
+  }
+  function go(n){
+    cur = Math.max(0, Math.min(N - 1, n));
+    slides.forEach(function(s, i){ s.classList.toggle('active', i === cur); });
+    counter.textContent = String(cur+1).padStart(2,'0') + ' / ' + String(N).padStart(2,'0');
+    var notes = slides[cur].querySelector('.speaker-notes');
+    ppNotes.textContent = notes ? notes.textContent.replace(/\s+/g,' ').trim() : '';
+    ppNext.textContent = (cur < N-1) ? 'Next → ' + titleOf(cur+1) : 'Last slide';
+    if (overview) layoutOverview();
+  }
+
+  /* ---------- overview grid (ESC) ---------- */
+  var COLS = 4, SC = 0.215, GAP = 36;
+  function layoutOverview(){
+    var rows = Math.ceil(N / COLS);
+    var cellW = 1920 * SC, cellH = 1080 * SC;
+    var totW = COLS * cellW + (COLS-1) * GAP;
+    var totH = rows * cellH + (rows-1) * GAP;
+    var ox = (1920 - totW) / 2, oy = (1080 - totH) / 2;
+    slides.forEach(function(s, i){
+      var c = i % COLS, r = Math.floor(i / COLS);
+      s.style.transformOrigin = '0 0';
+      s.style.transform = 'translate(' + (ox + c*(cellW+GAP)) + 'px,' +
+                          (oy + r*(cellH+GAP)) + 'px) scale(' + SC + ')';
+    });
+  }
+  function clearOverview(){
+    slides.forEach(function(s){ s.style.transform = ''; s.style.transformOrigin = ''; });
+  }
+  function toggleOverview(){
+    overview = !overview;
+    document.body.classList.toggle('overview', overview);
+    if (overview) layoutOverview(); else clearOverview();
+  }
+  slides.forEach(function(s, i){
+    s.addEventListener('click', function(){
+      if (overview){ toggleOverview(); go(i); }
+    });
+  });
+
+  /* ---------- presenter mode (P) ---------- */
+  var idleTimer = null;
+  function toggleP(){
+    document.body.classList.toggle('presenter');
+    fitStage();
+  }
+  document.addEventListener('mousemove', function(){
+    document.body.classList.remove('hide-cursor');
+    clearTimeout(idleTimer);
+    if (document.body.classList.contains('presenter')){
+      idleTimer = setTimeout(function(){
+        document.body.classList.add('hide-cursor');
+      }, 2000);
+    }
+  });
+
+  /* ---------- keys ---------- */
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); go(cur+1); }
+    else if (e.key === 'ArrowLeft'){ e.preventDefault(); go(cur-1); }
+    else if (e.key === 'Escape'){ e.preventDefault(); toggleOverview(); }
+    else if (e.key === 'p' || e.key === 'P'){ toggleP(); }
+    else if (e.key === 'c' || e.key === 'C'){ document.body.classList.toggle('debug-contrast'); }
+    else if (e.key === 'Home'){ go(0); }
+    else if (e.key === 'End'){ go(N-1); }
+  });
+
+  /* ---------- cover typing animation: types once (~4s), then rests ---------- */
+  var LINE = "make challenge NAME='SATIZABAL RENGIFO, Mario German'";
+  var typed = document.getElementById('typed'), ti = 0;
+  function typeStep(){
+    if (ti <= LINE.length){
+      typed.textContent = LINE.slice(0, ti); ti++;
+      setTimeout(typeStep, 55);
+    } /* rests with blinking caret after one pass */
+  }
+  setTimeout(typeStep, 900);
+
+  fitStage(); go(0);
+})();
+</script>
+</body>
+</html>
