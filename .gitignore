@@ -1,0 +1,12 @@
+.env
+.env.*
+node_modules/
+__pycache__/
+.next/
+dist/
+coverage/
+.DS_Store
+
+# OFAC source snapshots (27MB+, fetched at build time; hashes recorded in data/PROVENANCE.md)
+data/*.XML
+data/*.xml

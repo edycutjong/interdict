@@ -1,0 +1,401 @@
+uid,name,sdn_type,programs,stratum,selection_hash,sentinel,source_dataset,source_record_id
+4715,SHINING PATH,Entity,FTO|SDGT|SDNTK,SDNTK,175ba3ac67b46717,true,us_ofac_sdn,sdn:4715
+6858,"CARO QUINTERO, Miguel Angel",Individual,SDNTK,SDNTK,2839d5f4d60f14e3,true,us_ofac_sdn,sdn:6858
+6861,"GUZMAN LOERA, Joaquin",Individual,SDNTK,SDNTK,2bfd8e9d9b1e415a,true,us_ofac_sdn,sdn:6861
+6939,"AL-AHDAL, Mohammad Hamdi Mohammad Sadiq",Individual,SDGT,REMAINDER,004b720c54aeeaef,true,us_ofac_sdn,sdn:6939
+7157,"FARMACIA VIDA SUPREMA, S.A. DE C.V.",Entity,SDNTK,SDNTK,1c2228e8f397c8d3,true,us_ofac_sdn,sdn:7157
+7160,GEX EXPLORE S. DE R.L. DE C.V.,Entity,SDNTK,SDNTK,0b2a3186249b8bbe,true,us_ofac_sdn,sdn:7160
+7161,"OPERADORA VALPARK, S.A. DE C.V.",Entity,SDNTK,SDNTK,2aa82198ffce44b9,true,us_ofac_sdn,sdn:7161
+7162,"VALPARK, S.A. DE C.V.",Entity,SDNTK,SDNTK,100bb757ff8d1e0e,true,us_ofac_sdn,sdn:7162
+7163,"AGUILAR AMAO, Miguel",Individual,SDNTK,SDNTK,25a7fdc3e04ae228,true,us_ofac_sdn,sdn:7163
+7167,"FREGOSO AMEZQUITA, Maria Antonieta",Individual,SDNTK,SDNTK,023fd0323a0cad1a,true,us_ofac_sdn,sdn:7167
+7173,"MORENO MEDINA, Luis Ignacio",Individual,SDNTK,SDNTK,0c3e6b547701641b,true,us_ofac_sdn,sdn:7173
+7790,"SIMATOVIC, Franko",Individual,BALKANS,REMAINDER,0061d01c14c0961c,true,us_ofac_sdn,sdn:7790
+7820,"ESPARRAGOZA MORENO, Juan Jose",Individual,SDNTK,SDNTK,031b361c173d1ed1,true,us_ofac_sdn,sdn:7820
+7843,"AL-TIKRITI, Saddam Hussein",Individual,IRAQ2,IRAQ2,9da369a1c302a520,true,us_ofac_sdn,sdn:7843
+7844,"AL-TIKRITI, Qusay Saddam Hussein",Individual,IRAQ2,IRAQ2,78e707670c4d5ca4,true,us_ofac_sdn,sdn:7844
+7847,"AL-TIKRITI, Ali Hassan al-Majid",Individual,IRAQ2,IRAQ2,4df1c86ffbaacd2d,true,us_ofac_sdn,sdn:7847
+7848,"AL-DURI, Izzat Ibrahim",Individual,IRAQ2,IRAQ2,4798118740abc0b2,true,us_ofac_sdn,sdn:7848
+7850,"AL-NUMAN, Aziz Salih",Individual,IRAQ2,IRAQ2,479fd8ab3a815bc0,true,us_ofac_sdn,sdn:7850
+7854,"AL-TIKRITI, Muzahim Sa'b Hassan",Individual,IRAQ2,IRAQ2,8b7a5abf761f7464,true,us_ofac_sdn,sdn:7854
+7856,"AL-RAWI, Saif-al-Din Fulayyih Hassan Taha",Individual,IRAQ2,IRAQ2,05596607f0692eda,true,us_ofac_sdn,sdn:7856
+7857,"AL-TIKRITI, Rafi abd-al-Latif Tilfah",Individual,IRAQ2,IRAQ2,2ecacb052f3f8ece,true,us_ofac_sdn,sdn:7857
+7859,"AL-TIKRITI, Hamid Raja Shalah",Individual,IRAQ2,IRAQ2,6f082e012f0227cb,true,us_ofac_sdn,sdn:7859
+7860,"AL-DULAYMI, Latif Nusayyif Jasim",Individual,IRAQ2,IRAQ2,6d934e73f9ca3242,true,us_ofac_sdn,sdn:7860
+7861,"HUWAYSH, Abd-al-Tawab Mullah",Individual,IRAQ2,IRAQ2,5bcbcca7facfc6a0,true,us_ofac_sdn,sdn:7861
+7862,"AL-JIZRAWI, Taha Yassin Ramadan",Individual,IRAQ2,IRAQ2,628747c0ebe01aa4,true,us_ofac_sdn,sdn:7862
+7866,"MA'RUF, Taha Muhyi-al-Din",Individual,IRAQ2,IRAQ2,2bee2cc7aad839e0,true,us_ofac_sdn,sdn:7866
+7867,"AZIZ, Tariq",Individual,IRAQ2,IRAQ2,1b39416cbc686961,true,us_ofac_sdn,sdn:7867
+7868,"AL-TIKRITI, Walid Hamid Tawfiq",Individual,IRAQ2,IRAQ2,a19f7e2cf79e7777,true,us_ofac_sdn,sdn:7868
+7869,"AL-TAI, Sultan Hashim Ahmad",Individual,IRAQ2,IRAQ2,13e92dbf70e73209,true,us_ofac_sdn,sdn:7869
+7870,"AL-AZZAWI, Hikmat Mizban Ibrahim",Individual,IRAQ2,IRAQ2,16081975d836c4c2,true,us_ofac_sdn,sdn:7870
+7871,"AL-AHMAD, Mahmud Dhiyab",Individual,IRAQ2,IRAQ2,9f44de3577506980,true,us_ofac_sdn,sdn:7871
+7873,"AL-NAQIB, Zuhair Talib abd-al-Sattar",Individual,IRAQ2,IRAQ2,4028167881b016c2,true,us_ofac_sdn,sdn:7873
+7874,"AL-SA'DI, Amir Hamudi Hassan",Individual,IRAQ2,IRAQ2,21cb2e5bcafd82d6,true,us_ofac_sdn,sdn:7874
+7876,"AL-YASSIN, Husam Muhammad Amin",Individual,IRAQ2,IRAQ2,4cbbfd11a9819adf,true,us_ofac_sdn,sdn:7876
+7879,"AL-TIKRITI, Watban Ibrahim Hassan",Individual,IRAQ2,IRAQ2,4580faeddc9cc88f,true,us_ofac_sdn,sdn:7879
+7880,"AL-TIKRITI, Barzan Ibrahim Hassan",Individual,IRAQ2,IRAQ2,78acbe4d15705487,true,us_ofac_sdn,sdn:7880
+7883,"AL-SA'DUN, Muhammad Zimam abd-al-Razzaq",Individual,IRAQ2,IRAQ2,9e6d34d7605d972b,true,us_ofac_sdn,sdn:7883
+7885,"ABD-AL-GHAFUR, Humam abd-al-Khaliq",Individual,IRAQ2,IRAQ2,894f9f1eb58f8a0b,true,us_ofac_sdn,sdn:7885
+7887,"GHALIB, Nayif Shindakh Thamir",Individual,IRAQ2,IRAQ2,6be6793a03179bb8,true,us_ofac_sdn,sdn:7887
+7889,"GHARIB, Fadil Mahmud",Individual,IRAQ2,IRAQ2,70d4c2bf0900ee38,true,us_ofac_sdn,sdn:7889
+7891,"KAZIM, Rashid Taan",Individual,IRAQ2,IRAQ2,35b7513bb931251d,true,us_ofac_sdn,sdn:7891
+7892,"AL-KUBAYSI, Ugla Abid Saqar",Individual,IRAQ2,IRAQ2,8a1f0ecf38de3756,true,us_ofac_sdn,sdn:7892
+7894,"MAHDI, Adil Abdallah",Individual,IRAQ2,IRAQ2,6d8d78cf5750a6a3,true,us_ofac_sdn,sdn:7894
+7895,"AL-AWADI, Hussein Qaid",Individual,IRAQ2,IRAQ2,4f6a525815e0648d,true,us_ofac_sdn,sdn:7895
+7896,"AL-MUHAMMAD, Khamis Sirhan",Individual,IRAQ2,IRAQ2,03b5c2a2b522a201,true,us_ofac_sdn,sdn:7896
+7897,"AL-TIKRITI, Sa'd abd-al-Majid al-Faysal",Individual,IRAQ2,IRAQ2,4d4e7b47d859304e,true,us_ofac_sdn,sdn:7897
+8149,"CASTANO GIL, Jose Vicente",Individual,SDNTK,SDNTK,091ce787a71d6f85,true,us_ofac_sdn,sdn:8149
+8153,"DUQUE GAVIRIA, Ivan Roberto",Individual,SDNTK,SDNTK,0ecdeb82e4087ff2,true,us_ofac_sdn,sdn:8153
+8154,"GIRALDO SERNA, Hernan",Individual,SDNTK,SDNTK,1e1fc8c2f1b6cd2a,true,us_ofac_sdn,sdn:8154
+8155,"GOMEZ ALVAREZ, Sor Teresa",Individual,SDNTK,SDNTK,096d287c6dd67536,true,us_ofac_sdn,sdn:8155
+8158,"MANCUSO GOMEZ, Salvatore",Individual,SDNTK,SDNTK,008499c4304f6041,true,us_ofac_sdn,sdn:8158
+8163,"MURILLO BEJARANO, Diego Fernando",Individual,SDNTK,SDNTK,049d67b40c3d3b1d,true,us_ofac_sdn,sdn:8163
+8183,"ABD AL-GHAFAR, Sundus",Individual,IRAQ2,IRAQ2,272665da84d67ef6,true,us_ofac_sdn,sdn:8183
+8184,"AL-DURI, Jawhar Majid",Individual,IRAQ2,IRAQ2,5c6e551d1ed0c350,true,us_ofac_sdn,sdn:8184
+8185,"AL-RABI'I, Nidal",Individual,IRAQ2,IRAQ2,289c828b6fa42cae,true,us_ofac_sdn,sdn:8185
+8187,"AL-TIKRITI, Ali Saddam Hussein",Individual,IRAQ2,IRAQ2,386a683c43d8b4c8,true,us_ofac_sdn,sdn:8187
+8192,"AL-TIKRITI, Raghad Saddam Hussein",Individual,IRAQ2,IRAQ2,560ef5de496eb3b1,true,us_ofac_sdn,sdn:8192
+8193,"AL-TIKRITI, Rana Saddam Hussein",Individual,IRAQ2,IRAQ2,0138d2c9d5901d03,true,us_ofac_sdn,sdn:8193
+8195,"AL-TIKRITI, Thoraya Barzan Ibrahim Hasan",Individual,IRAQ2,IRAQ2,3e64d10d4eef717d,true,us_ofac_sdn,sdn:8195
+8210,AL WASEL AND BABEL GENERAL TRADING LLC,Entity,IRAQ2,IRAQ2,3fe4c54f34912649,true,us_ofac_sdn,sdn:8210
+8211,"AL-BASHAIR TRADING COMPANY, LTD",Entity,IRAQ2,IRAQ2,2ac45c7f4f4e6d16,true,us_ofac_sdn,sdn:8211
+8212,AL-HUDA STATE COMPANY FOR RELIGIOUS TOURISM,Entity,IRAQ2,IRAQ2,3ccad7bc6e229a20,true,us_ofac_sdn,sdn:8212
+8213,AVIATRANS ANSTALT,Entity,IRAQ2,IRAQ2,819f1f6de5c062e0,true,us_ofac_sdn,sdn:8213
+8214,LOGARCHEO S.A.,Entity,IRAQ2,IRAQ2,9f0935559ed267a2,true,us_ofac_sdn,sdn:8214
+8217,"AL-QUBAYSI, Munir",Individual,IRAQ2,IRAQ2,0bcd252a027e753b,true,us_ofac_sdn,sdn:8217
+8218,"BAHNAM, Hikmat Jarjes",Individual,IRAQ2,IRAQ2,24c83bd630180fe5,true,us_ofac_sdn,sdn:8218
+8228,"HAMUDAT, General Maki Mustafa",Individual,IRAQ2,IRAQ2,4475e4e4838095d8,true,us_ofac_sdn,sdn:8228
+8230,"SHABAN, Adib",Individual,IRAQ2,IRAQ2,53cc906c2f8f3416,true,us_ofac_sdn,sdn:8230
+8235,"ARELLANO FELIX, Francisco Javier",Individual,SDNTK,SDNTK,128cb04d7ef35704,true,us_ofac_sdn,sdn:8235
+8239,"NEMBHARD, Norris",Individual,SDNTK,SDNTK,1157159d899f9f2e,true,us_ofac_sdn,sdn:8239
+8241,"RAMCHARAN, Leebert",Individual,SDNTK,SDNTK,0e099ec8c4d4879a,true,us_ofac_sdn,sdn:8241
+8307,"ABBAS, Abdul Hussein",Individual,IRAQ2,IRAQ2,3513c7f2b31a230f,true,us_ofac_sdn,sdn:8307
+8312,"AHMAD, Wallid Issa",Individual,IRAQ2,IRAQ2,608e7fe11cda5fe8,true,us_ofac_sdn,sdn:8312
+8313,"AL-AMIRI, Adnan Talib Hassim",Individual,IRAQ2,IRAQ2,7da07d33c70a0e0e,true,us_ofac_sdn,sdn:8313
+8314,AL-ARABI TRADING COMPANY LIMITED,Entity,IRAQ2,IRAQ2,5ba10cbecd08a0b1,true,us_ofac_sdn,sdn:8314
+8315,"AL-ATRUSH, Abd al-Wahhab Umar Mirza",Individual,IRAQ2,IRAQ2,7398e82e27fb09c6,true,us_ofac_sdn,sdn:8315
+8316,"AL-AZAWI, Dafir",Individual,IRAQ2,IRAQ2,0abbb4eaaec8a2be,true,us_ofac_sdn,sdn:8316
+8317,"AL-BAZZAZ, Hikmet Abdallah",Individual,IRAQ2,IRAQ2,2254983bbd7159a4,true,us_ofac_sdn,sdn:8317
+8318,"AL-DAJANI, Leila N.S.",Individual,IRAQ2,IRAQ2,5e3991b86866d379,true,us_ofac_sdn,sdn:8318
+8319,"AL-DAJANI, Nadim S.",Individual,IRAQ2,IRAQ2,5ece8538aee17849,true,us_ofac_sdn,sdn:8319
+8320,"AL-DAJANI, Sa'ad",Individual,IRAQ2,IRAQ2,9c512e72bf3b665f,true,us_ofac_sdn,sdn:8320
+8323,"AL-HAMMADI, Hamid Yusif",Individual,IRAQ2,IRAQ2,800392bf160979de,true,us_ofac_sdn,sdn:8323
+8326,"AL-HUWAYSH, Isam Rashid",Individual,IRAQ2,IRAQ2,9c3b5389b14f45f5,true,us_ofac_sdn,sdn:8326
+8327,"AL-JABBURI, Sadi Tuma Abbas",Individual,IRAQ2,IRAQ2,134e7b9fb9c4ebec,true,us_ofac_sdn,sdn:8327
+8329,"AL-KHODAIR, Ahmad Hussein",Individual,IRAQ2,IRAQ2,6f3f2f7e8ad112bb,true,us_ofac_sdn,sdn:8329
+8330,"AL-MAJID, Hussein Kamel Hassan",Individual,IRAQ2,IRAQ2,009a06ade857ad4e,true,us_ofac_sdn,sdn:8330
+8331,"AL-MALIKI, Shabib Lazem",Individual,IRAQ2,IRAQ2,32b704dc1cfddc57,true,us_ofac_sdn,sdn:8331
+8332,"AL-QASIR, Nazar Jumah Ali",Individual,IRAQ2,IRAQ2,0204672573c31d8c,true,us_ofac_sdn,sdn:8332
+8335,"AL-SAHHAF, Muhammad Said Kazim",Individual,IRAQ2,IRAQ2,4c74a78a145dd8f4,true,us_ofac_sdn,sdn:8335
+8337,"ALAWI, Abdel-Salam Abdel-Rahman",Individual,IRAQ2,IRAQ2,4b6c87acd490d6c4,true,us_ofac_sdn,sdn:8337
+8339,"ALWAN, Allaidin Hussain",Individual,IRAQ2,IRAQ2,3bd81a6caa970c3e,true,us_ofac_sdn,sdn:8339
+8340,AMD CO. LTD AGENCY,Entity,IRAQ2,IRAQ2,05b604c5ef6d07dc,true,us_ofac_sdn,sdn:8340
+8342,ARAB PROJECTS COMPANY S.A. LTD.,Entity,IRAQ2,IRAQ2,11dcf3161a74318a,true,us_ofac_sdn,sdn:8342
+8359,DURAND PROPERTIES LIMITED,Entity,IRAQ2,IRAQ2,8b08e4dcf2b457dc,true,us_ofac_sdn,sdn:8359
+8365,"FARAJ, Samal Majid",Individual,IRAQ2,IRAQ2,1ab5c505a46c95b6,true,us_ofac_sdn,sdn:8365
+8366,FARTRADE HOLDINGS S.A.,Entity,IRAQ2,IRAQ2,3b3d4c2ac1988ff1,true,us_ofac_sdn,sdn:8366
+8369,"HABIB, Mohammed Turki",Individual,IRAQ2,IRAQ2,8bdd0770f81dd626,true,us_ofac_sdn,sdn:8369
+8370,HELFORD DIRECTORS LIMITED,Entity,IRAQ2,IRAQ2,9b6e3d6b382fda19,true,us_ofac_sdn,sdn:8370
+8378,"JASIM, Latif Nusayyif",Individual,IRAQ2,IRAQ2,91445efa6937e8a8,true,us_ofac_sdn,sdn:8378
+8380,"JUME'AN, George",Individual,IRAQ2,IRAQ2,8e561e97df4b6fc5,true,us_ofac_sdn,sdn:8380
+8382,"KARAGHULLY, Labeed A.",Individual,IRAQ2,IRAQ2,8e5aab35b5647f05,true,us_ofac_sdn,sdn:8382
+8384,"KHALIL, Dr. Ahmad Murtada Ahmad",Individual,IRAQ2,IRAQ2,13045e0475e48913,true,us_ofac_sdn,sdn:8384
+8388,"MOHAMED, Abdul Kader Ibrahim",Individual,IRAQ2,IRAQ2,2114ab6aaab768ad,true,us_ofac_sdn,sdn:8388
+8389,"MUBARAK, Umid Medhat",Individual,IRAQ2,IRAQ2,8a1f553a9f951b28,true,us_ofac_sdn,sdn:8389
+8399,"RZOOKI, Hanna",Individual,IRAQ2,IRAQ2,0c3bf9fcfe74812b,true,us_ofac_sdn,sdn:8399
+8406,"TALL, Aktham",Individual,IRAQ2,IRAQ2,7dbb25b600c6d1f0,true,us_ofac_sdn,sdn:8406
+8407,TARIQ ABU SHANAB EST. FOR TRADE & COMMERCE,Entity,IRAQ2,IRAQ2,066d206ff51b8426,true,us_ofac_sdn,sdn:8407
+8408,TECHNOLOGY AND DEVELOPMENT GROUP LTD,Entity,IRAQ2,IRAQ2,8be4d0716cc6b887,true,us_ofac_sdn,sdn:8408
+8409,"TIGRIS TRADING, INC.",Entity,IRAQ2,IRAQ2,63773aac9515d3f4,true,us_ofac_sdn,sdn:8409
+8413,"ZAHRAN, Yousuf",Individual,IRAQ2,IRAQ2,910fc4f4d652c557,true,us_ofac_sdn,sdn:8413
+8420,BLOTO INTERNATIONAL COMPANY,Entity,IRAQ2,IRAQ2,11257f8e88e6e2fe,true,us_ofac_sdn,sdn:8420
+8863,RAMCHARAN LTD,Entity,SDNTK,SDNTK,042605f6d11062a5,true,us_ofac_sdn,sdn:8863
+8864,RAMCHARAN BROTHERS LTD,Entity,SDNTK,SDNTK,131b54cc2d1d5827,true,us_ofac_sdn,sdn:8864
+8868,"SHALISH, Zuhayr",Individual,IRAQ2,IRAQ2,66103b154461392b,true,us_ofac_sdn,sdn:8868
+8881,"SHALISH, Asif",Individual,IRAQ2,IRAQ2,051211248c7a8a30,true,us_ofac_sdn,sdn:8881
+8883,"AHMAD, Muhammad Yunis",Individual,IRAQ2,IRAQ2,87b0c299008c410b,true,us_ofac_sdn,sdn:8883
+9329,"AL-TIKRITI, Yasir Sabawi Ibrahim Hasan",Individual,IRAQ2,IRAQ2,284dcc9e660e4a43,true,us_ofac_sdn,sdn:9329
+9330,"AL-TIKRITI, Omar Sabawi Ibrahim Hasan",Individual,IRAQ2,IRAQ2,463383638e0cca3d,true,us_ofac_sdn,sdn:9330
+9331,"AL-TIKRITI, Ayman Sabawi Ibrahim Hasan",Individual,IRAQ2,IRAQ2,92c931eb9be85532,true,us_ofac_sdn,sdn:9331
+9353,"AL-TIKRITI, Bashar Sabawi Ibrahim Hasan",Individual,IRAQ2,IRAQ2,9fb74df92cf9ea31,true,us_ofac_sdn,sdn:9353
+9354,"AL-TIKRITI, Sa'd Sabawi Ibrahim Hasan",Individual,IRAQ2,IRAQ2,699d2aae3629763c,true,us_ofac_sdn,sdn:9354
+9388,"MELGOZA TORRES, Martin",Individual,SDNTK,SDNTK,2bbd44573185df10,true,us_ofac_sdn,sdn:9388
+9392,"MARTINEZ CASAS, Carlos Mario",Individual,SDNTK,SDNTK,212b91044c253bdb,true,us_ofac_sdn,sdn:9392
+9393,"TAPIA ORTEGA, Abigail",Individual,SDNTK,SDNTK,1df848aef5840050,true,us_ofac_sdn,sdn:9393
+9394,"LOPEZ POBLANO, Beatriz Raquel",Individual,SDNTK,SDNTK,143e4fc98bd5cfa1,true,us_ofac_sdn,sdn:9394
+9395,"CARRERA YLLADES, Marisela",Individual,SDNTK,SDNTK,147540419c239604,true,us_ofac_sdn,sdn:9395
+9396,"PEREZ CASTANO, Mario Alberto",Individual,SDNTK,SDNTK,11ab56458e16e253,true,us_ofac_sdn,sdn:9396
+9398,"ARRIOLA MARQUEZ, Edgar Fernando",Individual,SDNTK,SDNTK,0d961133af1ac342,true,us_ofac_sdn,sdn:9398
+9399,"ARRIOLA MARQUEZ, Luis Raul",Individual,SDNTK,SDNTK,0ef05487b5002a9c,true,us_ofac_sdn,sdn:9399
+9400,INDIO VITORIO S. DE P.R. DE R.L. DE C.V.,Entity,SDNTK,SDNTK,00d6131205d09500,true,us_ofac_sdn,sdn:9400
+9408,AUTO EXPRESS DORADOS S.A. DE C.V.,Entity,SDNTK,SDNTK,1149e7efe1d43fb1,true,us_ofac_sdn,sdn:9408
+9412,"ARREOLA GOMEZ, Guadalupe Armando",Individual,SDNTK,SDNTK,0d64ef3dd363969b,true,us_ofac_sdn,sdn:9412
+9538,"CHAIJAMROONPHAN, Warin",Individual,SDNTK,SDNTK,15974fead5be4a5a,true,us_ofac_sdn,sdn:9538
+9549,KRADUMPORN IMPORT EXPORT COMPANY LTD.,Entity,SDNTK,SDNTK,15cf6fd2b0aa4964,true,us_ofac_sdn,sdn:9549
+9550,HATKAEW COMPANY LTD.,Entity,SDNTK,SDNTK,25c2e781e9e214aa,true,us_ofac_sdn,sdn:9550
+9552,BANGKOK SILK FLOWER COMPANY LTD.,Entity,SDNTK,SDNTK,2045938f5ddddd2d,true,us_ofac_sdn,sdn:9552
+9965,BAYT AL-MAL,Entity,SDGT,REMAINDER,00603abea3b3c3b3,true,us_ofac_sdn,sdn:9965
+9982,"PELAYO MENDOZA, Franco Arturo",Individual,SDNTK,SDNTK,27afe0afdc3ed85f,true,us_ofac_sdn,sdn:9982
+10357,"ZAMBADA NIEBLA, Monica del Rosario",Individual,SDNTK,SDNTK,2a45f075f860e560,true,us_ofac_sdn,sdn:10357
+10358,"ZAMBADA NIEBLA, Midiam Patricia",Individual,SDNTK,SDNTK,1bc2187e03edfe19,true,us_ofac_sdn,sdn:10358
+10361,ROSARIO NIEBLA CARDOZA A. EN P.,Entity,SDNTK,SDNTK,1742b6c3468541c9,true,us_ofac_sdn,sdn:10361
+10366,NUEVA INDUSTRIA DE GANADEROS DE CULIACAN S.A. DE C.V.,Entity,SDNTK,SDNTK,2647488c8a173410,true,us_ofac_sdn,sdn:10366
+10373,"AL-DULAYMI, Hasan Hashim Khalaf",Individual,IRAQ2,IRAQ2,5a9c3a1a69b01b6f,true,us_ofac_sdn,sdn:10373
+10374,"AL-TIKRITI, Ahmed Watban Ibrahim Hasan",Individual,IRAQ2,IRAQ2,4cafb147608c7007,true,us_ofac_sdn,sdn:10374
+10375,"AL-AHMAD, Ahmad Muhammad Yunis",Individual,IRAQ2,IRAQ2,6c9e083e57552130,true,us_ofac_sdn,sdn:10375
+10383,"KHAN, Shahbaz",Individual,SDNTK,SDNTK,2dcae3a2002616c0,true,us_ofac_sdn,sdn:10383
+10386,GULF CARTEL,Entity,FTO|ILLICIT-DRUGS-EO14059|SDGT|SDNTK,SDNTK,137b408c9cff261f,true,us_ofac_sdn,sdn:10386
+10589,"DUZCAN, Ceylan",Individual,SDNTK,SDNTK,01c2bb2a920db465,true,us_ofac_sdn,sdn:10589
+10592,"GHANI, Mohammad Nadeem",Individual,SDNTK,SDNTK,297699d57d5e09ba,true,us_ofac_sdn,sdn:10592
+10599,BELS FLOWERS IMPORT EXPORT BVBA,Entity,SDNTK,SDNTK,0a8cd37aaf1b3c41,true,us_ofac_sdn,sdn:10599
+10600,OFFENBACH HAUSHALTWAREN B.V.,Entity,SDNTK,SDNTK,2b72a3fca081518c,true,us_ofac_sdn,sdn:10600
+10605,SHAHBAZ TV CENTER,Entity,SDNTK,SDNTK,0e5d9251e1e635aa,true,us_ofac_sdn,sdn:10605
+10607,SHER MATCH INDUSTRIES (PVT.) LIMITED,Entity,SDNTK,SDNTK,1841353441b71f2b,true,us_ofac_sdn,sdn:10607
+10615,"MEZA GASPAR, Arturo",Individual,SDNTK,SDNTK,2dcbb07987100d5a,true,us_ofac_sdn,sdn:10615
+10621,"BELTRAN ROMERO, Mireya Denisse",Individual,SDNTK,SDNTK,25f0f7778842aee1,true,us_ofac_sdn,sdn:10621
+10627,"AGUIRRE SANCHEZ, Claudia",Individual,SDNTK,SDNTK,294197d89a799aeb,true,us_ofac_sdn,sdn:10627
+10636,"OLIVAS OJEDA, Jesus Joaquin",Individual,SDNTK,SDNTK,1b7db96e8ded0277,true,us_ofac_sdn,sdn:10636
+10638,"TOYS FACTORY, S.A. DE C.V.",Entity,SDNTK,SDNTK,165c06a13d6ec9df,true,us_ofac_sdn,sdn:10638
+10651,"COMERCIAL JOANA, S.A. DE C.V.",Entity,SDNTK,SDNTK,022e488ab5e3d2c8,true,us_ofac_sdn,sdn:10651
+10653,"COMERCIALIZADORA TOQUIN, S.A. DE C.V.",Entity,SDNTK,SDNTK,18d5455211a3cb4c,true,us_ofac_sdn,sdn:10653
+10655,"COMERCIAL DOMELY, S.A. DE C.V",Entity,SDNTK,SDNTK,0db592c72897751b,true,us_ofac_sdn,sdn:10655
+10898,"MOHAMMADHASNI, Haji Asad Khan Zarkari",Individual,SDNTK,SDNTK,03e3c56451897fc6,true,us_ofac_sdn,sdn:10898
+10899,"BELTRAN LEYVA, Marcos Arturo",Individual,SDNTK,SDNTK,0a346ad44fea3ac3,true,us_ofac_sdn,sdn:10899
+10900,BELTRAN LEYVA ORGANIZATION,Entity,ILLICIT-DRUGS-EO14059|SDNTK,SDNTK,1d000655ddb91bb7,true,us_ofac_sdn,sdn:10900
+10984,"LUCERO DE MARTINEZ, Sandra",Individual,SDNTK,SDNTK,1a97a8288f0f5c7e,true,us_ofac_sdn,sdn:10984
+10987,"GARCIA DURAN, Maria Del Rosario",Individual,SDNTK,SDNTK,0fba95e5e01f00b3,true,us_ofac_sdn,sdn:10987
+10996,BIOESPORT S.A. DE C.V.,Entity,SDNTK,SDNTK,014de453416f310e,true,us_ofac_sdn,sdn:10996
+10997,FLETES Y TRANSPORTES GAXGAR S.A. DE C.V.,Entity,SDNTK,SDNTK,05c9817e726688e4,true,us_ofac_sdn,sdn:10997
+11237,"LADINO AVILA, Jaime Arturo",Individual,SDNTK,SDNTK,0cbe52c7ea7b5c87,true,us_ofac_sdn,sdn:11237
+11238,"AMEZCUA CONTRERAS, Patricia",Individual,SDNTK,SDNTK,1532a6baf709ae1a,true,us_ofac_sdn,sdn:11238
+11270,"KHINE, Oo Oo",Individual,SDNTK,SDNTK,2a06061e2273e8b2,true,us_ofac_sdn,sdn:11270
+11273,"AKIRAPHOKIN, Thit",Individual,SDNTK,SDNTK,1900d1cbe070f575,true,us_ofac_sdn,sdn:11273
+11280,"SHIH, Kuo Neng",Individual,SDNTK,SDNTK,0bc4a9ec745369ae,true,us_ofac_sdn,sdn:11280
+11283,"KYA, La Bo",Individual,SDNTK,SDNTK,0905997ca45d125c,true,us_ofac_sdn,sdn:11283
+11291,"WEI, Hsueh Yuan",Individual,SDNTK,SDNTK,2b60995b2a5bbf73,true,us_ofac_sdn,sdn:11291
+11296,"TET KHAM GEMS CO., LTD.",Entity,SDNTK,SDNTK,1ee45b9d3a8e6e7d,true,us_ofac_sdn,sdn:11296
+11308,YANGON AIRWAYS COMPANY LIMITED,Entity,SDNTK,SDNTK,1d9b79555ea1093f,true,us_ofac_sdn,sdn:11308
+11396,"PORTILLA BARRAZA, Jorge",Individual,SDNTK,SDNTK,1bfcb5723b2f893a,true,us_ofac_sdn,sdn:11396
+11406,PERUVIAN PRECIOUS METALS S.A.C.,Entity,SDNTK,SDNTK,07927d927617b275,true,us_ofac_sdn,sdn:11406
+11408,URANTIA SERVICES S.A.,Entity,SDNTK,SDNTK,089488c1d5c992e6,true,us_ofac_sdn,sdn:11408
+11413,REPRESENTACIONES ORIENTE S.R.L.,Entity,SDNTK,SDNTK,076af24971112788,true,us_ofac_sdn,sdn:11413
+11438,CARTEL DEL NORESTE,Entity,FTO|ILLICIT-DRUGS-EO14059|SDGT|SDNTK|TCO,SDNTK,0a063c53f440e658,true,us_ofac_sdn,sdn:11438
+11501,"RENDON HERRERA, Daniel",Individual,SDNTK,SDNTK,1854181cdbaa5840,true,us_ofac_sdn,sdn:11501
+11588,"LA HACIENDA (USA), LLC",Entity,SDNTK,SDNTK,1f6a3c7deba11653,true,us_ofac_sdn,sdn:11588
+11654,"LEYVA ESCANDON, Edgardo",Individual,SDNTK,SDNTK,2537e580e7e381fe,true,us_ofac_sdn,sdn:11654
+11726,"BELTRAN LEYVA, Hector",Individual,SDNTK,SDNTK,299a221b5bc33798,true,us_ofac_sdn,sdn:11726
+11795,GRUPO MBS - KAYUM CENTRE,Entity,SDNTK,SDNTK,1fddf8678a4a3e43,true,us_ofac_sdn,sdn:11795
+11796,MAPUTO SHOPPING CENTRE,Entity,SDNTK,SDNTK,03dd7ec2b6117431,true,us_ofac_sdn,sdn:11796
+11816,"MOLINA CUBILLOS, Alba Judith",Individual,SDNTK,SDNTK,29419919b859f7a0,true,us_ofac_sdn,sdn:11816
+11834,"GUTIERREZ GARAVITO, Armando",Individual,SDNTK,SDNTK,074c7de343aa8e7f,true,us_ofac_sdn,sdn:11834
+11841,LOGISTICA Y TRANSPORTE NORVAL LTDA.,Entity,SDNTK,SDNTK,0c82d6f90d3d1d5c,true,us_ofac_sdn,sdn:11841
+11849,MODERNA EXPRESS TRANSPORTE DE CARGA LTDA.,Entity,SDNTK,SDNTK,126ad9cd888c8db1,true,us_ofac_sdn,sdn:11849
+11854,INVERSIONES TALADRO LTDA.,Entity,SDNTK,SDNTK,14a71775c56ccd62,true,us_ofac_sdn,sdn:11854
+11866,ESTACION DE SERVICIO LA TURQUESA,Entity,SDNTK,SDNTK,24520ae58957510a,true,us_ofac_sdn,sdn:11866
+11869,EMPRESA DE EMPLEOS TEMPORALES LA UNICA LTDA.,Entity,SDNTK,SDNTK,2c5347b579d948cf,true,us_ofac_sdn,sdn:11869
+11900,"USUGA DAVID, Dairo Antonio",Individual,ILLICIT-DRUGS-EO14059|SDNTK,SDNTK,16a7471569ff07f9,true,us_ofac_sdn,sdn:11900
+11902,"RENDON HERRERA, Freddy Enrique",Individual,SDNTK,SDNTK,11e0d2efc53ec60e,true,us_ofac_sdn,sdn:11902
+11922,"VELASQUEZ CABALLERO, Ivan",Individual,SDNTK,SDNTK,0ccdc98c604c1f29,true,us_ofac_sdn,sdn:11922
+11938,"MENDOZA CONTRERAS, Cipriano",Individual,SDNTK,SDNTK,13af24055651cac4,true,us_ofac_sdn,sdn:11938
+11943,"MEDINA ROJAS, Eleazar",Individual,SDNTK,SDNTK,169a23b317274542,true,us_ofac_sdn,sdn:11943
+11948,"REYES ENRIQUEZ, Luis",Individual,SDNTK,SDNTK,00fb770e77a34a45,true,us_ofac_sdn,sdn:11948
+11961,"ROMO LOPEZ, Martin",Individual,SDNTK,SDNTK,2333033f5f805373,true,us_ofac_sdn,sdn:11961
+12019,"BANDO, Haji",Individual,SDNTK,SDNTK,214948fa9ef7a79f,true,us_ofac_sdn,sdn:12019
+12170,"OLVERA ESTRADA, Arturo",Individual,SDNTK,SDNTK,148d98ffb97e62c2,true,us_ofac_sdn,sdn:12170
+12173,"MASSA CAMACHO, Eduardo",Individual,SDNTK,SDNTK,0abf7c43446b98fb,true,us_ofac_sdn,sdn:12173
+12177,"URREA LENIS, Jair Fernando",Individual,SDNTK,SDNTK,04bc87cba4333b61,true,us_ofac_sdn,sdn:12177
+12184,"FLORES CACHO, Alejandro",Individual,SDNTK,SDNTK,19cd2bca04f4583e,true,us_ofac_sdn,sdn:12184
+12193,"MANTENIMIENTO, AERONAUTICA, TRANSPORTE, Y SERVICIOS AEREOS S.A. DE C.V.",Entity,SDNTK,SDNTK,2416aaf25324a292,true,us_ofac_sdn,sdn:12193
+12195,GENETICA IMPORT-EXPORT S.P.R. DE R.L. DE C.V.,Entity,SDNTK,SDNTK,1550fcad76f70716,true,us_ofac_sdn,sdn:12195
+12313,KOREA DAESONG GENERAL TRADING CORPORATION,Entity,DPRK,REMAINDER,0083e3fedadd9871,true,us_ofac_sdn,sdn:12313
+12419,"SERRALDE PLAZA, Carlos Fernando",Individual,SDNTK,SDNTK,0e6c47e161f98006,true,us_ofac_sdn,sdn:12419
+12423,"DORIA CASTILLO, Danit Dario",Individual,SDNTK,SDNTK,220c634722872a73,true,us_ofac_sdn,sdn:12423
+12468,ELLISSA SHIPPING,Entity,SDNTK,SDNTK,04ba90a7d99d4824,true,us_ofac_sdn,sdn:12468
+12474,COMERCIAL PLANETA,Entity,SDNTK,SDNTK,03b963fd73ec3b30,true,us_ofac_sdn,sdn:12474
+12543,PHENICIA SHIPPING OFFSHORE SARL,Entity,SDNTK,SDNTK,14797a0cb707efa6,true,us_ofac_sdn,sdn:12543
+12547,GOLDI ELECTRONICS S.A.,Entity,SDNTK,SDNTK,139fd2107cd24a27,true,us_ofac_sdn,sdn:12547
+12576,"BAYIK, Cemil",Individual,SDNTK,SDNTK,08bb075f86f740a5,true,us_ofac_sdn,sdn:12576
+12581,NEW ANSARI MONEY EXCHANGE,Entity,SDNTK,SDNTK,04c66b54f6b3ee3c,true,us_ofac_sdn,sdn:12581
+12584,CONNECT TELECOM GENERAL TRADING LLC,Entity,SDNTK,SDNTK,295dd194c0becd41,true,us_ofac_sdn,sdn:12584
+12588,"KHAN, Haji Mohammad",Individual,SDNTK,SDNTK,0be4dd07b70bff6d,true,us_ofac_sdn,sdn:12588
+12595,"HAJI ABDUL QAYOUM, Eissa Jan",Individual,SDNTK,SDNTK,074997924bfa51a2,true,us_ofac_sdn,sdn:12595
+12624,"ISHAQZAI, Haji Lal Jan",Individual,SDNTK,SDNTK,2efdb2522db2fba9,true,us_ofac_sdn,sdn:12624
+12686,WAATASEMU CHARITY ASSOCIATION,Entity,LIBYA2,REMAINDER,0011a9600412ef22,true,us_ofac_sdn,sdn:12686
+12784,"BELLOSO RODRIGUEZ, Miguel Angel",Individual,SDNTK,SDNTK,00588938b1495273,true,us_ofac_sdn,sdn:12784
+12894,IMPORTADORA SILVANIA,Entity,SDNTK,SDNTK,147545601dac6813,true,us_ofac_sdn,sdn:12894
+12976,JUNIOR INTERNATIONAL S.A.,Entity,SDNTK,SDNTK,0df50502f604dd46,true,us_ofac_sdn,sdn:12976
+12980,MICRO EMPRESA ASHQUI,Entity,SDNTK,SDNTK,1810fa5d94ce2107,true,us_ofac_sdn,sdn:12980
+12983,AGROPECUARIA LA PERLA LTDA.,Entity,SDNTK,SDNTK,220cc4e89bced065,true,us_ofac_sdn,sdn:12983
+13005,"FIGUEROA GOMEZ, Hassein Eduardo",Individual,SDNTK,SDNTK,034816400d45888a,true,us_ofac_sdn,sdn:13005
+13012,"EL PALOMAR CAR WASH, S.A. DE C.V.",Entity,SDNTK,SDNTK,231a726bcaf4ab4a,true,us_ofac_sdn,sdn:13012
+13015,"GRUPO COMERCIAL SAN BLAS, S.A. DE C.V.",Entity,SDNTK,SDNTK,143a70a579947288,true,us_ofac_sdn,sdn:13015
+13018,PUNTO FARMACEUTICO S.A. DE C.V.,Entity,SDNTK,SDNTK,25bce11a899c55be,true,us_ofac_sdn,sdn:13018
+13023,"ALVAREZ ZEPEDA, Oscar",Individual,SDNTK,SDNTK,2c079c95e99889b2,true,us_ofac_sdn,sdn:13023
+13128,NEW AHMADI LTD.,Entity,SDNTK,SDNTK,0545de7f7de2a38a,true,us_ofac_sdn,sdn:13128
+13149,"GUZMAN LOPEZ, Ovidio",Individual,ILLICIT-DRUGS-EO14059|SDNTK,SDNTK,15efc182ecd4b345,true,us_ofac_sdn,sdn:13149
+13171,"SOTO GASTELUM, Jose Antonio",Individual,SDNTK,SDNTK,11fede558383f7ff,true,us_ofac_sdn,sdn:13171
+13360,"IBARRA CARDONA, Carlos Jesus Ivan",Individual,SDNTK,SDNTK,1fcb4bdf99479eb0,true,us_ofac_sdn,sdn:13360
+13377,"GUBEREK RAVINOVICZ, Isaac Perez",Individual,SDNTK,SDNTK,22d99cb46bca1c80,true,us_ofac_sdn,sdn:13377
+13407,"ESPARRAGOZA GASTELUM, Juan Ignacio",Individual,SDNTK,SDNTK,28195092463e4284,true,us_ofac_sdn,sdn:13407
+13413,"GUZMAN OCHOA, Ulises",Individual,SDNTK,SDNTK,1fd05f6cc5f33c58,true,us_ofac_sdn,sdn:13413
+13414,"PONCE FELIX, Martin Humberto",Individual,SDNTK,SDNTK,041e5bdbd4e4c2ed,true,us_ofac_sdn,sdn:13414
+13428,"IBARRA FAVILA, Jose Gerardo",Individual,SDNTK,SDNTK,2d8a598f40b9611f,true,us_ofac_sdn,sdn:13428
+13430,CONSTRUCTORA W.L.,Entity,SDNTK,SDNTK,1e886fdee42791e0,true,us_ofac_sdn,sdn:13430
+13446,"BUENOS AIRES SERVICIOS, S.A. DE C.V.",Entity,SDNTK,SDNTK,21cb271315572933,true,us_ofac_sdn,sdn:13446
+13465,"GASODIESEL Y SERVICIOS ANCONA, S.A. DE C.V.",Entity,SDNTK,SDNTK,095c1485877a1ad5,true,us_ofac_sdn,sdn:13465
+15005,ROSHAN MONEY EXCHANGE,Entity,SDGT,REMAINDER,0080ef200ca5991b,true,us_ofac_sdn,sdn:15005
+15014,"SERVICIOS CHULAVISTA, S.A. DE C.V.",Entity,SDNTK,SDNTK,223ddf13f8018fdd,true,us_ofac_sdn,sdn:15014
+15114,AUTO SERVICIO JATZIRY S.A. DE C.V.,Entity,SDNTK,SDNTK,1bc1074fedc0fe12,true,us_ofac_sdn,sdn:15114
+15182,AUTO PARTES HANDAL S. DE R.L. DE C.V.,Entity,SDNTK,SDNTK,0916f48cb1d2d288,true,us_ofac_sdn,sdn:15182
+15337,"URBANIZADORA NUEVA ITALIA, S.A. DE C.V.",Entity,SDNTK,SDNTK,227eb0c8486398c5,true,us_ofac_sdn,sdn:15337
+15610,"EL KHAIRY, Hamad",Individual,SDGT,REMAINDER,00332db67e78a0f2,true,us_ofac_sdn,sdn:15610
+15654,"RAMIREZ PERALES, Jose Odilon",Individual,SDNTK,SDNTK,002911e73f61ce45,true,us_ofac_sdn,sdn:15654
+15678,"RODRIGUEZ OLIVERA, Rosalina",Individual,SDNTK,SDNTK,1ba1992eb66bb0ac,true,us_ofac_sdn,sdn:15678
+15688,"REYES MAGANA, Felipe",Individual,SDNTK,SDNTK,22e8bcf41f3fdb1b,true,us_ofac_sdn,sdn:15688
+15691,"PARQUE ACUATICO LOS CASCABELES, S.A. DE C.V.",Entity,SDNTK,SDNTK,141e98598c30cdd2,true,us_ofac_sdn,sdn:15691
+15699,"RANCHO AGRICOLA GANADERO LOS MEZQUITES, S.A. DE C.V.",Entity,SDNTK,SDNTK,0ca7dd94e38b8f65,true,us_ofac_sdn,sdn:15699
+15701,"GRIMBERG DE GUBEREK, Sara",Individual,SDNTK,SDNTK,0f8bc44939e00163,true,us_ofac_sdn,sdn:15701
+15709,G&G INTERNACIONAL S.A.S.,Entity,SDNTK,SDNTK,04a3ffa6e526c9d0,true,us_ofac_sdn,sdn:15709
+15710,INVERSIONES GILFE S.A.,Entity,SDNTK,SDNTK,27c750004b4fad3e,true,us_ofac_sdn,sdn:15710
+15711,ISSA EMPRESA UNIPERSONAL,Entity,SDNTK,SDNTK,0f1f625ad3c9a37f,true,us_ofac_sdn,sdn:15711
+15784,"VALDEZ RODRIGUEZ, Manuel Arturo",Individual,SDNTK,SDNTK,20908ae2938294d4,true,us_ofac_sdn,sdn:15784
+15847,LOS CACHIROS,Entity,SDNTK,SDNTK,2dc0df09f4cc0481,true,us_ofac_sdn,sdn:15847
+15854,T.F.M.C. THE FOOD MANAGEMENT CORPORATION LTD,Entity,SDNTK,SDNTK,134f00c5ac946f72,true,us_ofac_sdn,sdn:15854
+15861,"GONZALEZ MUNIZ, Esperanza Maria",Individual,SDNTK,SDNTK,1af778835be5a601,true,us_ofac_sdn,sdn:15861
+15867,INVERSORA PANACOL S.A.,Entity,SDNTK,SDNTK,1f8b13bbc5debe15,true,us_ofac_sdn,sdn:15867
+16177,"RIVERA MARADIAGA, Maira Lizeth",Individual,SDNTK,SDNTK,08f5468596feb222,true,us_ofac_sdn,sdn:16177
+16181,"INMOBILIARIA RIVERA MARADIAGA, S.A. DE C.V.",Entity,SDNTK,SDNTK,2d3728ef11604c11,true,us_ofac_sdn,sdn:16181
+16225,"LAHBOUS, Mohamed",Individual,SDGT,REMAINDER,009cdbf6a27acef1,true,us_ofac_sdn,sdn:16225
+16371,"LOPEZ LONDONO, Henry de Jesus",Individual,SDNTK,SDNTK,1388fa4fe93ae5d1,true,us_ofac_sdn,sdn:16371
+16469,H Y J COMERCIALIZADORA INTERNACIONAL LTDA,Entity,SDNTK,SDNTK,2041e5e162dab6c5,true,us_ofac_sdn,sdn:16469
+16625,"VALLE VALLE, Luis Alonso",Individual,SDNTK,SDNTK,2bd846a94de8ca22,true,us_ofac_sdn,sdn:16625
+16630,INVERSIONES YOSARY,Entity,SDNTK,SDNTK,056f1c98ad590aee,true,us_ofac_sdn,sdn:16630
+16795,GLOBANTY S.A.S.,Entity,SDNTK,SDNTK,1b252890dcac49a6,true,us_ofac_sdn,sdn:16795
+16839,PANYA AG,Entity,SDNTK,SDNTK,18a05256129dcd28,true,us_ofac_sdn,sdn:16839
+16859,NORTH GROUP HOLDING CORP.,Entity,SDNTK,SDNTK,22bc7f731c4515ea,true,us_ofac_sdn,sdn:16859
+16902,"LOUIE, Francine Denise",Individual,SDNTK,SDNTK,10d1568bc635675e,true,us_ofac_sdn,sdn:16902
+16966,"ECHEVERRI PAREJA, Oscar Alonso",Individual,SDNTK,SDNTK,067241b898a4139f,true,us_ofac_sdn,sdn:16966
+17008,"BUSTAMANTE JARAMILLO, Luis Carlos",Individual,SDNTK,SDNTK,2566286a8c6f0b7a,true,us_ofac_sdn,sdn:17008
+17117,"ISAZA SANCHEZ, Felix Alberto",Individual,SDNTK,SDNTK,21648996cc4aeacc,true,us_ofac_sdn,sdn:17117
+17119,"ARREDONDO ORTIZ, Carlos Arturo",Individual,SDNTK,SDNTK,1058b4709d974f5e,true,us_ofac_sdn,sdn:17119
+17159,"ARAUJO URIARTE, Alejandra",Individual,SDNTK,SDNTK,2144966ea849de54,true,us_ofac_sdn,sdn:17159
+17278,"KELMENDI, Liridon",Individual,SDNTK,SDNTK,017e829c07303439,true,us_ofac_sdn,sdn:17278
+17869,"NIETO GONZALEZ, Rogelio",Individual,SDNTK,SDNTK,126b4a98af9f0317,true,us_ofac_sdn,sdn:17869
+18090,"GRUPO DIJEMA, S.A. DE C.V.",Entity,SDNTK,SDNTK,10946e14c5639d70,true,us_ofac_sdn,sdn:18090
+18097,"SANCHEZ CARLON, Diana Maria",Individual,SDNTK,SDNTK,1d9e13623e892acd,true,us_ofac_sdn,sdn:18097
+18368,"JJGON, S.P.R. DE R.L. DE C.V.",Entity,SDNTK,SDNTK,14264c717df7140c,true,us_ofac_sdn,sdn:18368
+18571,"MAYA RIOS, Edison",Individual,SDNTK,SDNTK,0cbb735d83d001a2,true,us_ofac_sdn,sdn:18571
+18822,AGRICOLA TAVO S.P.R. DE R.L.,Entity,SDNTK,SDNTK,0d3d42abf86bd08f,true,us_ofac_sdn,sdn:18822
+18825,DESARROLLO AGRICOLA VERDE DE SAYULA S.P.R. DE R.L.,Entity,SDNTK,SDNTK,191252bc8ed5c985,true,us_ofac_sdn,sdn:18825
+18826,STEP LATINAMEDICA S.A. DE C.V.,Entity,SDNTK,SDNTK,07c7d271336a8250,true,us_ofac_sdn,sdn:18826
+18940,"WAKED HATUM, Nidal Ahmed",Individual,SDNTK,SDNTK,10465b93369c5775,true,us_ofac_sdn,sdn:18940
+18969,"RIVERA SANDOVAL, Hector Librado",Individual,SDNTK,SDNTK,27611a76ea0ad763,true,us_ofac_sdn,sdn:18969
+18970,"ESPINOZA RODRIGUEZ, Maria de Jesus",Individual,SDNTK,SDNTK,042ed803aacddbf6,true,us_ofac_sdn,sdn:18970
+18971,"BARRAZA ACEVES, Jose Carlos",Individual,SDNTK,SDNTK,14fe460b35d294af,true,us_ofac_sdn,sdn:18971
+19150,"NARANJO ABAJO, S.A.",Entity,SDNTK,SDNTK,1c5450647fb25f0f,true,us_ofac_sdn,sdn:19150
+19155,"XZACT, INC.",Entity,SDNTK,SDNTK,059945b6b73dfa90,true,us_ofac_sdn,sdn:19155
+19159,"V.P. PROPERTIES, INC.",Entity,SDNTK,SDNTK,05a4dbc3ba4f4e42,true,us_ofac_sdn,sdn:19159
+19161,SEGOVIA IMPORT & EXPORT CORP.,Entity,SDNTK,SDNTK,05682613951b7b94,true,us_ofac_sdn,sdn:19161
+19170,"LA GRAN VIA ZONA LIBRE, S.A.",Entity,SDNTK,SDNTK,19812d8cc8d6ae6c,true,us_ofac_sdn,sdn:19170
+19174,INMOBILIARIA J & M CORP,Entity,SDNTK,SDNTK,0c2d3a3eaacd21c4,true,us_ofac_sdn,sdn:19174
+19184,"LA RIVIERA, PANAMA, S.A.",Entity,SDNTK,SDNTK,27f479eeb308fca1,true,us_ofac_sdn,sdn:19184
+19186,"WAREHOUSE OUTLETS, S.A.",Entity,SDNTK,SDNTK,09e21af70d01f584,true,us_ofac_sdn,sdn:19186
+19187,"TROLL PROPERTIES, INC.",Entity,SDNTK,SDNTK,1d99d5ccecd5a4e8,true,us_ofac_sdn,sdn:19187
+19199,"MEDAL INVERSIONES, S.A.",Entity,SDNTK,SDNTK,09bd30934ecececf,true,us_ofac_sdn,sdn:19199
+19429,HASSAN DRUG TRAFFICKING ORGANIZATION,Entity,SDNTK,SDNTK,297ec4f9513137bb,true,us_ofac_sdn,sdn:19429
+19492,ACADEMY OF NATIONAL DEFENSE SCIENCE,Entity,NPWMD,REMAINDER,00b2287be57d98c9,true,us_ofac_sdn,sdn:19492
+19640,"GAZPROM INVEST, OOO",Entity,RUSSIA-EO14024|UKRAINE-EO13662,REMAINDER,0075610246497cd4,true,us_ofac_sdn,sdn:19640
+19912,"MURILLO SALAZAR, Claudia Julieta",Individual,SDNTK,SDNTK,24a926626d67ff04,true,us_ofac_sdn,sdn:19912
+19936,AVICAL S.A.,Entity,SDNTK,SDNTK,1216054d146fe9a7,true,us_ofac_sdn,sdn:19936
+20111,"GONZALEZ VALENCIA, Arnulfo",Individual,SDNTK,SDNTK,098c712f87a8e309,true,us_ofac_sdn,sdn:20111
+20253,YAKIMA TRADING CORPORATION,Entity,SDNTK,SDNTK,054c63d1d0431697,true,us_ofac_sdn,sdn:20253
+20257,"SERVICIOS TECNOLOGICOS INDUSTRIALES, C.A.",Entity,SDNTK,SDNTK,135d844c658d99fa,true,us_ofac_sdn,sdn:20257
+20261,"1425 BRICKELL AVENUE UNIT 46B, LLC",Entity,SDNTK,SDNTK,1511b811fee2e024,true,us_ofac_sdn,sdn:20261
+20905,"HIGUITA PERALTA, Jose Efer",Individual,SDNTK,SDNTK,279ed6ee74be5e17,true,us_ofac_sdn,sdn:20905
+21026,"FLORES ESPARZA, Moises",Individual,SDNTK,SDNTK,28d76108711748b8,true,us_ofac_sdn,sdn:21026
+21028,"FLORES GOMEZ, Felipe",Individual,SDNTK,SDNTK,099fc51cb99058ad,true,us_ofac_sdn,sdn:21028
+21035,"CORDERO CARDENAS, Jose Antonio",Individual,SDNTK,SDNTK,136ce3356f896a9c,true,us_ofac_sdn,sdn:21035
+21073,"CAMELIAS BAR, S.A. DE C.V.",Entity,SDNTK,SDNTK,1cd533cc534f1e10,true,us_ofac_sdn,sdn:21073
+21086,"CORPORATIVO SOSVAL, S.A. DE C.V.",Entity,SDNTK,SDNTK,202ce7e028c36f49,true,us_ofac_sdn,sdn:21086
+21089,"CIRCULO REPRESENTACIONES INTERNACIONALES, S. DE R.L. DE C.V.",Entity,SDNTK,SDNTK,1346d2b87c3ca1ad,true,us_ofac_sdn,sdn:21089
+21091,"FC GRUPO EMPRESARIAL, S.A. DE C.V.",Entity,SDNTK,SDNTK,01b1184a3b55b4c7,true,us_ofac_sdn,sdn:21091
+21103,"LOLA LOLITA 1110, S. DE R.L. DE C.V.",Entity,SDNTK,SDNTK,281463092b9fc50c,true,us_ofac_sdn,sdn:21103
+21116,"RODRIGUEZ LOPEZ, S.A. DE C.V.",Entity,SDNTK,SDNTK,00f0f4fa1831ae9d,true,us_ofac_sdn,sdn:21116
+21121,"MONTALVA INMOBILIARIA, S.A. DE C.V.",Entity,SDNTK,SDNTK,049a8f6f2547febf,true,us_ofac_sdn,sdn:21121
+21559,ZIST TAJHIZ POOYESH COMPANY,Entity,IFSR|NPWMD,REMAINDER,006d4c6ce8bda7e3,true,us_ofac_sdn,sdn:21559
+21569,"AVILA ROCHA, Maria Monserrat",Individual,SDNTK,SDNTK,1dd81801443b7c64,true,us_ofac_sdn,sdn:21569
+21576,"FELIXTAPIA, S.C. DE R.L. DE C.V.",Entity,SDNTK,SDNTK,2e742cba7d669232,true,us_ofac_sdn,sdn:21576
+21582,"RUELAS AVILA, Patricia Lourdes",Individual,SDNTK,SDNTK,0b95769c1d2306f0,true,us_ofac_sdn,sdn:21582
+21585,"SANCHEZ MEDRANO, Pedro",Individual,SDNTK,SDNTK,11835ad2e68a13f6,true,us_ofac_sdn,sdn:21585
+21844,"HAKIMZADA, Harmohan Singh",Individual,SDNTK,SDNTK,028af162eb2da6ec,true,us_ofac_sdn,sdn:21844
+23224,"CHU, Na",Individual,SDNTK,SDNTK,05655e08535cb837,true,us_ofac_sdn,sdn:23224
+23365,"LEONE MARTINEZ, Miguel Jose",Individual,SDNTK,SDNTK,089a2d307785740e,true,us_ofac_sdn,sdn:23365
+23607,"RINCON CASTILLO, Gilberto",Individual,SDNTK,SDNTK,0960371769fa96fe,true,us_ofac_sdn,sdn:23607
+23650,"EBERAHIM, Abbas",Individual,TCO,REMAINDER,0063ebeef5a58807,true,us_ofac_sdn,sdn:23650
+23885,"RODRIGUEZ ESPINOZA, Mario Antonio",Individual,SDNTK,SDNTK,052e2109622f1139,true,us_ofac_sdn,sdn:23885
+23887,"GRUPO CONTROL 2004, C.A.",Entity,SDNTK,SDNTK,160236d65012f8a0,true,us_ofac_sdn,sdn:23887
+23888,"GRUPO CONTROL SYSTEM 2004, C.A.",Entity,SDNTK,SDNTK,1196e6663eb59275,true,us_ofac_sdn,sdn:23888
+23891,"MATSUNICHI OIL TRAEADEZ 12, C.A.",Entity,SDNTK,SDNTK,1b518141db2748d2,true,us_ofac_sdn,sdn:23891
+23898,"PLM TRANSPORTE, C.A.",Entity,SDNTK,SDNTK,06bd720038487874,true,us_ofac_sdn,sdn:23898
+23901,DMI TRADING INC.,Entity,SDNTK,SDNTK,112a674b0c92c581,true,us_ofac_sdn,sdn:23901
+23904,VIC DEL INC. (OFF SHORE),Entity,SDNTK,SDNTK,10c7d802e3a2fdb1,true,us_ofac_sdn,sdn:23904
+23905,"INVERSIONES MALAMAR R, C.A.",Entity,SDNTK,SDNTK,23a40b43ad43c055,true,us_ofac_sdn,sdn:23905
+24473,"AZARPISHEH, Mehdi",Individual,IFSR|IRGC|SDGT,REMAINDER,007dfdaa08d7e970,true,us_ofac_sdn,sdn:24473
+25308,"YAN, Xiaobing",Individual,SDNTK,SDNTK,123fdc77c1362fb1,true,us_ofac_sdn,sdn:25308
+25693,"ROSAS CAMBA, Liliana",Individual,SDNTK,SDNTK,08b6c2c2980a4ce9,true,us_ofac_sdn,sdn:25693
+26062,"A&A ESTUDIO ARQUITECTONICO, S. DE R.L. DE C.V.",Entity,SDNTK,SDNTK,02be346fdb08c919,true,us_ofac_sdn,sdn:26062
+26145,"CASTRO CORDERO, Natanael",Individual,SDNTK,SDNTK,23b350c861dceab8,true,us_ofac_sdn,sdn:26145
+26151,SUPLINKA SRL,Entity,SDNTK,SDNTK,0deb96cc6790867e,true,us_ofac_sdn,sdn:26151
+26162,"NUNEZ MOLINA, Adelmo",Individual,SDNTK,SDNTK,187f61e646671360,true,us_ofac_sdn,sdn:26162
+26212,TINDAYA PROPERTIES OF NEW YORK CORP.,Entity,VENEZUELA-EO13850,REMAINDER,006aefa8009b5d3b,true,us_ofac_sdn,sdn:26212
+26413,GOLDPHARMA DRUG TRAFFICKING & MONEY LAUNDERING ORGANIZATION,Entity,SDNTK,SDNTK,030252abe1ecca3c,true,us_ofac_sdn,sdn:26413
+26468,SMILE TECHNOLOGIES CANADA LTD,Entity,SDNTK,SDNTK,18cec2d41af346a2,true,us_ofac_sdn,sdn:26468
+26470,HIGH NUTRITION SOCIEDAD DE RESPONSABILIDAD LIMITADA,Entity,SDNTK,SDNTK,06cda00d9fcca5ce,true,us_ofac_sdn,sdn:26470
+26586,"SMILEPAYMENTS, LLC",Entity,SDNTK,SDNTK,2286a7d052d80f9b,true,us_ofac_sdn,sdn:26586
+26604,SMILE TECHNOLOGIES S.A. LLC,Entity,SDNTK,SDNTK,10fb8513dae0cce3,true,us_ofac_sdn,sdn:26604
+27271,"AKBARI, Mohammadreza Ali",Individual,SDGT,REMAINDER,002211d12b96ca96,true,us_ofac_sdn,sdn:27271
+28172,NOUMAYRIYE 1057 SAL,Entity,SDGT,REMAINDER,00b2ee87c3a75dd3,true,us_ofac_sdn,sdn:28172
+30171,"RODRIGUEZ SERRANO, Lucio",Individual,SDNTK,SDNTK,277de3e2bf4f7e2a,true,us_ofac_sdn,sdn:30171
+30268,LAS INGENIERIAS S.A.S.,Entity,SDNTK,SDNTK,19ea7551adb37b4e,true,us_ofac_sdn,sdn:30268
+30517,"ASTREIKA, Alyaksandr Vyachaslavavich",Individual,BELARUS,REMAINDER,00adf3692fb69ab8,true,us_ofac_sdn,sdn:30517
+30880,INFORMATSIYNE AGENSTVO ONLI N'YUZ TOV,Entity,ELECTION-EO13848,REMAINDER,008aad9000d0b6ae,true,us_ofac_sdn,sdn:30880
+31005,"CITY PLAZA, SOCIEDAD ANOMINA DE CAPITAL VARIABLE",Entity,SDNTK,SDNTK,21d5905aa31f6fef,true,us_ofac_sdn,sdn:31005
+31144,"GUDINO HARO, Francisco Javier",Individual,ILLICIT-DRUGS-EO14059|SDGT|SDNTK,SDNTK,0f2e3fa720f7942a,true,us_ofac_sdn,sdn:31144
+31948,"TSELIKAVIETS, Iryna Aliaksandrawna",Individual,BELARUS,REMAINDER,007fadd7813ed373,true,us_ofac_sdn,sdn:31948
+32335,"DIAZ DE LEON SAUCEDA, Cesar Enrique",Individual,SDNTK,SDNTK,07f96af536d21925,true,us_ofac_sdn,sdn:32335
+32499,"ROCHIN HURTADO, Meliton",Individual,SDNTK,SDNTK,2076a9f0f2912efc,true,us_ofac_sdn,sdn:32499
+32500,"MARTINEZ RENTERIA, Gilberto",Individual,SDNTK,SDNTK,17eeb4e910e7f17e,true,us_ofac_sdn,sdn:32500
+32501,"PINEDA ARMENTA, Leonardo",Individual,SDNTK,SDNTK,1ad0f6eabf858f19,true,us_ofac_sdn,sdn:32501
+33014,POLIGONO SANTA MARTA S.A.S.,Entity,SDNTK,SDNTK,2aa1d4e39f0f0cb4,true,us_ofac_sdn,sdn:33014
+33256,"KAZEMI, Mohammad Reza",Individual,IFSR|SDGT,REMAINDER,00bd0430a3f3b340,true,us_ofac_sdn,sdn:33256
+34616,ARIMERO HOLDING LIMITED,Entity,RUSSIA-EO14024,REMAINDER,00150d4a183aec8a,true,us_ofac_sdn,sdn:34616
+34674,PSB BIZNES OOO,Entity,RUSSIA-EO14024,REMAINDER,00269e6fd26d323f,true,us_ofac_sdn,sdn:34674
+35448,"PAYKIN, Boris Romanovich",Individual,RUSSIA-EO14024,REMAINDER,0026c684103f52dc,true,us_ofac_sdn,sdn:35448
+35563,"BOGUSLAWSKI, Irek Borisovich",Individual,RUSSIA-EO14024,REMAINDER,009de03bfdeb657b,true,us_ofac_sdn,sdn:35563
+36063,PUBLIC JOINT STOCK COMPANY AMURSKY SHIPBUILDING PLANT,Entity,RUSSIA-EO14024,REMAINDER,00102c0dd6c31c95,true,us_ofac_sdn,sdn:36063
+36422,LIMITED LIABILITY COMPANY SBERBANK REAL ESTATE CENTER,Entity,RUSSIA-EO14024,REMAINDER,0066490b35ebea0b,true,us_ofac_sdn,sdn:36422
+36775,"BIBIKOVA, Yelena Vasilyevna",Individual,RUSSIA-EO14024,REMAINDER,00557d33d97dec2c,true,us_ofac_sdn,sdn:36775
+40208,OBSHCHESTVO S OGRANICHENNOI OTVETSTVENNOSTYU PROEKT,Entity,RUSSIA-EO14024,REMAINDER,002a767447813788,true,us_ofac_sdn,sdn:40208
+40218,JAMAME BROTHERS COMPANY,Entity,SOMALIA,REMAINDER,006555e3bd42e511,true,us_ofac_sdn,sdn:40218
+40250,"TEKSLER, Aleksey Leonidovich",Individual,RUSSIA-EO14024,REMAINDER,009b1436d5473ad6,true,us_ofac_sdn,sdn:40250
+40762,LALEH PETROCHEMICAL COMPANY,Entity,IRAN-EO13846,REMAINDER,006900035db03104,true,us_ofac_sdn,sdn:40762
+42735,"SCHMUCKI, Anselm Oskar",Individual,RUSSIA-EO14024,REMAINDER,008afe8c33423120,true,us_ofac_sdn,sdn:42735
+43290,"SUK, Vitaly Alexandrovich",Individual,RUSSIA-EO14024,REMAINDER,000a3b59476c4d02,true,us_ofac_sdn,sdn:43290
+44207,PYRAMAXIA REAL ESTATE DEVELOPMENT GMBH & CO. KG,Entity,GLOMAG,REMAINDER,00811f40ec291af2,true,us_ofac_sdn,sdn:44207
+45747,FLAVIC FZE,Entity,RUSSIA-EO14024,REMAINDER,000609d4f836fd23,true,us_ofac_sdn,sdn:45747
+45975,NEWAY TECHNOLOGIES LIMITED,Entity,RUSSIA-EO14024,REMAINDER,000a177166f9d628,true,us_ofac_sdn,sdn:45975
+46170,NABIL CHOUMAN & CO,Entity,SDGT,REMAINDER,00b388a193caefb6,true,us_ofac_sdn,sdn:46170
+46429,SIBAVTORESURS,Entity,RUSSIA-EO14024,REMAINDER,00c1fabb68823b06,true,us_ofac_sdn,sdn:46429
+46656,JOINT STOCK COMPANY ZAVOD KORPUSOV,Entity,RUSSIA-EO14024,REMAINDER,0074bebb2f8a4f7e,true,us_ofac_sdn,sdn:46656
+47247,"ESFANJANI, Ali",Individual,IRAN-HR,REMAINDER,00979477ba86ef45,true,us_ofac_sdn,sdn:47247
+47718,JOINT STOCK COMPANY VOSKRESENSKY AGGREGATION FACTORY,Entity,RUSSIA-EO14024,REMAINDER,0063d8014c8f6469,true,us_ofac_sdn,sdn:47718
+49175,LIMITED LIABILITY COMPANY NEVA TOOL FACTORY,Entity,RUSSIA-EO14024,REMAINDER,009fdbc9efdcb494,true,us_ofac_sdn,sdn:49175
+49178,JOINT STOCK COMPANY OBORONAUTO,Entity,RUSSIA-EO14024,REMAINDER,008c23406f3d75a4,true,us_ofac_sdn,sdn:49178
+50040,AUDAX TRUST CONSULTING ESTABLISHMENT,Entity,RUSSIA-EO14024,REMAINDER,005b93343332c5b0,true,us_ofac_sdn,sdn:50040
+51207,MOTO EXPORT DWC LLC,Entity,RUSSIA-EO14024,REMAINDER,00b45e9997cf0118,true,us_ofac_sdn,sdn:51207
+51585,ATLAS NNB,Entity,RUSSIA-EO14024|UKRAINE-EO13662,REMAINDER,0074a6c1dea163e3,true,us_ofac_sdn,sdn:51585
+52952,"ASADROUZ, Abbass",Individual,IRAN-EO13902,REMAINDER,0002e741a366b27e,true,us_ofac_sdn,sdn:52952
+54162,"SABER, Sayyed Mohammad Reza Seddighi",Individual,IFSR|NPWMD,REMAINDER,002ad07457611848,true,us_ofac_sdn,sdn:54162
+56365,VRG ENERGETICOS S.A. DE C.V.,Entity,ILLICIT-DRUGS-EO14059,REMAINDER,00459bfcf4ddbdb6,true,us_ofac_sdn,sdn:56365
+57998,"CRUZ CABRERA, Jorge Fernando",Individual,ILLICIT-DRUGS-EO14059|SDGT,REMAINDER,009c4f7e8d04ce2a,true,us_ofac_sdn,sdn:57998
