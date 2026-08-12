@@ -14,3 +14,6 @@ data/archive/sdn-*.xml
 
 # Delta files are ~130KB and ARE the replay evidence for the release leg -- keep them.
 # (no ignore rule for data/archive/delta-*.xml, by design)
+
+# Local archiver log (launchd stopgap; not part of the deliverable)
+data/archive/archiver.log
