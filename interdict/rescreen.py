@@ -13,6 +13,13 @@ resumes exactly there. The alternative -- a cursor advanced optimistically -- wo
 whichever ranges were still in flight, leaving counterparties unscreened against a live
 sanctions list while the run reported success.
 
+COMPLETENESS IS NOT THE SAME QUESTION. "Nothing incomplete" does not mean "everything
+screened", and treating them as equivalent was a real bug here: a worker that dies
+*between* batches leaves nothing outstanding, because the remaining ranges were never
+claimed in the first place. The run then closed itself as finished with most of the book
+untouched. Closing therefore requires both -- nothing outstanding AND claimed coverage
+reaching the end of the book.
+
 IDEMPOTENCE. Re-running a completed batch must be harmless, because retries are normal.
 Holds are idempotent at the database level, so a redelivered message re-decides the same
 way and changes nothing.
@@ -26,7 +33,7 @@ from datetime import date
 import psycopg
 
 from .adjudicator import Adjudicator
-from .db import claim_batch, complete_batch, emit, resume_point
+from .db import claim_batch, complete_batch, emit, run_is_complete
 from .matcher import Matcher
 from .orchestrator import screen_counterparty
 
@@ -134,9 +141,11 @@ def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
         complete_batch(conn, run_id, start)
         summary.batches += 1
 
-    # Only close the run when nothing is outstanding. A run with an incomplete batch is
-    # not finished, however many batches succeeded.
-    if resume_point(conn, run_id) is None:
+    # Close the run only when the whole book has actually been screened -- nothing
+    # outstanding AND claimed coverage reaching the end. "No incomplete batches" alone
+    # would mark a run finished when a worker died between batches, leaving the
+    # unclaimed remainder unscreened and unreported.
+    if run_is_complete(conn, run_id, max_id):
         with conn.cursor() as cur:
             cur.execute("UPDATE rescreen_runs SET finished_at = now() WHERE id = %s", (run_id,))
         emit(conn, "RUN_COMPLETED", {

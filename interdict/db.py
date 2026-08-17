@@ -153,3 +153,24 @@ def resume_point(conn: psycopg.Connection, run_id: int) -> int | None:
             (run_id,),
         )
         return cur.fetchone()["resume"]
+
+
+def run_is_complete(conn: psycopg.Connection, run_id: int, max_id: int) -> bool:
+    """Has this run actually screened the whole book?
+
+    "No incomplete batches" is NOT sufficient, and assuming it was is a bug this
+    project shipped briefly. A worker that dies *between* batches leaves nothing
+    incomplete -- the remaining ranges were simply never claimed -- so the run looked
+    finished while most of the book had never been screened against a live sanctions
+    publication. Completeness therefore requires BOTH: nothing outstanding, and claimed
+    coverage reaching the end of the book.
+    """
+    if resume_point(conn, run_id) is not None:
+        return False
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT coalesce(max(batch_end), 0) AS covered FROM rescreen_batches "
+            "WHERE run_id = %s",
+            (run_id,),
+        )
+        return cur.fetchone()["covered"] >= max_id
