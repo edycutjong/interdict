@@ -26,9 +26,10 @@ from dataclasses import dataclass
 from datetime import date
 
 import psycopg
+from psycopg.rows import DictRow
 
-from .adjudicator import Adjudicator, build_context
-from .db import emit
+from .adjudicator import Adjudicator, Verdict, build_context
+from .db import emit, one
 from .matcher import T_HI, T_LO, Match, Matcher
 from .money import place_hold
 
@@ -60,13 +61,17 @@ def guard(match: Match, verdict) -> tuple[str, str | None]:
     Returns (result, complaint). `complaint` is fed back verbatim on the retry, so the
     adjudicator is told what disagreed rather than merely that something did.
     """
-    # A CLEAR on a near-identical name needs evidence the matcher already sought.
-    if verdict.verdict == "CLEAR" and match.score >= GUARD_CLEAR_CEILING:
-        if match.components.dob_signal != "disjoint" and match.components.type_signal != "mismatch":
-            return "DISAGREE", (
-                f"deterministic score {match.score} is at or above {GUARD_CLEAR_CEILING} "
-                f"and no contradicting date of birth or entity type was found, so a "
-                f"CLEAR is not supported by the record")
+    # A CLEAR on a near-identical name needs evidence the matcher already sought. The
+    # two exemptions are the cases the model exists for: a contradicting date of birth
+    # or an entity-type mismatch is positive evidence of a different party.
+    if (verdict.verdict == "CLEAR"
+            and match.score >= GUARD_CLEAR_CEILING
+            and match.components.dob_signal != "disjoint"
+            and match.components.type_signal != "mismatch"):
+        return "DISAGREE", (
+            f"deterministic score {match.score} is at or above {GUARD_CLEAR_CEILING} "
+            f"and no contradicting date of birth or entity type was found, so a "
+            f"CLEAR is not supported by the record")
 
     # A HOLD below the auto-no-hit floor means the model matched something the
     # deterministic plane could not see at all.
@@ -94,7 +99,7 @@ def guard(match: Match, verdict) -> tuple[str, str | None]:
     return "AGREE", None
 
 
-def _persist_match(conn: psycopg.Connection, run_id: int, counterparty_id: int,
+def _persist_match(conn: psycopg.Connection[DictRow], run_id: int, counterparty_id: int,
                    match: Match) -> int:
     with conn.cursor() as cur:
         cur.execute(
@@ -107,10 +112,10 @@ def _persist_match(conn: psycopg.Connection, run_id: int, counterparty_id: int,
             (run_id, counterparty_id, match.sdn_uid, match.score,
              json.dumps(match.components.as_dict(), sort_keys=True)),
         )
-        return cur.fetchone()["id"]
+        return one(cur)["id"]
 
 
-def _persist_adjudication(conn: psycopg.Connection, match_id: int, verdict,
+def _persist_adjudication(conn: psycopg.Connection[DictRow], match_id: int, verdict,
                           guard_result: str, round_trips: int,
                           yente_verdict: str | None) -> int:
     with conn.cursor() as cur:
@@ -126,10 +131,10 @@ def _persist_adjudication(conn: psycopg.Connection, match_id: int, verdict,
              verdict.prompt_hash, json.dumps(verdict.context, sort_keys=True),
              guard_result, yente_verdict, round_trips),
         )
-        return cur.fetchone()["id"]
+        return one(cur)["id"]
 
 
-def _quarantine(conn: psycopg.Connection, match_id: int | None, reason: str,
+def _quarantine(conn: psycopg.Connection[DictRow], match_id: int | None, reason: str,
                 payload: dict) -> None:
     with conn.cursor() as cur:
         cur.execute(
@@ -139,7 +144,7 @@ def _quarantine(conn: psycopg.Connection, match_id: int | None, reason: str,
     emit(conn, "QUARANTINED", {"reason": reason, "match_id": match_id, **payload})
 
 
-def screen_counterparty(conn: psycopg.Connection, *, run_id: int, counterparty_id: int,
+def screen_counterparty(conn: psycopg.Connection[DictRow], *, run_id: int, counterparty_id: int,
                         name: str, dob: str | None, is_person: bool,
                         matcher: Matcher, adjudicator: Adjudicator,
                         publication: dict, oracle_verdict: str | None = None,
@@ -181,8 +186,14 @@ def screen_counterparty(conn: psycopg.Connection, *, run_id: int, counterparty_i
     match_id = _persist_match(conn, run_id, counterparty_id, match)
 
     feedback: str | None = None
-    verdict = None
+    verdict: Verdict | None = None
     guard_result = "DISAGREE"
+    # Bound the loop variables outside it. mypy flagged that `verdict` could still be
+    # None and `attempt` unbound at the persist call below, which is only unreachable
+    # today because MAX_ROUND_TRIPS happens to be >= 1. Persisting a None verdict would
+    # mean writing an adjudication row with no decision in it -- a silent hole in the
+    # audit trail, in the one table that is supposed to explain why money moved.
+    attempt = 0
 
     for attempt in range(1, MAX_ROUND_TRIPS + 1):
         try:
@@ -201,6 +212,17 @@ def screen_counterparty(conn: psycopg.Connection, *, run_id: int, counterparty_i
         if guard_result == "AGREE":
             break
         feedback = complaint
+
+    if verdict is None:
+        # Only reachable if MAX_ROUND_TRIPS is misconfigured to 0. Quarantine rather
+        # than write an empty adjudication -- the failure mode this whole module exists
+        # to prevent is money moving on a decision nobody can inspect.
+        _quarantine(conn, match_id, "SCHEMA_INVALID", {
+            "counterparty_id": counterparty_id,
+            "error": f"no adjudication attempted (MAX_ROUND_TRIPS={MAX_ROUND_TRIPS})",
+        })
+        return Decision(counterparty_id, match.sdn_uid, "QUARANTINE",
+                        "no adjudication attempted", 0, match.score, "DISAGREE")
 
     adjudication_id = _persist_adjudication(
         conn, match_id, verdict, guard_result, attempt, oracle_verdict)

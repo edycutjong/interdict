@@ -32,10 +32,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.matcher import T_HI, Matcher                      # noqa: E402
-from interdict.ofac import parse_sdn                             # noqa: E402
-from interdict.oracle import Oracle                              # noqa: E402
-from interdict.perturb import perturb                            # noqa: E402
+from interdict.matcher import T_HI, Matcher
+from interdict.ofac import parse_sdn
+from interdict.oracle import Oracle
+from interdict.perturb import perturb
 
 BATCH = 50
 
@@ -167,7 +167,7 @@ def main() -> int:
         for r in misses[:15]:
             print(f"  uid={r['uid']:<8} {r['query_name'][:34]:<34} "
                   f"[{r['perturbation'][:12]:<12}] "
-                  f"mine={str(r['my_top']):<8} oracle={str(r['oracle_top']):<8} "
+                  f"mine={r['my_top']!s:<8} oracle={r['oracle_top']!s:<8} "
                   f"{'AGREE' if r['agree'] else 'DISAGREE'}")
 
     if args.json_out:

@@ -1,0 +1,12 @@
+-r requirements.txt
+
+# Code quality
+ruff==0.7.4
+mypy==1.13.0
+
+# Tests
+pytest==9.0.3
+pytest-cov==6.0.0
+
+# Security
+pip-audit==2.7.3

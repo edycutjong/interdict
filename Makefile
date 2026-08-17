@@ -21,6 +21,46 @@ help:  ## Show this help
 install: .venv  ## Install Python dependencies
 	$(PIP) install -q -r requirements.txt
 
+.PHONY: install-dev
+install-dev: .venv  ## Install dependencies plus the lint/type/security toolchain
+	$(PIP) install -q -r requirements-dev.txt
+
+# ---------------------------------------------------------------------------
+# Code quality
+# ---------------------------------------------------------------------------
+
+.PHONY: lint
+lint:  ## Ruff lint
+	@echo "ruff check..."
+	$(PY) -m ruff check .
+
+.PHONY: lint-fix
+lint-fix:  ## Ruff autofix + format
+	$(PY) -m ruff check --fix . && $(PY) -m ruff format .
+
+.PHONY: typecheck
+typecheck:  ## mypy
+	@echo "mypy..."
+	$(PY) -m mypy interdict --ignore-missing-imports
+
+.PHONY: test-coverage
+test-coverage:  ## Tests with coverage
+	$(PY) -m pytest --cov --cov-report=term-missing --cov-report=xml
+
+# ---------------------------------------------------------------------------
+# Security
+# ---------------------------------------------------------------------------
+
+.PHONY: audit
+audit:  ## Dependency CVEs + secrets in history
+	@echo "=== pip-audit (dependency CVEs) ==="
+	@$(PY) -m pip_audit || true
+	@echo "=== gitleaks (secrets in history) ==="
+	@gitleaks detect --no-banner --redact || echo "gitleaks not installed locally; CI runs it"
+
+.PHONY: ci
+ci: lint typecheck test-coverage audit  ## Everything CI runs
+
 .PHONY: up
 up:  ## Start Postgres + Elasticsearch + yente
 	docker compose -f ops/docker-compose.yml up -d

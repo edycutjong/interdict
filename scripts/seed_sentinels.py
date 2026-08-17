@@ -46,7 +46,7 @@ import hashlib
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 NS = {"s": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/XML"}

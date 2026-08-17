@@ -62,7 +62,7 @@ def main() -> int:
     index_path = root / "index.json"
     index: dict = json.loads(index_path.read_text()) if index_path.exists() else {}
 
-    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    now = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
     new_count = 0
     failures = 0
 

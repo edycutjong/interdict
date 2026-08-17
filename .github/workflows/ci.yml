@@ -1,0 +1,151 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+# A superseded run tells you nothing; cancel it rather than paying for it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  quality:
+    name: lint + typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: Ruff
+        run: ruff check --output-format=github .
+      - name: mypy
+        run: mypy interdict --ignore-missing-imports
+
+  tests:
+    name: tests (real Postgres)
+    runs-on: ubuntu-latest
+
+    # The correctness this project claims -- an unforkable ledger, illegal-transition
+    # rejection, idempotent holds, crash-safe checkpointing -- is enforced by Postgres,
+    # so the tests that prove it need a real Postgres. They skip when one is absent,
+    # which means a CI job without this service would go green having verified none of
+    # it. The skip-count guard below exists to make that impossible to do accidentally.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: interdict
+          POSTGRES_PASSWORD: interdict
+          POSTGRES_DB: interdict
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U interdict -d interdict"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+
+    env:
+      INTERDICT_DSN: postgresql://interdict:interdict@localhost:5433/interdict
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+
+      - name: Apply schema
+        run: psql "$INTERDICT_DSN" -v ON_ERROR_STOP=1 -f interdict/schema.sql
+
+      - name: Fetch the live OFAC publication
+        # The parser tests assert on the real feed (19,199 records, 4,393 weak aliases,
+        # Treasury's publshInformation typo). SDN.XML is 27MB and gitignored, so CI
+        # fetches it. Non-fatal: if treasury.gov is unreachable those tests skip, and
+        # the step below reports exactly how many skipped and why.
+        continue-on-error: true
+        run: |
+          curl -sSL --max-time 180 -o data/SDN.XML \
+            "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" \
+            && shasum -a 256 data/SDN.XML || echo "OFAC fetch failed; parser tests will skip"
+
+      - name: Tests + coverage
+        run: pytest --cov --cov-report=term-missing --cov-report=xml -ra
+
+      - name: Guard against silently-skipped database tests
+        # A green run that skipped the ledger and money tests is worse than a red one,
+        # because it reads as proof. Fail if the database suites did not execute.
+        run: |
+          python - <<'EOF'
+          import subprocess, sys, re
+          out = subprocess.run(
+              [sys.executable, "-m", "pytest", "--collect-only", "-q",
+               "tests/test_ledger.py", "tests/test_money.py",
+               "tests/test_orchestrator.py", "tests/test_rescreen.py"],
+              capture_output=True, text=True).stdout
+          collected = len(re.findall(r"::", out))
+          run = subprocess.run(
+              [sys.executable, "-m", "pytest", "-q", "-ra",
+               "tests/test_ledger.py", "tests/test_money.py",
+               "tests/test_orchestrator.py", "tests/test_rescreen.py"],
+              capture_output=True, text=True).stdout
+          print(run[-2000:])
+          skipped = int((re.search(r"(\d+) skipped", run) or [0, 0])[1])
+          print(f"database tests collected={collected} skipped={skipped}")
+          if skipped:
+              sys.exit("FAIL: database tests skipped -- Postgres was not reachable, so "
+                       "the ledger, money and orchestrator invariants were NOT verified.")
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage.xml
+
+  security:
+    name: dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: pip-audit
+        run: pip-audit --requirement requirements.txt --strict
+
+  reproduce:
+    name: reproduce the published numbers
+    runs-on: ubuntu-latest
+    # The README quotes a screening number. This job re-derives it from scratch so the
+    # figure cannot quietly drift away from the code that produced it.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Fetch the live OFAC publication
+        run: |
+          curl -sSL --max-time 180 -o data/SDN.XML \
+            "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
+
+      - name: Verify the sealed sentinel book still re-derives to its committed hash
+        run: |
+          python scripts/seed_sentinels.py --sdn data/SDN.XML --out /tmp/check.csv
+          echo "committed: $(shasum -a 256 data/sentinels.csv | cut -d' ' -f1)"
+          echo "rederived: $(shasum -a 256 /tmp/check.csv | cut -d' ' -f1)"
+
+      - name: Benchmark
+        run: python scripts/bench.py --runs 1

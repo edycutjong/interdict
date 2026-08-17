@@ -138,8 +138,9 @@ def overview(cur) -> str:
         ("adjudications", guard["n"]), ("guard disagreements", guard["d"]),
     ]
     cards_html = "".join(
-        f'<div class="card"><div class="n">{_e(v)}</div><div class="l">{_e(l)}</div></div>'
-        for l, v in cards)
+        f'<div class="card"><div class="n">{_e(value)}</div>'
+        f'<div class="l">{_e(label)}</div></div>'
+        for label, value in cards)
 
     cur.execute("""
         SELECT c.origin, count(*) AS n,
@@ -318,7 +319,7 @@ ROUTES = {"/": overview, "/holds": holds, "/adjudications": adjudications,
 
 
 class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):                                    # noqa: N802
+    def do_GET(self):
         path = self.path.split("?")[0].rstrip("/") or "/"
         if path == "/healthz":
             self.send_response(200)

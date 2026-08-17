@@ -7,14 +7,21 @@ against the real database rather than a mock.
 Requires the local stack: `make up`.
 """
 
-import json
 import threading
 
 import psycopg
 import pytest
 
-from interdict.db import (DSN, claim_batch, complete_batch, connect, emit, relay,
-                          resume_point, verify_chain)
+from interdict.db import (
+    DSN,
+    claim_batch,
+    complete_batch,
+    connect,
+    emit,
+    relay,
+    resume_point,
+    verify_chain,
+)
 
 
 def _db_available() -> bool:

@@ -156,7 +156,7 @@ class GeminiAdjudicator:
     """
 
     def __init__(self, model_id: str = MODEL_ID, api_key: str | None = None):
-        from google import genai                      # imported lazily: no key, no import
+        from google import genai  # imported lazily: no key, no import
 
         key = api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         if not key:

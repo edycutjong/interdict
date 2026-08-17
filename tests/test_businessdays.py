@@ -9,8 +9,12 @@ from datetime import date
 
 import pytest
 
-from interdict.businessdays import (add_business_days, federal_holidays,
-                                    is_business_day, report_due)
+from interdict.businessdays import (
+    add_business_days,
+    federal_holidays,
+    is_business_day,
+    report_due,
+)
 
 
 def test_weekend_is_not_a_business_day():

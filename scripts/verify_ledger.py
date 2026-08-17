@@ -13,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.db import connect, verify_chain      # noqa: E402
+from interdict.db import connect, verify_chain
 
 
 def main() -> int:

@@ -152,7 +152,7 @@ class DobInterval:
     precision: str  # 'day' | 'month' | 'year' | 'circa' | 'range'
     raw: str
 
-    def overlaps(self, other: "DobInterval") -> bool:
+    def overlaps(self, other: DobInterval) -> bool:
         return self.start_year <= other.end_year and other.start_year <= self.end_year
 
 

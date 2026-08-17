@@ -27,7 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.db import connect                      # noqa: E402
+from interdict.db import connect
 
 QUERY = """
 SELECT c.origin,
@@ -62,12 +62,11 @@ def main() -> int:
     ap.add_argument("--show", type=int, default=12, help="how many errors to print")
     args = ap.parse_args()
 
-    with connect() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
-            rows = cur.fetchall()
-            cur.execute(DETAIL, (args.show,))
-            errors = cur.fetchall()
+    with connect() as conn, conn.cursor() as cur:
+        cur.execute(QUERY)
+        rows = cur.fetchall()
+        cur.execute(DETAIL, (args.show,))
+        errors = cur.fetchall()
 
     if not rows:
         print("no graded counterparties -- run scripts/load_book.py then "

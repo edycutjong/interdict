@@ -1,7 +1,13 @@
 """Normalisation and DOB-interval tests."""
 
-from interdict.normalize import (DobInterval, blocking_keys, normalize, parse_dob,
-                                 strip_diacritics, tokens)
+from interdict.normalize import (
+    DobInterval,
+    blocking_keys,
+    normalize,
+    parse_dob,
+    strip_diacritics,
+    tokens,
+)
 
 
 def test_diacritics_fold():

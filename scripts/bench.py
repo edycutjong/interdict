@@ -27,9 +27,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.matcher import Matcher                    # noqa: E402
-from interdict.ofac import parse_sdn                     # noqa: E402
-from interdict.perturb import perturb                    # noqa: E402
+from interdict.matcher import Matcher
+from interdict.ofac import parse_sdn
+from interdict.perturb import perturb
 
 
 def percentile(values: list[float], p: float) -> float:

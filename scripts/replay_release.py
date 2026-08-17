@@ -29,13 +29,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.adjudicator import RuleBasedAdjudicator                 # noqa: E402
-from interdict.db import connect, relay, verify_chain                  # noqa: E402
-from interdict.matcher import Matcher                                  # noqa: E402
-from interdict.money import draft_report                               # noqa: E402
-from interdict.ofac import Name, SdnEntry, parse_delta, parse_sdn      # noqa: E402
-from interdict.orchestrator import screen_counterparty                 # noqa: E402
-from interdict.rescreen import apply_delta_removals, open_run          # noqa: E402
+from interdict.adjudicator import RuleBasedAdjudicator
+from interdict.db import connect, relay, verify_chain
+from interdict.matcher import Matcher
+from interdict.money import draft_report
+from interdict.ofac import Name, SdnEntry, parse_delta, parse_sdn
+from interdict.orchestrator import screen_counterparty
+from interdict.rescreen import apply_delta_removals, open_run
 
 DELTA = Path("data/archive/delta-20260812T221237+0000-9403f40d9496.xml")
 DELTA_SHA = "9403f40d949617405bdcddd25bb1f3784ce6ba25a7137101d5b27742ddeb05bc"
@@ -145,7 +145,7 @@ def main() -> int:
                   f"(10 business days)")
 
         # ---- Step 3: apply Treasury's real removals -> RELEASE ----
-        print(f"\n  [3] applying the real 2026-08-07 removals")
+        print("\n  [3] applying the real 2026-08-07 removals")
         released = apply_delta_removals(conn, removals, delta_source_hash=DELTA_SHA)
         relay(conn)
         conn.commit()

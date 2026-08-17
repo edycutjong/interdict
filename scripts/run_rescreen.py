@@ -21,12 +21,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.db import (connect, relay, resume_point, run_is_complete,  # noqa: E402
-                          verify_chain)
-from interdict.matcher import Matcher                                  # noqa: E402
-from interdict.ofac import parse_sdn                                   # noqa: E402
-from interdict.oracle import Oracle                                    # noqa: E402
-from interdict.rescreen import open_run, rescreen_book                 # noqa: E402
+from interdict.db import (
+    connect,
+    relay,
+    resume_point,
+    run_is_complete,
+    verify_chain,
+)
+from interdict.matcher import Matcher
+from interdict.ofac import parse_sdn
+from interdict.oracle import Oracle
+from interdict.rescreen import open_run, rescreen_book
 
 
 def build_adjudicator(force_offline: bool):
@@ -148,7 +153,7 @@ def main() -> int:
                 cur.execute("SELECT coalesce(max(batch_end),0) AS covered "
                             "FROM rescreen_batches WHERE run_id=%s", (run_id,))
                 covered = cur.fetchone()["covered"]
-            print(f"\n  RUN INCOMPLETE -- the run did NOT mark itself finished.")
+            print("\n  RUN INCOMPLETE -- the run did NOT mark itself finished.")
             print(f"  claimed coverage reaches id {covered} of {book_max}; "
                   f"abandoned batch at {resume_point(conn, run_id)}")
             print(f"  python scripts/run_rescreen.py --resume {run_id}")

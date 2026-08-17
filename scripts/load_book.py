@@ -47,9 +47,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.db import connect                    # noqa: E402
-from interdict.ofac import parse_sdn                # noqa: E402
-from interdict.perturb import perturb               # noqa: E402
+from interdict.db import connect
+from interdict.ofac import parse_sdn
+from interdict.perturb import perturb
 
 # Ordinary grantee names. Generic by construction -- they exist to exercise the
 # auto-no-hit path, not to represent anyone.

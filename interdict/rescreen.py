@@ -31,9 +31,10 @@ from dataclasses import dataclass, field
 from datetime import date
 
 import psycopg
+from psycopg.rows import DictRow
 
 from .adjudicator import Adjudicator
-from .db import claim_batch, complete_batch, emit, run_is_complete
+from .db import claim_batch, complete_batch, emit, one, run_is_complete
 from .matcher import Matcher
 from .orchestrator import screen_counterparty
 
@@ -55,7 +56,7 @@ class RunSummary:
         return self.holds + self.quarantined
 
 
-def open_run(conn: psycopg.Connection, *, published_at: date, source_hash: str,
+def open_run(conn: psycopg.Connection[DictRow], *, published_at: date, source_hash: str,
              kind: str, trigger: str, record_count: int | None = None) -> int:
     """Register a publication and open a re-screen run against it.
 
@@ -72,13 +73,13 @@ def open_run(conn: psycopg.Connection, *, published_at: date, source_hash: str,
             """,
             (published_at, source_hash, kind, record_count),
         )
-        version_id = cur.fetchone()["id"]
+        version_id = one(cur)["id"]
 
         cur.execute(
             "INSERT INTO rescreen_runs (list_version_id, trigger) VALUES (%s,%s) RETURNING id",
             (version_id, trigger),
         )
-        run_id = cur.fetchone()["id"]
+        run_id = one(cur)["id"]
 
     emit(conn, "RUN_OPENED", {
         "run_id": run_id, "list_version_id": version_id, "trigger": trigger,
@@ -123,7 +124,7 @@ def _oracle_verdicts(oracle, rows) -> dict[int, str]:
     return out
 
 
-def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
+def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Matcher,
                   adjudicator: Adjudicator, publication: dict,
                   batch_size: int = BATCH_SIZE, blocked_on: date | None = None,
                   stop_after_batches: int | None = None,
@@ -141,7 +142,7 @@ def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
 
     with conn.cursor() as cur:
         cur.execute("SELECT coalesce(max(id), 0) AS max_id FROM counterparties")
-        max_id = cur.fetchone()["max_id"]
+        max_id = one(cur)["max_id"]
     if max_id == 0:
         return summary
 
@@ -199,7 +200,7 @@ def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
     return summary
 
 
-def apply_delta_removals(conn: psycopg.Connection, removals, *, delta_source_hash: str,
+def apply_delta_removals(conn: psycopg.Connection[DictRow], removals, *, delta_source_hash: str,
                          ) -> list[int]:
     """Release funds for every held counterparty that OFAC just delisted.
 

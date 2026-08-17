@@ -61,7 +61,7 @@ class Oracle:
     def close(self) -> None:
         self._client.close()
 
-    def __enter__(self) -> "Oracle":
+    def __enter__(self) -> Oracle:
         return self
 
     def __exit__(self, *exc) -> None:

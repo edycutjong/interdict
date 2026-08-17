@@ -25,9 +25,10 @@ from dataclasses import dataclass
 from datetime import date
 
 import psycopg
+from psycopg.rows import DictRow
 
 from .businessdays import REPORT_DEADLINE_BUSINESS_DAYS, report_due
-from .db import emit
+from .db import emit, one
 
 
 @dataclass(frozen=True)
@@ -37,7 +38,7 @@ class HoldResult:
     disbursements_held: int
 
 
-def place_hold(conn: psycopg.Connection, *, counterparty_id: int,
+def place_hold(conn: psycopg.Connection[DictRow], *, counterparty_id: int,
                adjudication_id: int, sdn_uid: str, blocked_on: date | None = None,
                ) -> HoldResult:
     """Freeze every queued disbursement to a counterparty. Idempotent.
@@ -91,7 +92,7 @@ def place_hold(conn: psycopg.Connection, *, counterparty_id: int,
     return HoldResult(hold_id, created=True, disbursements_held=len(held))
 
 
-def release_hold(conn: psycopg.Connection, *, counterparty_id: int,
+def release_hold(conn: psycopg.Connection[DictRow], *, counterparty_id: int,
                  sdn_uid: str, delta_source_hash: str) -> int:
     """Release funds after OFAC delists a party. Returns disbursements released.
 
@@ -167,7 +168,7 @@ class BlockingReport:
     due: date
 
 
-def draft_report(conn: psycopg.Connection, hold_id: int, *,
+def draft_report(conn: psycopg.Connection[DictRow], hold_id: int, *,
                  entity: str = "Reporting entity (configure INTERDICT_ENTITY)",
                  ) -> BlockingReport:
     """Draft the OFAC blocking report for a hold and file it to the ledger.
@@ -203,7 +204,7 @@ def draft_report(conn: psycopg.Connection, hold_id: int, *,
             """,
             (row["counterparty_id"],),
         )
-        money = cur.fetchone()
+        money = one(cur)
 
     components = row["components"] or {}
     text = REPORT_TEMPLATE.format(
@@ -235,7 +236,7 @@ def draft_report(conn: psycopg.Connection, hold_id: int, *,
     return BlockingReport(hold_id, text, row["report_due_at"])
 
 
-def overdue_reports(conn: psycopg.Connection, as_of: date | None = None) -> list[dict]:
+def overdue_reports(conn: psycopg.Connection[DictRow], as_of: date | None = None) -> list[dict]:
     """Holds whose statutory report deadline has passed without a filing.
 
     Surfaced on the console because a missed deadline is its own violation, separate

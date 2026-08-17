@@ -1,0 +1,32 @@
+name: codeql
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Weekly, because a dependency that was clean on merge day may not be next month.
+    - cron: "27 4 * * 1"
+
+jobs:
+  analyze:
+    name: analyze (python)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          queries: security-extended
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:python"

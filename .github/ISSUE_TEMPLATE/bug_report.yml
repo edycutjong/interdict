@@ -1,0 +1,65 @@
+name: Bug report
+description: A screening decision, invariant, or command behaving incorrectly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If the bug is a **wrong screening decision**, the most useful thing you can
+        include is the `make challenge` output — it prints the full signal breakdown
+        and the independent oracle's opinion beside it.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did the system decide or do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduce
+      description: The exact command, and its output.
+      render: shell
+      placeholder: |
+        make challenge NAME="..." DOB="..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part
+      options:
+        - Matcher / scoring
+        - Adjudicator / oracle guard
+        - Money plane (holds, releases, reports)
+        - Ledger / invariants
+        - Re-screen loop / checkpointing
+        - Console
+        - Setup, Makefile, or CI
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: publication
+    attributes:
+      label: OFAC publication date
+      description: Printed by every command; the feed changes weekly.
+      placeholder: "08/07/2026"
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Python 3.11.1, macOS 26.5, Postgres 16 via ops/docker-compose.yml"

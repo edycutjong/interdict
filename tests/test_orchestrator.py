@@ -15,8 +15,12 @@ from interdict.adjudicator import RuleBasedAdjudicator, Verdict
 from interdict.db import DSN, connect, relay
 from interdict.matcher import Matcher
 from interdict.ofac import Name, SdnEntry
-from interdict.orchestrator import (GUARD_CLEAR_CEILING, MAX_ROUND_TRIPS, guard,
-                                    screen_counterparty)
+from interdict.orchestrator import (
+    GUARD_CLEAR_CEILING,
+    MAX_ROUND_TRIPS,
+    guard,
+    screen_counterparty,
+)
 
 PUBLICATION = {"publish_date": "08/07/2026", "record_count": "19199"}
 

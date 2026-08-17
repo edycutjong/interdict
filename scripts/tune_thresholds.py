@@ -31,9 +31,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.matcher import T_HI, T_LO, Matcher       # noqa: E402
-from interdict.ofac import parse_sdn                     # noqa: E402
-from interdict.perturb import perturb                    # noqa: E402
+from interdict.matcher import T_HI, T_LO, Matcher
+from interdict.ofac import parse_sdn
+from interdict.perturb import perturb
 
 
 def main() -> int:

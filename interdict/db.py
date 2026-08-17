@@ -14,11 +14,12 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator
+from typing import Any
 
 import psycopg
-from psycopg.rows import dict_row
+from psycopg.rows import DictRow, dict_row
 
 DSN = os.environ.get(
     "INTERDICT_DSN",
@@ -26,13 +27,26 @@ DSN = os.environ.get(
 )
 
 
+def one(cur) -> DictRow:
+    """Fetch exactly one row, or fail loudly.
+
+    Every call site here follows an INSERT ... RETURNING or an aggregate, both of which
+    always produce a row -- so a None means the query changed underneath the code, and
+    indexing into it would raise a confusing TypeError several frames away instead.
+    """
+    row = cur.fetchone()
+    if row is None:
+        raise RuntimeError("expected exactly one row, got none")
+    return row
+
+
 @contextmanager
-def connect(dsn: str | None = None) -> Iterator[psycopg.Connection]:
+def connect(dsn: str | None = None) -> Iterator[psycopg.Connection[DictRow]]:
     with psycopg.connect(dsn or DSN, row_factory=dict_row) as conn:
         yield conn
 
 
-def emit(conn: psycopg.Connection, topic: str, payload: dict[str, Any]) -> int:
+def emit(conn: psycopg.Connection[DictRow], topic: str, payload: dict[str, Any]) -> int:
     """Append an event to the transactional outbox.
 
     Called inside the caller's transaction, so an event is published if and only if the
@@ -44,10 +58,10 @@ def emit(conn: psycopg.Connection, topic: str, payload: dict[str, Any]) -> int:
             "INSERT INTO outbox (topic, payload) VALUES (%s, %s) RETURNING id",
             (topic, json.dumps(payload, sort_keys=True)),
         )
-        return cur.fetchone()["id"]
+        return one(cur)["id"]
 
 
-def relay(conn: psycopg.Connection, limit: int = 500) -> int:
+def relay(conn: psycopg.Connection[DictRow], limit: int = 500) -> int:
     """Drain the outbox into the ledger. THE single ledger writer.
 
     Rows are claimed with FOR UPDATE SKIP LOCKED so multiple relay instances are safe;
@@ -78,7 +92,7 @@ def relay(conn: psycopg.Connection, limit: int = 500) -> int:
     return relayed
 
 
-def verify_chain(conn: psycopg.Connection) -> tuple[bool, int]:
+def verify_chain(conn: psycopg.Connection[DictRow]) -> tuple[bool, int]:
     """Verify the ledger hash chain end to end.
 
     Returns (intact, entry_count). This is what `make verify-ledger` runs and what goes
@@ -95,9 +109,9 @@ def verify_chain(conn: psycopg.Connection) -> tuple[bool, int]:
             WHERE lag_entry IS NOT NULL
             """
         )
-        row = cur.fetchone()
+        row = one(cur)
         cur.execute("SELECT count(*) AS total FROM ledger")
-        total = cur.fetchone()["total"]
+        total = one(cur)["total"]
     # A chain of 0 or 1 entries is trivially intact.
     return (True if row["intact"] is None else bool(row["intact"])), total
 
@@ -106,7 +120,7 @@ def verify_chain(conn: psycopg.Connection) -> tuple[bool, int]:
 # Re-screen checkpointing (audit F4)
 # ---------------------------------------------------------------------------
 
-def claim_batch(conn: psycopg.Connection, run_id: int, size: int,
+def claim_batch(conn: psycopg.Connection[DictRow], run_id: int, size: int,
                 max_id: int) -> tuple[int, int] | None:
     """Claim the next batch of counterparty ids for a run.
 
@@ -144,7 +158,7 @@ def claim_batch(conn: psycopg.Connection, run_id: int, size: int,
             "SELECT coalesce(max(batch_end), 0) AS last FROM rescreen_batches WHERE run_id = %s",
             (run_id,),
         )
-        start = cur.fetchone()["last"] + 1
+        start = one(cur)["last"] + 1
         if start > max_id:
             return None
         end = min(start + size - 1, max_id)
@@ -155,7 +169,7 @@ def claim_batch(conn: psycopg.Connection, run_id: int, size: int,
         return start, end
 
 
-def complete_batch(conn: psycopg.Connection, run_id: int, batch_start: int) -> None:
+def complete_batch(conn: psycopg.Connection[DictRow], run_id: int, batch_start: int) -> None:
     with conn.cursor() as cur:
         cur.execute(
             "UPDATE rescreen_batches SET completed_at = now() "
@@ -164,7 +178,7 @@ def complete_batch(conn: psycopg.Connection, run_id: int, batch_start: int) -> N
         )
 
 
-def resume_point(conn: psycopg.Connection, run_id: int) -> int | None:
+def resume_point(conn: psycopg.Connection[DictRow], run_id: int) -> int | None:
     """The only safe resume point: MIN(batch_start) over INCOMPLETE batches.
 
     Never max(completed), never a scalar cursor. If batches 1-500 and 1001-1500 are
@@ -177,10 +191,10 @@ def resume_point(conn: psycopg.Connection, run_id: int) -> int | None:
             "WHERE run_id = %s AND completed_at IS NULL",
             (run_id,),
         )
-        return cur.fetchone()["resume"]
+        return one(cur)["resume"]
 
 
-def run_is_complete(conn: psycopg.Connection, run_id: int, max_id: int) -> bool:
+def run_is_complete(conn: psycopg.Connection[DictRow], run_id: int, max_id: int) -> bool:
     """Has this run actually screened the whole book?
 
     "No incomplete batches" is NOT sufficient, and assuming it was is a bug this
@@ -198,4 +212,4 @@ def run_is_complete(conn: psycopg.Connection, run_id: int, max_id: int) -> bool:
             "WHERE run_id = %s",
             (run_id,),
         )
-        return cur.fetchone()["covered"] >= max_id
+        return one(cur)["covered"] >= max_id

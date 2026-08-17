@@ -1,0 +1,21 @@
+name: gitleaks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+# GitHub's own secret scanning covers known provider patterns on pushed commits.
+# gitleaks catches project-shaped secrets and scans HISTORY, which is what matters at a
+# private -> public flip: a key removed in the working tree is still in the log.
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history -- scanning the past is the entire point
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

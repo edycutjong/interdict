@@ -1,0 +1,62 @@
+# Tool configuration only. Dependencies stay in requirements.txt / requirements-dev.txt,
+# which is what this project already used -- switching the install path on a project
+# mid-submission churns the toolchain for no benefit.
+
+[tool.ruff]
+line-length = 96
+target-version = "py311"
+exclude = [".venv", "docs", "data"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # pyflakes
+    "I",         # import sorting
+    "B",         # bugbear
+    "UP",        # pyupgrade
+    "SIM",       # simplify
+    "RUF",       # ruff-specific
+]
+ignore = [
+    "E501",      # line length is handled by the formatter
+    "B008",      # function call in default arg -- not a pattern used here
+    "SIM108",    # ternary-instead-of-if hurts readability in the scoring code
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts deliberately sys.path-insert before importing the package, so imports
+# cannot sit at the top of the file.
+"scripts/*.py" = ["E402"]
+# SIM117: combining `with pytest.raises(...)` and `with conn.cursor()` onto one line
+# obscures which statement is expected to raise, which is the whole point of the test.
+"tests/*.py" = ["E402", "SIM117"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+# Deliberately not strict. This is a 14-day build and the correctness that matters is
+# enforced by database constraints and 133 tests, not by exhaustive annotation.
+check_untyped_defs = true
+exclude = ["\\.venv", "docs"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# -ra surfaces the skip reasons. Skipped database tests are the ones that matter most,
+# so they must never scroll past silently -- CI asserts on the skip count too.
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: takes more than a second",
+]
+
+[tool.coverage.run]
+source = ["interdict"]
+omit = ["*/console.py"]        # server-rendered HTML, exercised by the smoke job
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
