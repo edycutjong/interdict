@@ -90,6 +90,18 @@ python scripts/adjudication_quality.py
   MISSED HITS  1/460          FROZEN GRANTEES  0/76
 ```
 
+Every one of those 459 decisions also carries yente's independent verdict, because an
+oracle consulted only where it agrees is not an oracle:
+
+| | count |
+|---|---|
+| both flagged a hit | **456** |
+| we held, yente missed | 3 |
+| **we cleared, yente flagged** | **0** |
+
+The zero is the point. Under strict liability the dangerous direction is being *more
+permissive* than the independent oracle.
+
 ## Beat 5 — kill a worker mid-book
 
 The one that matters for an unattended system.
