@@ -115,31 +115,61 @@ def parse_sdn(path: Path) -> tuple[list[SdnEntry], dict]:
 @dataclass(frozen=True)
 class DeltaAction:
     uid: str
-    action: str          # add | remove | modify
-    name: str
+    action: str                  # add | remove | modify
+    name: str                    # primary formatted full name
+    entity_type: str = ""        # Individual | Entity | Vessel | Aircraft
+    programs: tuple[str, ...] = field(default=())
+    names: tuple[str, ...] = field(default=())
 
 
 def parse_delta(path: Path) -> list[DeltaAction]:
-    """Parse a /changes/latest delta publication."""
+    """Parse a /changes/latest delta publication.
+
+    The delta is NOT the SDN.XML schema. It uses Treasury's richer `sanctionsData`
+    format -- its own namespace, an explicit `action` attribute per entity, and names
+    carried as translations with `formattedFullName` rather than first/last pairs. A
+    generic "first element whose tag contains 'name'" walk pulls `formattedFirstName`
+    and silently yields half a name ("Mario German" for SATIZABAL RENGIFO, Mario
+    German), which then fails to match anything. So the real paths are pinned here and
+    the test asserts on full names.
+    """
     root = ET.parse(path).getroot()
     actions: list[DeltaAction] = []
 
     for ent in root.iter():
-        if not ent.tag.endswith("}entity") and ent.tag != "entity":
+        if ent.tag.rsplit("}", 1)[-1] != "entity":
             continue
         action = (ent.get("action") or "").strip().lower()
         if not action:
             continue
-        uid = (ent.get("id") or _text(ent, "d:id", DELTA_NS) or "").strip()
-        # The delta carries names in a few shapes across publications; take the first
-        # non-empty text under any *name element rather than pinning one path.
-        name = ""
-        for child in ent.iter():
-            tag = child.tag.rsplit("}", 1)[-1].lower()
-            if "name" in tag and (child.text or "").strip():
-                name = child.text.strip()
-                break
-        actions.append(DeltaAction(uid=uid, action=action, name=name))
+
+        names: list[str] = []
+        primary = ""
+        for translation in ent.iter():
+            if translation.tag.rsplit("}", 1)[-1] != "translation":
+                continue
+            full = _text(translation, "d:formattedFullName", DELTA_NS)
+            if not full:
+                first = _text(translation, "d:formattedFirstName", DELTA_NS)
+                last = _text(translation, "d:formattedLastName", DELTA_NS)
+                full = _join_name(first, last)
+            if not full:
+                continue
+            names.append(full)
+            if not primary and _text(translation, "d:isPrimary", DELTA_NS) == "true":
+                primary = full
+
+        actions.append(DeltaAction(
+            uid=(ent.get("id") or "").strip(),
+            action=action,
+            name=primary or (names[0] if names else ""),
+            entity_type=_text(ent, "d:generalInfo/d:entityType", DELTA_NS),
+            programs=tuple(sorted({
+                (p.text or "").strip()
+                for p in ent.findall(".//d:sanctionsProgram", DELTA_NS) if p.text
+            })),
+            names=tuple(names),
+        ))
 
     return actions
 

@@ -23,11 +23,31 @@ CREATE TABLE IF NOT EXISTS counterparties (
     external_ref    text UNIQUE NOT NULL,
     name            text NOT NULL,
     dob             text,                    -- free-form: the feed itself is imprecise
+    -- Recorded explicitly, never inferred. A first pass derived person-ness from
+    -- "does this row have a date of birth?", which quietly reclassified 27 listed
+    -- individuals who simply have no DOB on their SDN record as organisations. That
+    -- flipped the type-consistency signal to a mismatch and cleared every one of them.
+    -- Identity type is a fact about the counterparty, not a side effect of which
+    -- optional fields happen to be populated.
+    entity_type     text NOT NULL DEFAULT 'Individual'
+                    CHECK (entity_type IN ('Individual','Entity','Vessel','Aircraft')),
     nationality     text,
-    -- Provenance of this row in the seeded book. 'sentinel' rows were drawn from the
-    -- SDN list at seal time and are the release-leg proof; 'lookalike' rows are drawn
-    -- from real public records so that a CLEAR verifies against a source we do not own.
-    origin          text NOT NULL CHECK (origin IN ('sentinel', 'lookalike', 'ordinary')),
+    -- Provenance of this row in the seeded book.
+    --   sentinel   drawn from the SDN list at seal time -- the release-leg proof
+    --   variant    a sentinel's name in a different transliteration. The SAME person,
+    --              so the correct verdict is HOLD. Catching these is the whole job.
+    --   lookalike  a DIFFERENT person who shares a surname with a designated party and
+    --              whose date of birth contradicts the record. Correct verdict CLEAR.
+    --              These are the false positives that freeze an innocent grantee's
+    --              money in the real world, and clearing them correctly is what the
+    --              adjudication plane is for.
+    --   ordinary   unrelated to anyone on the list; exercises the auto-no-hit path.
+    origin          text NOT NULL
+                    CHECK (origin IN ('sentinel','variant','lookalike','ordinary')),
+    -- EVALUATION ONLY. Never read by the screening path -- the orchestrator does not
+    -- know this column exists. It is the ground truth `scripts/adjudication_quality.py`
+    -- grades against, which is only meaningful because the deciding code cannot see it.
+    expected_verdict text CHECK (expected_verdict IN ('HOLD','CLEAR')),
     source          text NOT NULL,
     created_at      timestamptz NOT NULL DEFAULT now()
 );

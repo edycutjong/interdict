@@ -65,3 +65,67 @@ def test_aliases_are_captured_with_categories(parsed):
 def test_sdn_types_are_the_four_ofac_publishes(parsed):
     entries, _ = parsed
     assert {e.sdn_type for e in entries} == {"Individual", "Entity", "Vessel", "Aircraft"}
+
+
+# ---------------------------------------------------------------------------
+# The delta feed -- a different schema entirely, and the RELEASE-leg evidence
+# ---------------------------------------------------------------------------
+
+DELTA = (pathlib.Path(__file__).resolve().parents[1] / "data" / "archive" /
+         "delta-20260812T221237+0000-9403f40d9496.xml")
+
+delta_only = pytest.mark.skipif(not DELTA.exists(), reason="archived delta missing")
+
+
+@pytest.fixture(scope="module")
+def delta():
+    from interdict.ofac import parse_delta
+    return parse_delta(DELTA)
+
+
+@delta_only
+def test_delta_action_counts_match_the_publication(delta):
+    """The 2026-08-07 Standard Action published 18 adds and 8 removes."""
+    assert len(delta) == 26
+    assert sum(a.action == "add" for a in delta) == 18
+    assert sum(a.action == "remove" for a in delta) == 8
+
+
+@delta_only
+def test_delta_names_are_full_names_not_first_names(delta):
+    """Regression: the delta carries names as translations with formattedFullName.
+
+    Walking for the first tag containing 'name' finds formattedFirstName and yields
+    half a name, which then matches nothing. uid 11753 is SATIZABAL RENGIFO, Mario
+    German -- not 'Mario German'.
+    """
+    by_uid = {a.uid: a for a in delta}
+    assert by_uid["11753"].name == "SATIZABAL RENGIFO, Mario German"
+
+
+@delta_only
+def test_delta_carries_entity_type_and_programs(delta):
+    by_uid = {a.uid: a for a in delta}
+    assert by_uid["11753"].entity_type == "Individual"
+    assert by_uid["16607"].entity_type == "Entity"
+    assert by_uid["11812"].programs == ("SDNTK",)
+
+
+@delta_only
+def test_removed_parties_are_absent_from_the_publication(delta, parsed):
+    """Internal consistency: a removal in the delta really did leave the list.
+
+    This is what makes the release leg honest -- the delisting is Treasury's, not ours.
+    """
+    entries, _ = parsed
+    uids = {e.uid for e in entries}
+    removed = [a.uid for a in delta if a.action == "remove"]
+    assert removed and not (set(removed) & uids)
+
+
+@delta_only
+def test_added_parties_are_present_in_the_publication(delta, parsed):
+    entries, _ = parsed
+    uids = {e.uid for e in entries}
+    added = [a.uid for a in delta if a.action == "add"]
+    assert added and set(added) <= uids

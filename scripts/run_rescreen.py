@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""Run a full-book re-screen -- the loop Cloud Scheduler triggers unattended.
+
+    python scripts/run_rescreen.py                      # screen the whole book
+    python scripts/run_rescreen.py --kill-after 1       # die mid-book (demo beat B5)
+    python scripts/run_rescreen.py --resume RUN_ID      # pick the unfinished range back up
+
+The adjudicator defaults to Gemini and falls back to the offline rule-based stand-in
+when no API key is present, so the pipeline is runnable and demonstrable before the key
+lands. The fallback is announced loudly on stdout -- a screening run whose verdicts came
+from a test double must never be mistaken for the product path.
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import sys
+from datetime import date
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from interdict.db import connect, relay, resume_point, verify_chain   # noqa: E402
+from interdict.matcher import Matcher                                  # noqa: E402
+from interdict.ofac import parse_sdn                                   # noqa: E402
+from interdict.rescreen import open_run, rescreen_book                 # noqa: E402
+
+
+def build_adjudicator(force_offline: bool):
+    if not force_offline and (os.environ.get("GEMINI_API_KEY")
+                              or os.environ.get("GOOGLE_API_KEY")):
+        from interdict.adjudicator import GeminiAdjudicator
+        adj = GeminiAdjudicator()
+        print(f"adjudicator: Gemini ({adj.model_id})")
+        return adj
+
+    from interdict.adjudicator import RuleBasedAdjudicator
+    print("!" * 72)
+    print("!! adjudicator: RULE-BASED OFFLINE STAND-IN -- NOT THE PRODUCT PATH.")
+    print("!! No GEMINI_API_KEY is set, so no model was consulted. Verdicts below are")
+    print("!! deterministic rules, and must not be presented as Gemini adjudications.")
+    print("!! Free key (no billing required): https://aistudio.google.com/apikey")
+    print("!" * 72)
+    return RuleBasedAdjudicator()
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--sdn", type=Path, default=Path("data/SDN.XML"))
+    ap.add_argument("--trigger", default="MANUAL",
+                    choices=["SCHEDULER", "DELTA", "MANUAL", "CHALLENGE"])
+    ap.add_argument("--batch-size", type=int, default=100)
+    ap.add_argument("--kill-after", type=int, default=None,
+                    help="stop after N batches, simulating a worker dying mid-book")
+    ap.add_argument("--resume", type=int, default=None, help="resume an existing run id")
+    ap.add_argument("--offline", action="store_true", help="force the offline adjudicator")
+    args = ap.parse_args()
+
+    entries, publication = parse_sdn(args.sdn)
+    matcher = Matcher(entries)
+    adjudicator = build_adjudicator(args.offline)
+
+    with connect() as conn:
+        if args.resume:
+            run_id = args.resume
+            point = resume_point(conn, run_id)
+            if point is None:
+                print(f"run {run_id} has no incomplete batches -- nothing to resume")
+                return 0
+            print(f"resuming run {run_id} from counterparty id {point} "
+                  f"(MIN(batch_start) over incomplete batches)")
+        else:
+            run_id = open_run(
+                conn,
+                published_at=date(2026, 8, 7),
+                source_hash="ac00228a68345e5c0d7174713cf97e5d5a8efe7cec5c2f540ed87106f49f7474",
+                kind="SDN", trigger=args.trigger,
+                record_count=int(publication["record_count"]),
+            )
+            print(f"opened run {run_id} against publication {publication['publish_date']}")
+
+        summary = rescreen_book(
+            conn, run_id=run_id, matcher=matcher, adjudicator=adjudicator,
+            publication=publication, batch_size=args.batch_size,
+            blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
+        )
+        relay(conn)
+        conn.commit()
+
+        print()
+        print(f"  screened     {summary.screened}")
+        print(f"  HELD         {summary.holds}")
+        print(f"  cleared      {summary.cleared}")
+        print(f"  quarantined  {summary.quarantined}")
+        print(f"  batches      {summary.batches}")
+
+        outstanding = resume_point(conn, run_id)
+        if outstanding is not None:
+            print(f"\n  RUN INCOMPLETE -- resume at counterparty id {outstanding}")
+            print(f"  python scripts/run_rescreen.py --resume {run_id}")
+
+        with conn.cursor() as cur:
+            cur.execute("SELECT state, count(*) AS n, sum(amount_cents) AS total "
+                        "FROM disbursements GROUP BY state ORDER BY state")
+            print("\n  money:")
+            for row in cur.fetchall():
+                print(f"    {row['state']:<10} {row['n']:>4}  ${row['total'] / 100:,.2f}")
+
+        intact, total = verify_chain(conn)
+        print(f"\n  ledger: {total} entries, chain {'INTACT' if intact else 'FORKED'}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
