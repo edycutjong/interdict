@@ -30,11 +30,40 @@ from rapidfuzz.distance import JaroWinkler
 from .normalize import DobInterval, blocking_keys, normalize, parse_dob, tokens
 from .ofac import WEAK, Name, SdnEntry
 
-# Tuned on 2026-08-19 against yente agreement on the sealed 400-entry book.
-# Both thresholds are deliberately module-level constants rather than run flags: every
-# reported agreement number is only meaningful relative to a pinned pair.
-T_HI = 0.85   # >= this is a candidate hit and goes to adjudication
-T_LO = 0.62   # < this is an auto-no-hit and never reaches the LLM plane
+# Tuned 2026-08-17 by `scripts/tune_thresholds.py` on 400 PERTURBED names -- measured,
+# not chosen. Full sweep in data/thresholds.json. Both are module constants rather than
+# run flags: an agreement number only means something against a pinned pair.
+#
+# WHY T_HI IS TUNED FOR RECALL, NOT FOR MAXIMUM MARGIN.
+# The sweep's widest recall/false-hit margin sits at 0.82, and a naive reading would
+# pick it. That would be tuning this plane as if it were the whole system. It is not:
+# the adjudicator exists to CLEAR lookalikes, so precision is its job, and the two
+# errors are nothing like symmetric --
+#
+#   a MISS      is a payment to a designated party under a strict-liability statute.
+#               Nothing downstream can recover it; the system never sees the name again.
+#   a FALSE HIT is one extra Gemini adjudication, which then clears it with a written
+#               rationale. It costs a fraction of a cent and a line in the console.
+#
+# So this plane is deliberately run hot and the LLM plane supplies precision. Tuning
+# both planes for precision would double-count the same conservatism and lose real hits
+# to no purpose.
+#
+#   T_HI    recall   false_hit
+#   0.85    0.855    0.043       previous value -- lost 14.5% of true hits
+#   0.82    0.932    0.070       max margin
+#   0.78    0.975    0.160       CHOSEN
+#
+# At 0.78 a full 400-counterparty re-screen sends ~64 extra candidates to adjudication.
+# That is the cost of finding 12 percentage points more of the people we are legally
+# required to find, and it is a trade worth making every time.
+T_HI = 0.78   # >= this is a candidate hit and goes to adjudication
+
+# T_LO is the auto-no-hit floor: below it nothing is persisted and nothing is ever
+# adjudicated, so it is the one threshold where a mistake is genuinely invisible.
+# Recall is 1.000 at both 0.60 and 0.62 and only starts falling at 0.64, so this sits
+# at the last measured value that loses nothing.
+T_LO = 0.62
 
 _WEAK_ALIAS_FACTOR = 0.80
 _DOB_DISJOINT_FACTOR = 0.55

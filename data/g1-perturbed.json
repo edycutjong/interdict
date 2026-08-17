@@ -8,7 +8,7 @@
     "top1": 0.995,
     "agreement": 0.83,
     "oracle_recall": 0.84,
-    "above_t_hi": 0.8575,
+    "above_t_hi": 0.9775,
     "n": 400
   },
   "rows": [

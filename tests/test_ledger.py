@@ -123,6 +123,24 @@ def test_ledger_chain_does_not_fork_under_concurrent_writers():
         assert row["n"] == row["d"], "two ledger rows share a parent -- chain forked"
 
 
+def test_sequence_order_is_chain_order():
+    """Regression: seq must be assigned under the chaining lock.
+
+    With a bigserial, the sequence is drawn at INSERT time -- outside the advisory lock
+    that serialises hashing -- so two concurrent writers can chain in one order and be
+    numbered in the other. The chain stays linear but no longer reads in order, which
+    is indistinguishable from corruption to anyone auditing it. A contiguous, gapless
+    sequence is the observable form of that guarantee.
+    """
+    with connect() as c:
+        with c.cursor() as cur:
+            cur.execute("SELECT min(seq) AS lo, max(seq) AS hi, count(*) AS n FROM ledger")
+            row = cur.fetchone()
+    if row["n"] == 0:
+        pytest.skip("empty ledger")
+    assert row["hi"] - row["lo"] + 1 == row["n"], "ledger sequence has gaps"
+
+
 def test_ledger_writes_only_via_outbox(conn, clean):
     """The relay is the single writer; emit() alone must not touch the ledger."""
     with conn.cursor() as cur:

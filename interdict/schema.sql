@@ -180,8 +180,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS holds_active_uniq
 -- F3: the ledger -- hash-chained, append-only, single writer
 -- ---------------------------------------------------------------------------
 
+-- NOTE: `seq` is a plain bigint, NOT a bigserial, and is assigned inside the trigger
+-- below. This is deliberate and was found by the concurrency test.
+--
+-- bigserial draws from a sequence at INSERT time, which happens OUTSIDE the advisory
+-- lock that serialises hash chaining. Two concurrent writers could therefore chain in
+-- one order and receive sequence numbers in the other: T2 chains onto the tail and T1
+-- chains onto T2, while T1 holds the lower seq. The chain is still linear, but reading
+-- it ORDER BY seq shows a break -- and an audit trail that cannot be read in order is
+-- not an audit trail. Assigning seq under the same lock makes sequence order and chain
+-- order the same thing by construction.
 CREATE TABLE IF NOT EXISTS ledger (
-    seq         bigserial PRIMARY KEY,
+    seq         bigint PRIMARY KEY,
     event_type  text NOT NULL,
     payload     jsonb NOT NULL,
     prev_hash   bytea NOT NULL,
@@ -191,17 +201,24 @@ CREATE TABLE IF NOT EXISTS ledger (
 
 -- The advisory lock is what makes the chain linear. Without it two concurrent inserts
 -- both read the same tail hash and the chain forks -- which is precisely the test in
--- tests/test_ledger_concurrency.py.
+-- tests/test_ledger.py::test_ledger_chain_does_not_fork_under_concurrent_writers.
 CREATE OR REPLACE FUNCTION ledger_chain() RETURNS trigger AS $$
 DECLARE
     last_hash bytea;
+    last_seq  bigint;
 BEGIN
     PERFORM pg_advisory_xact_lock(hashtext('interdict.ledger'));
 
-    SELECT entry_hash INTO last_hash FROM ledger ORDER BY seq DESC LIMIT 1;
+    SELECT entry_hash, seq INTO last_hash, last_seq
+    FROM ledger ORDER BY seq DESC LIMIT 1;
+
     IF last_hash IS NULL THEN
         last_hash := digest('interdict.genesis', 'sha256');   -- deterministic genesis
+        last_seq  := 0;
     END IF;
+
+    -- Assigned here, under the lock, so seq order == chain order.
+    NEW.seq := last_seq + 1;
 
     NEW.prev_hash  := last_hash;
     -- jsonb normalises key order, so the digest is reproducible across processes.
