@@ -1,0 +1,15 @@
+# yente manifest — SCOPE PIN (audit F6).
+#
+# The agreement harness targets /match/us_ofac_sdn EXCLUSIVELY. The default yente
+# scope spans 465 datasets and manufactures false "matches" out of Wikidata, SAM
+# exclusions, and foreign sanctions regimes — none of which OFAC strict liability
+# turns on. Every agreement/disagreement number Interdict reports depends on this
+# pin, so it lives in version control rather than in a run flag.
+#
+# Indexing ONLY us_ofac_sdn also means /match/default cannot silently be used by
+# mistake: the dataset simply is not there.
+
+catalogs:
+  - url: "https://data.opensanctions.org/datasets/latest/index.json"
+    scope: us_ofac_sdn
+    resource_name: entities.ftm.json

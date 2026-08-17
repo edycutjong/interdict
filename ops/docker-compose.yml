@@ -1,0 +1,63 @@
+# Local development stack for Interdict.
+#
+# Two services, both of which have cloud counterparts at deploy time:
+#   postgres -> Cloud SQL (Postgres 16)   — holds, ledger, outbox, rescreen_batches
+#   yente    -> Cloud Run container       — the external screening oracle
+#
+# The screening plane talks to both over env-var connection strings and imports no
+# GCP SDK, so `make deploy` is a re-point rather than a rewrite.
+
+name: interdict
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: interdict
+      POSTGRES_PASSWORD: interdict
+      POSTGRES_DB: interdict
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U interdict -d interdict"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  yente:
+    image: ghcr.io/opensanctions/yente:4.2.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      YENTE_INDEX_TYPE: elasticsearch
+      YENTE_INDEX_URL: http://elasticsearch:9200
+      YENTE_MANIFEST: /manifests/yente-manifest.yml
+      YENTE_AUTO_REINDEX: "false"
+      YENTE_UPDATE_TOKEN: ""
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./yente-manifest.yml:/manifests/yente-manifest.yml:ro
+
+volumes:
+  pgdata:
+  esdata:

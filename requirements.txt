@@ -1,0 +1,12 @@
+# Screening plane. Deliberately small and cloud-agnostic -- nothing here imports a GCP
+# SDK, which is what makes `make deploy` a re-point rather than a rewrite.
+rapidfuzz==3.9.7
+psycopg[binary]==3.2.3
+httpx==0.27.2
+
+# Adjudication plane (Gemini) and agent framework.
+google-genai==0.8.0
+google-adk==0.4.0
+
+# Tests
+pytest==8.3.3
