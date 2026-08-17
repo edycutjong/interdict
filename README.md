@@ -205,12 +205,19 @@ make test             # 133 tests
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
+export GEMINI_API_KEY=...                 # free, no billing: aistudio.google.com/apikey
 python scripts/load_book.py --truncate    # the labelled synthetic book
 python scripts/run_rescreen.py            # the unattended loop
 python scripts/adjudication_quality.py    # graded against ground truth
 python scripts/replay_release.py          # the labelled Aug-7 release replay
 python -m interdict.console               # evidence console on :8080
 ```
+
+**`run_rescreen.py` refuses to run without a Gemini key.** It does not fall back to a
+stand-in, because a reproduce command that quietly disables the thing being judged is
+worse than one that fails. `--offline` runs the deterministic plane alone and says so on
+every line of output; that is what CI uses, and it is the only honest way to describe
+such a run.
 
 Or `make reproduce` for all of it.
 

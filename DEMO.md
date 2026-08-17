@@ -3,7 +3,16 @@
 Every command here runs against the real OFAC publication committed to this repo. None
 of the numbers below are typed in by hand; each is printed by the command above it.
 
-Setup once: `make install && make up && make oracle-index && make schema && make fetch-sdn`
+Setup once:
+
+```bash
+make install && make up && make oracle-index && make schema && make fetch-sdn
+export GEMINI_API_KEY=...     # free, no billing: https://aistudio.google.com/apikey
+```
+
+`run_rescreen.py` **refuses to run without that key** rather than substituting a test
+double. Every `--offline` run below is the deterministic plane alone and labels itself
+as such on every line of output.
 
 ---
 

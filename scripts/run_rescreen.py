@@ -30,21 +30,40 @@ from interdict.rescreen import open_run, rescreen_book                 # noqa: E
 
 
 def build_adjudicator(force_offline: bool):
-    if not force_offline and (os.environ.get("GEMINI_API_KEY")
-                              or os.environ.get("GOOGLE_API_KEY")):
-        from interdict.adjudicator import GeminiAdjudicator
-        adj = GeminiAdjudicator()
-        print(f"adjudicator: Gemini ({adj.model_id})")
-        return adj
+    """Resolve the adjudication plane.
 
-    from interdict.adjudicator import RuleBasedAdjudicator
-    print("!" * 72)
-    print("!! adjudicator: RULE-BASED OFFLINE STAND-IN -- NOT THE PRODUCT PATH.")
-    print("!! No GEMINI_API_KEY is set, so no model was consulted. Verdicts below are")
-    print("!! deterministic rules, and must not be presented as Gemini adjudications.")
-    print("!! Free key (no billing required): https://aistudio.google.com/apikey")
-    print("!" * 72)
-    return RuleBasedAdjudicator()
+    THE DEFAULT PATH IS THE REAL ONE. Running without a key used to fall back to the
+    offline stand-in automatically, which meant the command in the README quietly did
+    not exercise the product -- the exact shape of failure where a project ships a
+    reproduce command that disables the thing being judged. Now the fallback is opt-in:
+    no key and no --offline is a hard error, so a stand-in run can only ever happen
+    because someone asked for one.
+    """
+    if force_offline:
+        from interdict.adjudicator import RuleBasedAdjudicator
+        print("!" * 72)
+        print("!! --offline: RULE-BASED STAND-IN, NOT THE PRODUCT PATH.")
+        print("!! No model was consulted. These verdicts are deterministic rules and")
+        print("!! must not be presented as Gemini adjudications.")
+        print("!" * 72)
+        return RuleBasedAdjudicator()
+
+    if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
+        raise SystemExit(
+            "\nNo GEMINI_API_KEY set.\n\n"
+            "The adjudication plane is half of this system and Gemini is required tech\n"
+            "for this hackathon, so this command will not silently substitute a test\n"
+            "double for it.\n\n"
+            "  Free key, no billing account needed: https://aistudio.google.com/apikey\n"
+            "  export GEMINI_API_KEY=...\n\n"
+            "To run the deterministic plane alone -- useful for CI, and the only honest\n"
+            "way to describe such a run -- pass --offline explicitly.\n"
+        )
+
+    from interdict.adjudicator import GeminiAdjudicator
+    adj = GeminiAdjudicator()
+    print(f"adjudicator: Gemini ({adj.model_id})")
+    return adj
 
 
 def main() -> int:
