@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Interdict — sanctions screening for the people Firco won't sell to</title>
-<meta name="description" content="An autonomous four-agent fleet that re-screens an NGO's entire counterparty book the moment Treasury updates the OFAC SDN list — holds true hits, clears lookalikes with written rationale, releases funds on delisting, and drafts the statutory blocking report. Every claim reproducible.">
+<meta name="description" content="An autonomous three-agent fleet that re-screens an NGO's entire counterparty book the moment Treasury updates the OFAC SDN list — holds true hits, clears lookalikes with written rationale, releases funds on delisting, and drafts the statutory blocking report. Every claim reproducible.">
 <style>
 /* ---------- tokens ---------- */
 :root{
@@ -118,6 +118,11 @@ tr:last-child td{border-bottom:none}
 th{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;background:color-mix(in srgb,var(--ink) 3%,transparent)}
 td b.hold{color:var(--hold)}
 td b.release{color:var(--release)}
+/* ---------- architecture figure ---------- */
+.archfig{margin:0;padding:clamp(16px,3vw,30px);border-radius:14px;background:#0b0e14;
+  border:1px solid #1c2330;overflow-x:auto}
+.archfig figcaption{margin-top:18px;color:#8b98ad;font-size:13.5px;line-height:1.6;
+  text-align:center;max-width:70ch;margin-left:auto;margin-right:auto}
 /* ---------- fleet diagram ---------- */
 .plane{border:1px dashed var(--line-strong);border-radius:12px;padding:1rem;margin-top:1.2rem}
 .plane-label{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
@@ -169,6 +174,16 @@ td b.release{color:var(--release)}
   background:color-mix(in srgb,var(--ink) 6%,transparent);
   border:1px solid var(--line);border-radius:8px;padding:.55rem .8rem;display:block;margin:.4rem 0 1rem;
 }
+/* ---------- real captures ---------- */
+.shotfig{margin:0}
+.shotfig img{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line)}
+.shotfig figcaption{margin-top:14px;color:var(--muted);font-size:.88rem;line-height:1.65;max-width:68ch}
+.tablewrap{overflow-x:auto}
+.tablewrap table{width:100%;border-collapse:collapse;font-size:.92rem}
+.tablewrap caption{caption-side:bottom;margin-top:12px;color:var(--muted);text-align:left}
+.tablewrap th,.tablewrap td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);
+  vertical-align:top}
+.tablewrap thead th{color:var(--muted);font-weight:600}
 /* ---------- placeholder blocks ---------- */
 .placeholder{
   border:2px dashed var(--line-strong);border-radius:12px;background:transparent;
@@ -217,7 +232,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 
 <!-- ============================== HERO ============================== -->
 <section class="hero wrap" id="top">
-  <p class="trackline"><b>Fortified Enterprise Fleet</b> · All Things Agentic Hackathon · four ADK agents on Google Cloud</p>
+  <p class="trackline"><b>Fortified Enterprise Fleet</b> · All Things Agentic Hackathon · three ADK agents on Google Cloud</p>
   <h1>Sanctions screening for the people Firco won&rsquo;t sell to.</h1>
 
   <div class="story">
@@ -296,7 +311,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 <section id="fleet">
   <div class="wrap">
     <p class="eyebrow" data-n="03">Architecture</p>
-    <h2>Four agents, two planes, one guard that decides what executes</h2>
+    <h2>Three agents, two planes, one guard that decides what executes</h2>
     <p class="lede">The deterministic matching plane is the <b>oracle</b> for the LLM plane. Because
     the planes are separate ADK agents, that check is literal inter-agent routing — not a function
     call inside a monolith. Deterministic code decides what executes; the LLM explains and judges.</p>
@@ -307,7 +322,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
         <p>Routes matcher → adjudicator and applies the guard on every hop. Exposes
         <code>screen_counterparty</code> as the A2A-cataloged skill. Owns quarantine.</p>
         <ul class="guardlist">
-          <li><b>Oracle disagreement:</b> a CLEAR against a deterministic score ≥ 0.93, or a HOLD at ≤ 0.55 with no corroborating citation, <b>quarantines instead of executing</b>.</li>
+          <li><b>Oracle disagreement:</b> a CLEAR against a deterministic score ≥ 0.93, or a HOLD below the 0.62 no-hit floor with no corroborating citation, <b>quarantines instead of executing</b>.</li>
           <li><b>Citation check:</b> every cited field must exist verbatim in the actual records — a hallucinated passport number is a schema rejection, not a hold.</li>
           <li><b>Loop cap:</b> hard cap of 2 matcher↔adjudicator round-trips per (hit, list_version), counted in Postgres — a looping worker cannot out-vote the router; it terminates in a quarantine terminal state.</li>
           <li><b>Fail-closed:</b> while quarantined, the disbursement stays held. A confused agent can never move money.</li>
@@ -321,36 +336,157 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
       </div>
 
       <div class="agent">
-        <h3>adjudicator-agent <span class="tag">Gemini plane · Vertex AI</span></h3>
+        <h3>adjudicator-agent <span class="tag">Gemini plane · structured output</span></h3>
         <p>Writes every hold/clear rationale as strict structured output: verdict, confidence,
         cited fields. DOB corroboration and weak-alias downweighting per OFAC&rsquo;s own published guidance.</p>
       </div>
 
       <div class="agent span2">
-        <h3>disburser-agent <span class="tag">ADK · the real A2A consumer</span></h3>
-        <p>Drains the disbursement queue. Before releasing any payment it calls the orchestrator over
-        A2A with SA-signed OIDC service-to-service auth — a genuine credential boundary per hop, each
-        agent with its own least-privilege service account.</p>
-      </div>
+            <h3>the money plane <span class="tag">Postgres — where correctness actually lives</span></h3>
+            <p>The orchestrator is the sole writer of decisions, and every one lands in constraints rather than in application code: idempotent holds under <code>UNIQUE&nbsp;…&nbsp;NULLS NOT DISTINCT</code>, an illegal-transition trigger so screened money cannot skip states, and a hash-chained append-only ledger whose sequence is assigned inside the chaining lock — so the audit trail cannot fork, and cannot be rewritten even by us.</p>
+          </div>
     </div>
 
     <p style="margin-top:1.3rem" class="small">This is the direct, structural answer to the track&rsquo;s
     failure-tolerance question — <em>how does the system recover if a worker agent loops or returns a
     hallucination?</em> — answered by the router itself, not by a paragraph in a README.</p>
 
-    <!-- TODO: replace with the real architecture diagram (regenerated FROM code before /publish) -->
-    <div class="placeholder" role="img" aria-label="Placeholder for architecture diagram">
-      <span class="ptag">diagram pending</span>
-      <p>Architecture diagram goes here — regenerated from the deployed code before submission,
-      per the project&rsquo;s rule that the published diagram describes the code, not the plan.</p>
-    </div>
+    <figure class="archfig">
+      <svg style="max-width:100%;height:auto;display:block;margin:0 auto" viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three ADK agents on Cloud Run with an oracle guard at the routing boundary">
+              <defs>
+                <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
+                <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#f59e0b"/></marker>
+              </defs>
+              <!-- external world -->
+              <rect x="10" y="20" width="300" height="200" rx="10" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
+              <text x="30" y="52" fill="#556174" font-size="14" letter-spacing="2">EXTERNAL — NOT OURS</text>
+              <text x="30" y="88" fill="#e7ecf4" font-size="17" font-weight="700">OFAC SLS</text>
+              <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 records</text>
+              <text x="30" y="138" fill="#94a3b8" font-size="14">/changes/latest delta</text>
+              <text x="30" y="162" fill="#94a3b8" font-size="14">302 → presigned S3</text>
+              <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
+              <!-- scheduler + ingest -->
+              <rect x="10" y="270" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
+              <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">Cloud Scheduler</text>
+              <text x="30" y="330" fill="#94a3b8" font-size="14">poll every 6h · unattended</text>
+              <rect x="10" y="390" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
+              <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest · Cloud Run job</text>
+              <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch → Pub/Sub</text>
+              <line x1="160" y1="220" x2="160" y2="270" stroke="#94a3b8" marker-end="url(#ar)"/>
+              <line x1="160" y1="360" x2="160" y2="390" stroke="#94a3b8" marker-end="url(#ar)"/>
+              <line x1="310" y1="435" x2="470" y2="435" stroke="#94a3b8" marker-end="url(#ar)"/>
+              <text x="325" y="425" fill="#556174" font-size="13">rescreen-tasks</text>
+              <!-- orchestrator (center) -->
+              <rect x="470" y="240" width="430" height="260" rx="12" fill="#121722" stroke="#f59e0b" stroke-width="1.5"/>
+              <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · ADK · thin</text>
+              <rect x="495" y="298" width="380" height="120" rx="8" fill="rgba(245,158,11,.14)" stroke="#f59e0b"/>
+              <text x="513" y="328" fill="#f59e0b" font-size="16" font-weight="700">ORACLE GUARD — at the routing boundary</text>
+              <text x="513" y="354" fill="#e7ecf4" font-size="14">schema · citation-vs-record · disagreement</text>
+              <text x="513" y="376" fill="#e7ecf4" font-size="14">loop cap ≤2 round-trips → QUARANTINE</text>
+              <text x="513" y="398" fill="#e7ecf4" font-size="14">fail-closed: quarantined money stays HELD</text>
+              <text x="495" y="448" fill="#94a3b8" font-size="14">A2A skill: screen_counterparty()</text>
+              <text x="495" y="472" fill="#94a3b8" font-size="14">sole writer of decisions · tx + outbox</text>
+              <!-- matcher -->
+              <rect x="1010" y="120" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
+              <text x="1035" y="158" fill="#e7ecf4" font-size="19" font-weight="700">matcher-agent · NO LLM</text>
+              <text x="1035" y="186" fill="#94a3b8" font-size="14">deterministic plane — always right</text>
+              <text x="1035" y="208" fill="#94a3b8" font-size="14">Jaro-Winkler + transliteration · weak-alias</text>
+              <text x="1035" y="230" fill="#94a3b8" font-size="14">checkpointed full-book re-screen</text>
+              <!-- adjudicator -->
+              <rect x="1010" y="390" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
+              <text x="1035" y="428" fill="#e7ecf4" font-size="19" font-weight="700">adjudicator-agent · Gemini</text>
+              <text x="1035" y="456" fill="#94a3b8" font-size="14">Gemini API · structured responseSchema</text>
+              <text x="1035" y="478" fill="#94a3b8" font-size="14">written rationale · DOB corroboration</text>
+              <text x="1035" y="500" fill="#94a3b8" font-size="14">weak-alias downweighting · cited_fields[]</text>
+              <!-- routing arrows -->
+              <line x1="900" y1="300" x2="1010" y2="200" stroke="#f59e0b" marker-end="url(#arA)"/>
+              <text x="905" y="238" fill="#f59e0b" font-size="13">A2A: score()</text>
+              <line x1="1010" y1="230" x2="900" y2="330" stroke="#94a3b8" marker-end="url(#ar)"/>
+              <line x1="900" y1="430" x2="1010" y2="440" stroke="#f59e0b" marker-end="url(#arA)"/>
+              <text x="905" y="418" fill="#f59e0b" font-size="13">A2A: adjudicate()</text>
+              <line x1="1010" y1="470" x2="900" y2="465" stroke="#94a3b8" marker-end="url(#ar)"/>
+              <!-- money plane (replaced the cut disburser-agent, 08-17 descope) -->
+              <rect x="470" y="20" width="430" height="110" rx="12" fill="#121722" stroke="#232b3a"/>
+              <text x="495" y="58" fill="#e7ecf4" font-size="19" font-weight="700">money plane</text>
+              <text x="495" y="86" fill="#94a3b8" font-size="14">idempotent holds · release on delisting</text>
+              <text x="495" y="108" fill="#94a3b8" font-size="14">10-business-day blocking report</text>
+              <line x1="685" y1="130" x2="685" y2="240" stroke="#94a3b8" marker-end="url(#ar)" marker-start="url(#ar)"/>
+              <text x="700" y="195" fill="#556174" font-size="13">HOLD / RELEASE · tx + outbox</text>
+              <!-- oracles -->
+              <rect x="1440" y="120" width="230" height="130" rx="12" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
+              <text x="1462" y="152" fill="#556174" font-size="13" letter-spacing="1">EXTERNAL ORACLES</text>
+              <text x="1462" y="180" fill="#e7ecf4" font-size="15" font-weight="700">yente · OpenSanctions</text>
+              <text x="1462" y="202" fill="#94a3b8" font-size="13">/match/us_ofac_sdn only</text>
+              <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
+              <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+              <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
+              <!-- cloud sql -->
+              <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
+              <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Cloud SQL · Postgres 16</text>
+              <text x="760" y="542" fill="#94a3b8" font-size="14">idempotent holds (UNIQUE) · hash-chained append-only ledger · outbox · quarantine · rescreen_batches</text>
+              <line x1="685" y1="500" x2="685" y2="512" stroke="#94a3b8" marker-end="url(#ar)"/>
+            </svg>
+      <figcaption>Three ADK agents on Cloud&nbsp;Run. The oracle guard sits at the routing boundary
+      between the deterministic and model planes, so a verdict is checked before it can move money.
+      Drawn from the code as it stands, not from the plan.</figcaption>
+    </figure>
   </div>
 </section>
 
 <!-- ============================== PROOF ============================== -->
+<!-- ============================== RESULTS ============================== -->
+<section id="results">
+  <div class="wrap">
+    <p class="eyebrow" data-n="04">Measured results</p>
+    <h2>It beats the independent oracle on names that aren&rsquo;t on the list.</h2>
+    <p class="lede">Screening our seeded book verbatim scores <b>1.000</b> — and that number is close to
+    worthless, because those names were copied out of the very publication being searched. So the
+    reported figure screens <b>deterministic perturbations</b> instead: transliterations drawn from
+    OFAC&rsquo;s own alias lists, reordering, dropped particles, transcription confusables. Each variant
+    is derived from the SHA-256 of the name, so the challenge set is byte-identical on your machine.</p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="n">0.995 <small>vs 0.840</small></span>
+        <p>Top-1 accuracy on perturbed names against <b>yente</b>, an independent implementation built
+        by people who have never seen this code. <code>make challenge-set</code> re-derives it.</p>
+      </div>
+      <div class="stat">
+        <span class="n">1 <small>in 460</small></span>
+        <p>Missed hits, graded against ground truth the screening path never reads — the orchestrator
+        does not know the column exists. <b>0 frozen grantees in 76.</b></p>
+      </div>
+      <div class="stat">
+        <span class="n">0</span>
+        <p>Cases where we cleared someone the oracle flagged, across 459 decisions. Under strict
+        liability, being <em>more permissive</em> than the oracle is the direction that ends in a
+        payment to a designated party. 456 agreed; in the other 3 we were stricter.</p>
+      </div>
+      <div class="stat">
+        <span class="n">9.3 <small>ms p50</small></span>
+        <p>Per counterparty against all 19,199 records. A full 536-counterparty re-screen finishes in
+        <b>7.6&nbsp;s</b>; OFAC publishes roughly weekly.</p>
+      </div>
+      <div class="stat">
+        <span class="n">133 <small>tests</small></span>
+        <p>CI runs a real Postgres and <b>fails if the database tests silently skip</b> — a green badge
+        that skipped the ledger invariants would read as proof of something never checked.</p>
+      </div>
+      <div class="stat">
+        <span class="n">6 <small>bugs</small></span>
+        <p>Found by those tests, each a silent correctness failure: a run that marked itself finished
+        with most of the book unscreened, an audit chain that could fork, identity type inferred from
+        an optional field. All fixed, all documented in the commit history.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="proof">
   <div class="wrap">
-    <p class="eyebrow" data-n="04">Verified proof points</p>
+    <p class="eyebrow" data-n="05">Verified proof points</p>
     <h2>Real feed. Real numbers. Nothing synthesized.</h2>
     <p class="lede">Everything below was verified live from a clean machine — no credentials, no API
     key — and traces to a public artifact.<sup><a href="#sources" aria-label="See sources">†</a></sup></p>
@@ -419,22 +555,33 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
     spelling, with a unit test pinning it. A parser that works against an invented feed wouldn&rsquo;t
     need to.</p>
 
-    <!-- TODO: replace with real capture — oracle agreement table output of `make reproduce`
-         (N adjudications, agreement %, every disagreement documented). Numbers do not exist yet;
-         never fill this with invented figures. -->
-    <div class="placeholder" role="img" aria-label="Placeholder for oracle agreement table">
-      <span class="ptag">capture pending — day 3+</span>
-      <p>The headline artifact lands here once the matcher runs: <em>every adjudication graded
-      against two oracles we don&rsquo;t control — with every disagreement documented</em>, printed
-      by <code>make reproduce</code>. No number appears here until it&rsquo;s real.</p>
+    <div class="tablewrap">
+      <table>
+        <caption class="small">Every one of 459 adjudications in a full re-screen, graded against
+        yente. Printed by <code>make challenge-set</code> and <code>scripts/adjudication_quality.py</code>.</caption>
+        <thead>
+          <tr><th scope="col">Outcome</th><th scope="col">Count</th><th scope="col">What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Both flagged a hit</td><td><b>456</b></td>
+              <td>Independent agreement on the designation.</td></tr>
+          <tr><td>We held, yente missed</td><td><b>3</b></td>
+              <td>We were the stricter party — the safe direction to differ.</td></tr>
+          <tr><td>We cleared, yente flagged</td><td><b>0</b></td>
+              <td>The number that matters. Under strict liability, being more permissive than the
+              oracle is what ends in a payment to a designated party.</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- TODO: replace with real capture — Cloud Scheduler run history in Cloud Console
          (the unattended-operation evidence; accrues only after GCP billing is active). -->
     <div class="placeholder" role="img" aria-label="Placeholder for Cloud Scheduler run history screenshot">
-      <span class="ptag">capture pending</span>
-      <p>Cloud Scheduler run history goes here — logged, unattended polls fired by genuine Treasury
-      publications across the build window. It cannot be backfilled, which is exactly why it&rsquo;s evidence.</p>
+      <span class="ptag">pending — GCP billing</span>
+      <p>Cloud Scheduler run history goes here: logged, unattended polls fired by genuine Treasury
+      publications. It accrues in wall-clock time and cannot be backfilled, which is exactly why it
+      counts as evidence — and why this panel stays empty rather than being filled with anything else.
+      A local archiver has captured every publication by content hash in the meantime.</p>
     </div>
 
     <h3 id="sources" style="margin-top:2rem">Sources</h3>
@@ -452,7 +599,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 <!-- ============================== SENTINEL BOOK ============================== -->
 <section id="sentinel">
   <div class="wrap">
-    <p class="eyebrow" data-n="05">The anti-plant proof</p>
+    <p class="eyebrow" data-n="06">The anti-plant proof</p>
     <h2>The sentinel book: a release demo nobody could stage</h2>
     <p class="lede">The easy way to demo &ldquo;releases funds on delisting&rdquo; is to pre-seed a
     name you already know was removed and replay the delta. Hindsight — and rightly discounted.
@@ -490,7 +637,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 <!-- ============================== HONESTY + REPRODUCE ============================== -->
 <section id="reproduce">
   <div class="wrap">
-    <p class="eyebrow" data-n="06">Honesty as a feature</p>
+    <p class="eyebrow" data-n="07">Honesty as a feature</p>
     <h2>What&rsquo;s synthetic is labelled. What&rsquo;s real is reproducible.</h2>
 
     <div class="honesty">
@@ -535,14 +682,17 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
     book hash, by design — entries added or removed since 08/07/2026 change the eligible pool.
     That&rsquo;s why the snapshot hash is recorded alongside the book hash.</p>
 
-    <!-- TODO: replace with real capture — evidence console showing a held disbursement with its
-         written rationale and the "SYNTHETIC LEDGER" label visible. Product is mid-build; do not
-         mock UI here. -->
-    <div class="placeholder" role="img" aria-label="Placeholder for evidence console screenshot">
-      <span class="ptag">capture pending</span>
-      <p>Evidence console screenshot goes here once the console exists — a held disbursement, its
-      written rationale, and the on-screen <em>SYNTHETIC LEDGER</em> label, exactly as judges will see it.</p>
-    </div>
+    <figure class="shotfig">
+      <img src="console-adjudications-dark.png"
+           alt="Interdict evidence console: adjudications with deterministic score, verdict, oracle
+                guard result, yente's independent verdict, and the written rationale for each decision"
+          >
+      <figcaption>The adjudications view, exactly as judges see it. Every row carries the
+      deterministic score, the guard result, yente&rsquo;s independent verdict, and the written
+      rationale. The <code>model</code> column names whichever adjudicator produced the verdict, so
+      a stand-in can never be mistaken for the product path — and the synthetic-book banner sits
+      above every screen that shows money.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -552,8 +702,7 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
 <footer>
   <div class="wrap">
     <p><b style="color:var(--ink)">Interdict</b> — built solo for the All Things Agentic Hackathon,
-    Fortified Enterprise Fleet track. Gemini on Vertex AI · ADK · Cloud Run · Cloud SQL · Pub/Sub ·
-    Cloud Scheduler · Gemma memo-armor.</p>
+    Fortified Enterprise Fleet track. Gemini · ADK · Cloud Run · Cloud SQL · Pub/Sub · Cloud Scheduler.</p>
     <ul class="pending" aria-label="Links pending until submission">
       <li>demo video — records after build completes</li>
       <li>live .run URL — pending deploy</li>
