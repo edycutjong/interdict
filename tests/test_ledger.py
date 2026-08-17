@@ -282,14 +282,21 @@ def test_resume_point_is_min_incomplete_not_max_completed(conn, clean):
                     "VALUES (%s,'SCHEDULER') RETURNING id", (lv,))
         run = cur.fetchone()["id"]
 
+    # Each batch is completed as it is claimed, because claim_batch now re-claims an
+    # abandoned range before allocating a new one -- claiming three in a row without
+    # completing them would simply hand back the first range three times.
     b1 = claim_batch(conn, run, 500, 1500)
+    complete_batch(conn, run, b1[0])
     b2 = claim_batch(conn, run, 500, 1500)
+    complete_batch(conn, run, b2[0])
     b3 = claim_batch(conn, run, 500, 1500)
+    complete_batch(conn, run, b3[0])
     assert (b1, b2, b3) == ((1, 500), (501, 1000), (1001, 1500))
 
-    # Workers 1 and 3 finish; worker 2 is killed mid-book.
-    complete_batch(conn, run, 1)
-    complete_batch(conn, run, 1001)
+    # Now worker 2's range is abandoned: reopen it by clearing its completion.
+    with conn.cursor() as cur:
+        cur.execute("UPDATE rescreen_batches SET completed_at = NULL "
+                    "WHERE run_id = %s AND batch_start = 501", (run,))
 
     assert resume_point(conn, run) == 501
 
@@ -315,7 +322,12 @@ def test_claim_batch_returns_none_past_the_end(conn, clean):
         cur.execute("INSERT INTO rescreen_runs (list_version_id,trigger) "
                     "VALUES (%s,'SCHEDULER') RETURNING id", (lv,))
         run = cur.fetchone()["id"]
+    start, _ = claim_batch(conn, run, 500, 100)
+    assert (start, _) == (1, 100)
+    # Only once the range is completed does the allocator move past the end of the book;
+    # an uncompleted range is re-handed out rather than abandoned.
     assert claim_batch(conn, run, 500, 100) == (1, 100)
+    complete_batch(conn, run, start)
     assert claim_batch(conn, run, 500, 100) is None
 
 

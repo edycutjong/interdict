@@ -152,6 +152,50 @@ def test_no_counterparty_is_skipped_across_a_crash(conn):
     assert total == 20
 
 
+def test_abandoned_batch_is_reclaimed_not_stepped_over(conn):
+    """A worker that dies MID-batch leaves a claimed, uncompleted range.
+
+    Allocating only from max(batch_end) would step over it forever: the range stays
+    claimed, never completes, the run can never close, and those counterparties are
+    never screened against a live sanctions list. Re-claiming is safe because screening
+    is idempotent.
+    """
+    _book(conn, n_hits=10, n_clean=10)
+    run = _run(conn)
+
+    # Simulate the crash directly: claim a batch and never complete it.
+    from interdict.db import claim_batch
+    first = claim_batch(conn, run, 5, 20)
+    assert first == (1, 5)
+
+    # The very next claim must return to the abandoned range, not skip to 6.
+    assert claim_batch(conn, run, 5, 20) == (1, 5)
+
+    # And a full re-screen must eventually cover the whole book and close the run.
+    _screen(conn, run, batch_size=5)
+    assert resume_point(conn, run) is None
+    with conn.cursor() as cur:
+        cur.execute("SELECT finished_at FROM rescreen_runs WHERE id=%s", (run,))
+        assert cur.fetchone()["finished_at"] is not None
+        cur.execute("SELECT count(*) AS n FROM disbursements d "
+                    "JOIN counterparties c ON c.id=d.counterparty_id "
+                    "WHERE c.expected_verdict='HOLD' AND d.state<>'HELD'")
+        assert cur.fetchone()["n"] == 0
+
+
+def test_incomplete_run_reports_short_coverage(conn):
+    """Stopping between batches leaves nothing 'incomplete' but the book unscreened."""
+    from interdict.db import run_is_complete
+    _book(conn, n_hits=10, n_clean=10)
+    run = _run(conn)
+    _screen(conn, run, batch_size=5, stop_after_batches=1)
+
+    # Nothing outstanding...
+    assert resume_point(conn, run) is None
+    # ...but the run is emphatically not complete.
+    assert not run_is_complete(conn, run, 20)
+
+
 def test_rescreen_is_idempotent_across_runs(conn):
     """A second publication re-screens the book without double-holding."""
     _book(conn)

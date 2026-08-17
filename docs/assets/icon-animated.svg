@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img"
+     aria-label="Interdict — a green-lit payment mid-flight hits the delta and freezes red — held until Treasury itself delists">
+<!-- STORYBOARD (dur 6s — must equal this file's single master dur)
+  0-10%   steady state: full mark visible — plate, green flight line, red packet at the bar, hold bar, dashed remainder (poster rule satisfied)
+  10-25%  trigger:      the delta lands — a pulse ring fires at the rail origin           data-story="beat-2"
+  25-55%  mechanism:    a green-lit payment mid-flight hits the delta and freezes red — held until Treasury itself delists   data-story="beat-3"
+  55-80%  resolution:   the hold seals — the bar and held packet glow-breathe red; the held state persists   data-story="beat-4"
+  80-100% breathe + seam fade (all story opacity is 0 by 96%)
+-->
+  <style>
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <defs>
+    <!-- NOTE: a gradient stroke on a horizontal line has a zero-height object bounding box
+         and silently fails to render (caught by measured frame QA) — the flow line is solid. -->
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#E0776B"/>
+      <stop offset="100%" stop-color="#C05A4F"/>
+    </linearGradient>
+    <filter id="sealGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+
+  <!-- ===== brand layer: fully visible at t=0 (frame-0 poster) ===== -->
+  <rect x="32" y="32" width="448" height="448" rx="100" fill="#14161A"/>
+  <rect x="34" y="34" width="444" height="444" rx="98" fill="none"
+        stroke="rgba(255,255,255,0.16)" stroke-width="4"/>
+  <line x1="104" y1="256" x2="212" y2="256" stroke="#54BD8F" stroke-width="30" stroke-linecap="round"/>
+  <rect x="304" y="138" width="48" height="236" rx="24" fill="url(#bar)"/>
+  <line x1="384" y1="256" x2="424" y2="256" stroke="#6E6A63"
+        stroke-width="16" stroke-linecap="round" stroke-dasharray="2 34"/>
+  <!-- the held packet: always at the bar; pops when the story packet lands -->
+  <circle cx="254" cy="256" r="36" fill="#E0776B">
+    <animate attributeName="r" dur="6s" repeatCount="indefinite"
+             values="36;36;43;36;36" keyTimes="0;0.50;0.55;0.62;1"/>
+  </circle>
+
+  <!-- ===== story layer (fades to 0 by 96% — loop seam) ===== -->
+  <!-- beat 2: the delta lands at the rail origin -->
+  <circle cx="104" cy="256" r="8" fill="none" stroke="#54BD8F" stroke-width="6" opacity="0" data-story="beat-2">
+    <animate attributeName="r" dur="6s" repeatCount="indefinite"
+             values="8;8;46;46" keyTimes="0;0.10;0.22;1"/>
+    <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+             values="0;0;0.85;0;0" keyTimes="0;0.10;0.14;0.24;1"/>
+  </circle>
+  <!-- beat 3: the payment crosses green and freezes at the bar -->
+  <circle cx="104" cy="256" r="27" fill="#54BD8F" opacity="0" data-story="beat-3">
+    <animateMotion dur="6s" repeatCount="indefinite" calcMode="linear"
+                   path="M0 0 L150 0" keyPoints="0;0;1;1" keyTimes="0;0.28;0.50;1"/>
+    <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.26;0.30;0.48;0.53;1"/>
+  </circle>
+  <!-- beat 4: the hold seals — red glow breath on bar + packet, then seam fade -->
+  <g opacity="0" data-story="beat-4" filter="url(#sealGlow)">
+    <rect x="304" y="138" width="48" height="236" rx="24" fill="#E0776B"/>
+    <circle cx="254" cy="256" r="36" fill="#E0776B"/>
+    <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+             values="0;0;0.8;0.45;0.65;0;0" keyTimes="0;0.50;0.58;0.76;0.88;0.96;1"/>
+  </g>
+</svg>

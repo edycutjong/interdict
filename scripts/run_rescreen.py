@@ -21,7 +21,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from interdict.db import connect, relay, resume_point, verify_chain   # noqa: E402
+from interdict.db import (connect, relay, resume_point, run_is_complete,  # noqa: E402
+                          verify_chain)
 from interdict.matcher import Matcher                                  # noqa: E402
 from interdict.ofac import parse_sdn                                   # noqa: E402
 from interdict.rescreen import open_run, rescreen_book                 # noqa: E402
@@ -64,12 +65,19 @@ def main() -> int:
     with connect() as conn:
         if args.resume:
             run_id = args.resume
-            point = resume_point(conn, run_id)
-            if point is None:
-                print(f"run {run_id} has no incomplete batches -- nothing to resume")
+            with conn.cursor() as cur:
+                cur.execute("SELECT coalesce(max(id),0) AS m FROM counterparties")
+                max_id = cur.fetchone()["m"]
+            if run_is_complete(conn, run_id, max_id):
+                print(f"run {run_id} is complete -- nothing to resume")
                 return 0
-            print(f"resuming run {run_id} from counterparty id {point} "
-                  f"(MIN(batch_start) over incomplete batches)")
+            point = resume_point(conn, run_id)
+            if point is not None:
+                print(f"resuming run {run_id} at counterparty id {point} "
+                      f"(MIN(batch_start) over ABANDONED batches)")
+            else:
+                print(f"resuming run {run_id} -- no abandoned batch, but claimed "
+                      f"coverage stops short of the book; continuing from there")
         else:
             run_id = open_run(
                 conn,
@@ -95,9 +103,17 @@ def main() -> int:
         print(f"  quarantined  {summary.quarantined}")
         print(f"  batches      {summary.batches}")
 
-        outstanding = resume_point(conn, run_id)
-        if outstanding is not None:
-            print(f"\n  RUN INCOMPLETE -- resume at counterparty id {outstanding}")
+        with conn.cursor() as cur:
+            cur.execute("SELECT coalesce(max(id),0) AS m FROM counterparties")
+            book_max = cur.fetchone()["m"]
+        if not run_is_complete(conn, run_id, book_max):
+            with conn.cursor() as cur:
+                cur.execute("SELECT coalesce(max(batch_end),0) AS covered "
+                            "FROM rescreen_batches WHERE run_id=%s", (run_id,))
+                covered = cur.fetchone()["covered"]
+            print(f"\n  RUN INCOMPLETE -- the run did NOT mark itself finished.")
+            print(f"  claimed coverage reaches id {covered} of {book_max}; "
+                  f"abandoned batch at {resume_point(conn, run_id)}")
             print(f"  python scripts/run_rescreen.py --resume {run_id}")
 
         with conn.cursor() as cur:

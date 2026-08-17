@@ -108,13 +108,38 @@ def verify_chain(conn: psycopg.Connection) -> tuple[bool, int]:
 
 def claim_batch(conn: psycopg.Connection, run_id: int, size: int,
                 max_id: int) -> tuple[int, int] | None:
-    """Claim the next unclaimed batch of counterparty ids for a run.
+    """Claim the next batch of counterparty ids for a run.
 
     Batches are recorded individually rather than tracked by a moving cursor, because
     workers complete out of order and an optimistically-advanced cursor would resume
     past unfinished batches -- silently leaving counterparties unscreened.
+
+    ABANDONED BATCHES ARE RE-CLAIMED FIRST. A worker that dies mid-batch leaves a row
+    with completed_at IS NULL, and allocating only from max(batch_end) would step over
+    it forever: the range stays claimed, never completes, and the run can never close
+    while those counterparties are never screened. Re-claiming is safe because screening
+    is idempotent -- holds collide on the active-hold index and re-decide identically.
     """
     with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT batch_start, batch_end FROM rescreen_batches
+            WHERE run_id = %s AND completed_at IS NULL
+            ORDER BY batch_start
+            LIMIT 1
+            FOR UPDATE SKIP LOCKED
+            """,
+            (run_id,),
+        )
+        abandoned = cur.fetchone()
+        if abandoned:
+            cur.execute(
+                "UPDATE rescreen_batches SET claimed_at = now() "
+                "WHERE run_id = %s AND batch_start = %s",
+                (run_id, abandoned["batch_start"]),
+            )
+            return abandoned["batch_start"], abandoned["batch_end"]
+
         cur.execute(
             "SELECT coalesce(max(batch_end), 0) AS last FROM rescreen_batches WHERE run_id = %s",
             (run_id,),

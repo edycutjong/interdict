@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 320" width="1280" height="320" role="img"
+     aria-label="Interdict — a green-lit payment mid-flight hits the delta and freezes red — held until Treasury itself delists">
+<!-- STORYBOARD (dur 8s — must equal this file's single master dur)
+  0-10%   steady state: plate, grid, mini mark, outlined wordmark + hold-red full stop, tagline,
+          pulsing metric, tech line, rail with book and payee nodes (poster rule satisfied)
+  10-25%  trigger:      the OFAC delta chip lands above the rail; the queued payment enters the rail   data-story="beat-2"
+  25-55%  mechanism:    a green-lit payment mid-flight hits the delta and freezes red — held until Treasury itself delists   data-story="beat-3"
+  55-80%  resolution:   the delisting chip lands, the hold bar lifts itself, the payment finishes its
+          run in release-green, RELEASE seals — no human click                                          data-story="beat-4"
+  80-100% breathe + seam fade (all story opacity is 0 by 97%)
+-->
+  <style>
+    .aur1 { animation: drift1 16s ease-in-out infinite alternate; }
+    .aur2 { animation: drift2 19s ease-in-out infinite alternate; }
+    .beam { animation: beamSweep 8s linear infinite; }
+    .metric { animation: metricPulse 8s ease-in-out infinite; }
+    .pop-hold { animation: popHold 8s ease infinite; transform-box: fill-box; transform-origin: center; }
+    .pop-release { animation: popRelease 8s ease infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes drift1 { from { transform: translate(0, 0); } to { transform: translate(70px, 24px); } }
+    @keyframes drift2 { from { transform: translate(0, 0); } to { transform: translate(-80px, -20px); } }
+    @keyframes beamSweep { 0%, 12% { transform: translateX(-300px) skewX(-18deg); } 38%, 100% { transform: translateX(1700px) skewX(-18deg); } }
+    @keyframes metricPulse { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+    @keyframes popHold { 0%, 30% { transform: scale(0.6); } 34% { transform: scale(1.14); } 37%, 100% { transform: scale(1); } }
+    @keyframes popRelease { 0%, 57% { transform: scale(0.6); } 61% { transform: scale(1.14); } 64%, 100% { transform: scale(1); } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.55)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.55)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E0776B"/>
+      <stop offset="100%" stop-color="#C05A4F"/>
+    </linearGradient>
+    <filter id="auroraBlur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="46"/>
+    </filter>
+    <filter id="packetGlow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="wmclip"><use href="#wm"/></clipPath>
+  </defs>
+
+  <!-- ===== backdrop (brand plate: mandatory, opaque — survives white AND dark GitHub) ===== -->
+  <rect x="0" y="0" width="1280" height="320" rx="22" fill="#14161A"/>
+  <rect x="1" y="1" width="1278" height="318" rx="21" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="2"/>
+  <rect x="0" y="0" width="1280" height="320" rx="22" fill="url(#grid)"/>
+  <g filter="url(#auroraBlur)">
+    <circle class="aur1" cx="210" cy="52" r="160" fill="#E0776B" opacity="0.10"/>
+    <circle class="aur2" cx="1090" cy="286" r="180" fill="#54BD8F" opacity="0.08"/>
+  </g>
+  <g class="beam" opacity="0.05"><rect x="0" y="-40" width="160" height="400" fill="url(#beamGrad)"/></g>
+
+  <!-- ===== left: brand (all visible at t=0 — frame-0 poster) ===== -->
+  <g transform="translate(56,42) scale(0.127)">
+    <rect x="32" y="32" width="448" height="448" rx="100" fill="#1B1E24"/>
+    <rect x="34" y="34" width="444" height="444" rx="98" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="6"/>
+    <line x1="104" y1="256" x2="212" y2="256" stroke="#54BD8F" stroke-width="30" stroke-linecap="round"/>
+    <circle cx="254" cy="256" r="36" fill="#E0776B"/>
+    <rect x="304" y="138" width="48" height="236" rx="24" fill="#E0776B"/>
+    <line x1="384" y1="256" x2="424" y2="256" stroke="#6E6A63" stroke-width="16" stroke-linecap="round" stroke-dasharray="2 34"/>
+  </g>
+
+  <g transform="translate(56,178)">
+    <path id="wm" d="M46.9 0L6.4 0L6.4-9.6L22.5-9.6L22.5-36.7L8.5-36.7L8.5-46.2L32.6-46.2L32.6-9.6L46.9-9.6L46.9 0ZM26.7-53.9L26.7-53.9Q23.5-53.9 21.7-55.6Q19.8-57.2 19.8-60.0L19.8-60.0Q19.8-62.7 21.7-64.4Q23.5-66.0 26.7-66.0L26.7-66.0Q29.9-66.0 31.8-64.4Q33.6-62.7 33.6-60.0L33.6-60.0Q33.6-57.2 31.8-55.6Q29.9-53.9 26.7-53.9ZM67.4 0L56.9 0L56.9-46.2L67.1-46.2L67.1-37.4L67.3-37.4Q67.9-41.4 70.5-43.8L70.5-43.8Q73.8-47.0 79.5-47.0L79.5-47.0Q86.4-47.0 90.4-42.5Q94.5-38.0 94.5-30.3L94.5-30.3L94.5 0L84 0L84-29.2Q84-33.4 81.8-35.7Q79.6-38.0 75.7-38.0L75.7-38.0Q71.8-38.0 69.6-35.6Q67.4-33.3 67.4-28.9L67.4-28.9L67.4 0ZM144.4 0L131.0 0Q124.4 0 120.7-3.7Q116.9-7.4 116.9-13.9L116.9-13.9L116.9-36.7L104.4-36.7L104.4-46.2L116.9-46.2L116.9-59.2L127.5-59.2L127.5-46.2L145.2-46.2L145.2-36.7L127.5-36.7L127.5-13.9Q127.5-9.5 131.8-9.5L131.8-9.5L144.4-9.5L144.4 0ZM176.5 0.8L176.5 0.8Q170.6 0.8 166.2-1.4Q161.9-3.7 159.5-7.8Q157.1-11.8 157.1-17.3L157.1-17.3L157.1-28.9Q157.1-34.4 159.5-38.4Q161.9-42.5 166.2-44.8Q170.6-47.0 176.5-47.0L176.5-47.0Q182.3-47.0 186.6-44.8Q190.9-42.5 193.3-38.4Q195.7-34.4 195.7-28.9L195.7-28.9L195.7-20.6L167.2-20.6L167.2-17.3Q167.2-12.4 169.6-10.0Q171.9-7.5 176.6-7.5L176.6-7.5Q180.1-7.5 182.3-8.7Q184.5-9.9 185.1-12.3L185.1-12.3L195.4-12.3Q194.2-6.3 189.0-2.7Q183.9 0.8 176.5 0.8ZM167.2-27.1L185.6-27.3L185.6-29.0Q185.6-33.8 183.3-36.3Q181.0-38.9 176.5-38.9Q171.9-38.9 169.6-36.3Q167.2-33.7 167.2-28.9L167.2-28.9L167.2-27.1ZM220.0 0L209.5 0L209.5-46.2L219.4-46.2L219.4-37.4L219.4-37.4Q220.2-41.0 222.3-43.3L222.3-43.3Q225.6-47.0 232.2-47.0L232.2-47.0Q239.7-47.0 243.9-42.4Q248.2-37.8 248.2-29.7L248.2-29.7L248.2-26.3L237.2-26.3L237.2-28.9Q237.2-33.3 234.9-35.8Q232.6-38.2 228.6-38.2L228.6-38.2Q224.4-38.2 222.2-35.8Q220.0-33.3 220.0-28.9L220.0-28.9L220.0 0ZM273.3 0.8L273.3 0.8Q266.4 0.8 262.1-3.9Q257.9-8.7 257.9-16.8L257.9-16.8L257.9-29.3Q257.9-37.5 262.1-42.3Q266.3-47.0 273.3-47.0L273.3-47.0Q279.0-47.0 282.3-43.8L282.3-43.8Q284.9-41.3 285.5-37.4L285.5-37.4L285.8-37.4L285.4-48.4L285.4-61.3L295.9-61.3L295.9 0L285.7 0L285.7-8.8L285.5-8.8Q284.9-4.9 282.3-2.4L282.3-2.4Q279.0 0.8 273.3 0.8ZM276.9-8.2L276.9-8.2Q281.0-8.2 283.2-10.6Q285.4-13.0 285.4-17.3L285.4-17.3L285.4-28.9Q285.4-33.2 283.2-35.6Q281.0-38.0 276.9-38.0Q272.9-38.0 270.6-35.6Q268.4-33.3 268.4-28.9L268.4-28.9L268.4-17.3Q268.4-12.9 270.6-10.6Q272.9-8.2 276.9-8.2ZM349.3 0L308.8 0L308.8-9.6L324.9-9.6L324.9-36.7L310.9-36.7L310.9-46.2L335.0-46.2L335.0-9.6L349.3-9.6L349.3 0ZM329.1-53.9L329.1-53.9Q325.9-53.9 324.1-55.6Q322.2-57.2 322.2-60.0L322.2-60.0Q322.2-62.7 324.1-64.4Q325.9-66.0 329.1-66.0L329.1-66.0Q332.3-66.0 334.2-64.4Q336.0-62.7 336.0-60.0L336.0-60.0Q336.0-57.2 334.2-55.6Q332.3-53.9 329.1-53.9ZM378.3 0.8L378.3 0.8Q372.4 0.8 368.0-1.4Q363.6-3.6 361.1-7.7Q358.7-11.8 358.7-17.3L358.7-17.3L358.7-28.9Q358.7-34.5 361.1-38.6Q363.6-42.6 368.0-44.8Q372.4-47.0 378.3-47.0L378.3-47.0Q387.0-47.0 392.2-42.5Q397.4-38.1 397.7-30.3L397.7-30.3L387.2-30.3Q386.9-33.9 384.6-35.9Q382.3-37.9 378.3-37.9L378.3-37.9Q374.1-37.9 371.6-35.6Q369.2-33.3 369.2-29.0L369.2-29.0L369.2-17.3Q369.2-13.0 371.6-10.7Q374.1-8.3 378.3-8.3L378.3-8.3Q382.3-8.3 384.6-10.3Q386.9-12.3 387.2-15.9L387.2-15.9L397.7-15.9Q397.4-8.1 392.2-3.7Q387.0 0.8 378.3 0.8ZM446.8 0L433.4 0Q426.8 0 423.1-3.7Q419.3-7.4 419.3-13.9L419.3-13.9L419.3-36.7L406.8-36.7L406.8-46.2L419.3-46.2L419.3-59.2L429.9-59.2L429.9-46.2L447.6-46.2L447.6-36.7L429.9-36.7L429.9-13.9Q429.9-9.5 434.2-9.5L434.2-9.5L446.8-9.5L446.8 0Z" fill="#E9E7E2"/>
+    <rect x="461.6" y="-14" width="14" height="14" fill="#E0776B"/>
+    <g clip-path="url(#wmclip)">
+      <g transform="skewX(-18)">
+        <rect x="0" y="-78" width="72" height="96" fill="url(#shine)" opacity="0.5">
+          <animateTransform attributeName="transform" type="translate" dur="8s" repeatCount="indefinite"
+                            calcMode="linear" values="-200 0;-200 0;620 0;620 0" keyTimes="0;0.04;0.30;1"/>
+        </rect>
+      </g>
+    </g>
+  </g>
+
+  <text x="56" y="216" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="15.5" fill="#A09A90">when Treasury updates the SDN list, the whole book re-screens —</text>
+  <text x="56" y="238" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="15.5" fill="#A09A90">true hits held, lookalikes cleared in writing, funds freed on delisting</text>
+  <text class="metric" x="56" y="272" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700" fill="#54BD8F">19,199 SDN records · full book · unattended</text>
+  <text x="56" y="298" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#928D84">Gemini · ADK · A2A · Cloud Run · Postgres</text>
+
+  <!-- ===== right: the mechanism, on the master timeline ===== -->
+  <!-- scene (visible at t=0): book node, rail, payee node -->
+  <rect x="606" y="140" width="106" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)"/>
+  <text x="659" y="166" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#E9E7E2">book</text>
+  <text x="659" y="184" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#A09A90">5,000 names</text>
+  <rect x="1148" y="140" width="92" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)"/>
+  <text x="1194" y="174" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#E9E7E2">payee</text>
+  <path d="M712 170 H1148" stroke="rgba(255,255,255,0.18)" stroke-width="4" fill="none"/>
+
+  <!-- beat 2: the traveled trace the packet leaves behind -->
+  <path d="M712 170 H1148" pathLength="100" stroke="#54BD8F" stroke-width="4" fill="none"
+        stroke-dasharray="100" stroke-dashoffset="100" opacity="0" data-story="beat-2">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;0.75;0.75;0;0" keyTimes="0;0.10;0.14;0.92;0.97;1"/>
+    <animate attributeName="stroke-dashoffset" dur="8s" repeatCount="indefinite"
+             values="100;100;52;52;0;0" keyTimes="0;0.14;0.30;0.58;0.74;1"/>
+  </path>
+
+  <!-- beat 2: the OFAC delta lands (the trigger) -->
+  <g opacity="0" data-story="beat-2">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.10;0.14;0.92;0.97;1"/>
+    <rect x="795" y="62" width="172" height="27" rx="7" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.22)"/>
+    <text x="881" y="80" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#E9E7E2">OFAC delta · 18 add / 8 rm</text>
+    <path d="M905 89 V112" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3 4"/>
+  </g>
+
+  <!-- beat 3: the hold bar draws itself across the rail, then lifts at beat 4 -->
+  <!-- solid stroke: a gradient on a vertical line has a zero-width object bounding box and never renders (caught by frame QA) -->
+  <path d="M930 118 V222" pathLength="100" stroke="#E0776B" stroke-width="11" stroke-linecap="round"
+        fill="none" stroke-dasharray="100" stroke-dashoffset="100" data-story="beat-3">
+    <animate attributeName="stroke-dashoffset" dur="8s" repeatCount="indefinite"
+             values="100;100;0;0;100;100" keyTimes="0;0.25;0.32;0.56;0.63;1"/>
+  </path>
+
+  <!-- beat 2→4: the payment itself — green in flight, frozen red at the bar, green again on release -->
+  <circle r="9" opacity="0" filter="url(#packetGlow)" data-story="beat-2">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.10;0.14;0.92;0.97;1"/>
+    <animateMotion dur="8s" repeatCount="indefinite" calcMode="linear"
+                   path="M712 170 L1148 170" keyPoints="0;0;0.485;0.485;1;1" keyTimes="0;0.14;0.30;0.58;0.74;1"/>
+    <animate attributeName="fill" dur="8s" repeatCount="indefinite"
+             values="#54BD8F;#54BD8F;#E0776B;#E0776B;#54BD8F;#54BD8F" keyTimes="0;0.28;0.31;0.57;0.60;1"/>
+  </circle>
+
+  <!-- beat 3: HOLD seals — money stops -->
+  <g opacity="0" data-story="beat-3">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.31;0.34;0.92;0.97;1"/>
+    <g class="pop-hold">
+      <rect x="848" y="192" width="66" height="26" rx="6" fill="rgba(224,119,107,0.12)" stroke="#E0776B" stroke-width="1.5"/>
+      <text x="881" y="210" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#E0776B">HOLD</text>
+    </g>
+  </g>
+
+  <!-- beat 4: the delisting lands and the funds free themselves -->
+  <g opacity="0" data-story="beat-4">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.52;0.56;0.92;0.97;1"/>
+    <rect x="988" y="62" width="150" height="27" rx="7" fill="rgba(84,189,143,0.08)" stroke="rgba(84,189,143,0.5)"/>
+    <text x="1063" y="80" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#54BD8F">delisting · remove</text>
+    <path d="M955 89 V112" stroke="rgba(84,189,143,0.45)" stroke-width="1.5" stroke-dasharray="3 4"/>
+  </g>
+  <g opacity="0" data-story="beat-4">
+    <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
+             values="0;0;1;1;0;0" keyTimes="0;0.58;0.62;0.92;0.97;1"/>
+    <g class="pop-release">
+      <rect x="1000" y="192" width="96" height="26" rx="6" fill="rgba(84,189,143,0.10)" stroke="#54BD8F" stroke-width="1.5"/>
+      <text x="1048" y="210" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#54BD8F">RELEASE</text>
+    </g>
+  </g>
+</svg>

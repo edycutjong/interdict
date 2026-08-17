@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img"
+     aria-label="Interdict mark — a payment mid-flight stopped at the hold bar; the rest of the rail hangs dashed">
+  <!-- The frozen moment in geometry: green flight line (money moving), packet frozen red
+       against the hold bar (money stopped), dashed remainder (the run it cannot finish).
+       Self-plated: legible on GitHub light #ffffff AND dark #0d1117 without changes. -->
+  <defs>
+    <!-- NOTE: a gradient stroke on a horizontal line has a zero-height object bounding box
+         and silently fails to render (caught by measured frame QA) — the flow line is solid. -->
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="var(--primary, #E0776B)"/>
+      <stop offset="100%" stop-color="var(--primary, #C05A4F)"/>
+    </linearGradient>
+    <filter id="holdGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- plate -->
+  <rect x="32" y="32" width="448" height="448" rx="100" fill="var(--plate, #14161A)"/>
+  <rect x="34" y="34" width="444" height="444" rx="98" fill="none"
+        stroke="rgba(255,255,255,0.16)" stroke-width="4"/>
+
+  <!-- flight line: the traveled run, release-green -->
+  <line x1="104" y1="256" x2="212" y2="256" stroke="var(--accent, #54BD8F)" stroke-width="30" stroke-linecap="round"/>
+
+  <!-- the packet, frozen at the bar: hold-red -->
+  <circle cx="254" cy="256" r="36" fill="var(--primary, #E0776B)" filter="url(#holdGlow)"/>
+
+  <!-- the hold bar across the rail -->
+  <rect x="304" y="138" width="48" height="236" rx="24" fill="url(#bar)"/>
+
+  <!-- the run it cannot finish: dashed, muted -->
+  <line x1="384" y1="256" x2="424" y2="256" stroke="var(--text-low, #6E6A63)"
+        stroke-width="16" stroke-linecap="round" stroke-dasharray="2 34"/>
+</svg>

@@ -1,0 +1,26 @@
+{
+  "publication": {
+    "publish_date": "08/07/2026",
+    "record_count": "19199"
+  },
+  "platform": {
+    "python": "3.11.1",
+    "system": "macOS-26.5.2-arm64-arm-64bit"
+  },
+  "measured": "deterministic screening plane only; adjudication excluded (network-bound on Gemini)",
+  "stats": {
+    "p50_ms": 9.34,
+    "p95_ms": 68.82,
+    "p99_ms": 106.7,
+    "mean_ms": 18.81,
+    "max_ms": 169.72,
+    "full_book_s": 7.556,
+    "throughput_per_s": 53,
+    "parse_ms": 1305,
+    "index_ms": 684,
+    "entries": 19199,
+    "names_indexed": 43775,
+    "book_size": 400,
+    "runs": 3
+  }
+}

@@ -75,10 +75,7 @@ challenge-set:  ## Grade the book against yente on PERTURBED names -- the honest
 
 .PHONY: verify-ledger
 verify-ledger:  ## Verify the ledger hash chain end to end
-	@$(PY) -c "from interdict.db import connect, verify_chain; \
-	  c=connect().__enter__(); ok,n=verify_chain(c); \
-	  print(f'ledger: {n} entries, chain {\"INTACT\" if ok else \"FORKED\"}'); \
-	  raise SystemExit(0 if ok else 1)"
+	@$(PY) scripts/verify_ledger.py
 
 # ---------------------------------------------------------------------------
 # Tests
