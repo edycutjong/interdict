@@ -15,7 +15,7 @@
 ![Cloud Run](https://img.shields.io/badge/Cloud%20Run-3%20agents-4285F4)
 ![Cloud SQL](https://img.shields.io/badge/Cloud%20SQL-Postgres%2016-EA4335)
 ![Cloud Scheduler](https://img.shields.io/badge/Cloud%20Scheduler-6h%20poll-FBBC04)
-![Tests](https://img.shields.io/badge/tests-131%20passing-success)
+![Tests](https://img.shields.io/badge/tests-133%20passing-success)
 
 </div>
 
@@ -89,6 +89,35 @@ that column — the orchestrator does not know it exists.
 **1 missed hit in 460. 0 frozen grantees in 76.** The two errors are reported separately
 because they are not equivalent: a missed hit is a payment to a designated party, a
 frozen grantee is aid stopped in error.
+
+### Agreement with the independent oracle, on every decision
+
+yente is consulted for **every** adjudication, not only where it agrees — an oracle
+consulted selectively is not an oracle. Across a full 536-counterparty re-screen:
+
+| | count |
+|---|---|
+| both flagged a hit | **456** |
+| we held, yente missed | 3 |
+| **we cleared, yente flagged** | **0** |
+
+The zero is the one that matters. Under strict liability the dangerous direction is
+being *more permissive* than the oracle, and we never are.
+
+### The console
+
+<img src="docs/assets/screenshots/console-overview-dark.png" width="860" alt="Interdict evidence console — overview">
+
+Run history, held money against the statutory clock, every adjudication with its
+rationale and the oracle beside it, quarantine, and the ledger with its chain verified
+on page load. The `model` column names whichever adjudicator produced each verdict, so
+a viewer can see at a glance whether it came from the product path or the offline
+stand-in.
+
+More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
+[adjudications](docs/assets/screenshots/console-adjudications-dark.png) ·
+[runs](docs/assets/screenshots/console-runs-dark.png) ·
+[ledger](docs/assets/screenshots/console-ledger-dark.png)
 
 ### Performance
 
@@ -172,9 +201,15 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 131 tests
+make test             # 133 tests
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
+
+python scripts/load_book.py --truncate    # the labelled synthetic book
+python scripts/run_rescreen.py            # the unattended loop
+python scripts/adjudication_quality.py    # graded against ground truth
+python scripts/replay_release.py          # the labelled Aug-7 release replay
+python -m interdict.console               # evidence console on :8080
 ```
 
 Or `make reproduce` for all of it.
