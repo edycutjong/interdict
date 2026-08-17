@@ -237,7 +237,7 @@ body.debug-contrast :is(h1,h2,h3,p,li,td,th,.kicker,.subhead,.chip,.code,.stat,.
       <h1 style="font-size:176px;letter-spacing:-.035em">INTERDICT</h1>
       <div class="subhead" style="margin-top:34px;font-size:42px;color:var(--color-primary);font-weight:700">
         When Treasury moves, the money stops itself.</div>
-      <p class="body" style="margin-top:26px;max-width:900px">A four-agent sanctions-interdiction
+      <p class="body" style="margin-top:26px;max-width:900px">A three-agent sanctions-interdiction
         fleet that re-screens an entire counterparty book every time OFAC publishes — unattended,
         and graded against sources we do not control.</p>
     </div>
@@ -317,7 +317,7 @@ entities         <span class="c-txt">26</span>
     <div class="kicker">The solution <span class="k-dim">· one flow, done to the bottom</span></div>
     <h2 style="max-width:1500px">The whole book, re-screened unattended.</h2>
     <p class="body" style="margin-top:26px;max-width:1250px">On every OFAC delta, Interdict
-      re-screens all ~5,000 counterparties: true hits held, lookalikes cleared with written
+      re-screens the entire 536-counterparty book: true hits held, lookalikes cleared with written
       reasons, funds released on delisting, the 10-day blocking report drafted.</p>
     <div class="mono" style="margin-top:40px;font-size:21px;color:var(--color-muted);letter-spacing:.02em">
       DELTA LANDS <span class="amber">→</span> FULL-BOOK RE-SCREEN <span class="amber">→</span>
@@ -352,11 +352,11 @@ entities         <span class="c-txt">26</span>
 <!-- ════════════════════ SLIDE 5 · HOW IT WORKS ════════════════════ -->
 <section class="slide" id="s5">
   <div class="s-wrap">
-    <div class="kicker">Architecture <span class="k-dim">· four agents · two planes · one guard</span></div>
+    <div class="kicker">Architecture <span class="k-dim">· three agents · two planes · one guard</span></div>
     <h2 style="font-size:64px">Deterministic code decides what executes.</h2>
     <div style="margin-top:34px">
       <!-- architecture diagram — pure SVG, real labels, real data flow -->
-      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: four ADK agents on Cloud Run with an oracle guard at the routing boundary">
+      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three ADK agents on Cloud Run with an oracle guard at the routing boundary">
         <defs>
           <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
@@ -401,7 +401,7 @@ entities         <span class="c-txt">26</span>
         <!-- adjudicator -->
         <rect x="1010" y="390" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
         <text x="1035" y="428" fill="#e7ecf4" font-size="19" font-weight="700">adjudicator-agent · Gemini</text>
-        <text x="1035" y="456" fill="#94a3b8" font-size="14">Vertex AI · structured responseSchema</text>
+        <text x="1035" y="456" fill="#94a3b8" font-size="14">Gemini API · structured responseSchema</text>
         <text x="1035" y="478" fill="#94a3b8" font-size="14">written rationale · DOB corroboration</text>
         <text x="1035" y="500" fill="#94a3b8" font-size="14">weak-alias downweighting · cited_fields[]</text>
         <!-- routing arrows -->
@@ -411,20 +411,13 @@ entities         <span class="c-txt">26</span>
         <line x1="900" y1="430" x2="1010" y2="440" stroke="#f59e0b" marker-end="url(#arA)"/>
         <text x="905" y="418" fill="#f59e0b" font-size="13">A2A: adjudicate()</text>
         <line x1="1010" y1="470" x2="900" y2="465" stroke="#94a3b8" marker-end="url(#ar)"/>
-        <!-- disburser -->
+        <!-- money plane (replaced the cut disburser-agent, 08-17 descope) -->
         <rect x="470" y="20" width="430" height="110" rx="12" fill="#121722" stroke="#232b3a"/>
-        <text x="495" y="58" fill="#e7ecf4" font-size="19" font-weight="700">disburser-agent · ADK</text>
-        <text x="495" y="86" fill="#94a3b8" font-size="14">the real A2A consumer — asks before it pays</text>
-        <text x="495" y="108" fill="#94a3b8" font-size="14">SA-signed OIDC · audience-checked</text>
+        <text x="495" y="58" fill="#e7ecf4" font-size="19" font-weight="700">money plane</text>
+        <text x="495" y="86" fill="#94a3b8" font-size="14">idempotent holds · release on delisting</text>
+        <text x="495" y="108" fill="#94a3b8" font-size="14">10-business-day blocking report</text>
         <line x1="685" y1="130" x2="685" y2="240" stroke="#94a3b8" marker-end="url(#ar)" marker-start="url(#ar)"/>
-        <text x="700" y="195" fill="#556174" font-size="13">A2A · verdict before release</text>
-        <!-- gemma -->
-        <rect x="1440" y="390" width="230" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
-        <text x="1462" y="428" fill="#e7ecf4" font-size="17" font-weight="700">Gemma</text>
-        <text x="1462" y="454" fill="#94a3b8" font-size="14">memo-armor: screens</text>
-        <text x="1462" y="476" fill="#94a3b8" font-size="14">free text for injection</text>
-        <text x="1462" y="498" fill="#94a3b8" font-size="14">before Gemini reads it</text>
-        <line x1="1440" y1="455" x2="1390" y2="455" stroke="#94a3b8" marker-end="url(#ar)"/>
+        <text x="700" y="195" fill="#556174" font-size="13">HOLD / RELEASE · tx + outbox</text>
         <!-- oracles -->
         <rect x="1440" y="120" width="230" height="130" rx="12" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
         <text x="1462" y="152" fill="#556174" font-size="13" letter-spacing="1">EXTERNAL ORACLES</text>
@@ -432,7 +425,7 @@ entities         <span class="c-txt">26</span>
         <text x="1462" y="202" fill="#94a3b8" font-size="13">/match/us_ofac_sdn only</text>
         <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
         <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
-        <text x="1398" y="172" fill="#556174" font-size="12">graded daily</text>
+        <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
         <!-- cloud sql -->
         <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
         <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Cloud SQL · Postgres 16</text>
@@ -599,37 +592,46 @@ entities         <span class="c-txt">26</span>
 <!-- ════════════════════ SLIDE 9 · TRACTION + HONESTY ════════════════════ -->
 <section class="slide" id="s9">
   <div class="s-wrap">
-    <div class="kicker">Where it stands <span class="k-dim">· clean machine, no credentials, no API key</span></div>
-    <h2 style="font-size:62px">Day 2 of 19. Already verified.</h2>
+    <div class="kicker">Where it stands <span class="k-dim">· every number below is printed by a script in the repo</span></div>
+    <h2 style="font-size:62px">Graded, and it beats the oracle.</h2>
     <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:80px;margin-top:36px">
       <div>
+        <h3 style="margin-bottom:14px">Screening quality — on names <em>not</em> on the list</h3>
+        <p class="body" style="font-size:19px;margin-bottom:18px">Screening the seeded book verbatim
+          scores 1.000 and means nothing: those names were copied out of the publication being
+          searched. So we screen <strong>deterministic perturbations</strong> — transliterations from
+          OFAC's own alias lists, reordering, dropped particles, transcription confusables. Seeded
+          from SHA-256, so the challenge set is byte-identical on your machine.</p>
         <ul class="vlist">
-          <li><strong>19,199 SDN records</strong> live-parsed from Treasury's feed — published 08/07/2026, 27&nbsp;MB in ~5s</li>
-          <li><strong>4,393 real weak aliases</strong> (<span class="mono">category=weak</span>) — the false-positive-clearing engine, nothing synthesized</li>
-          <li><strong>Delta feed verified</strong> — explicit <span class="mono">add / remove</span> actions; 18 / 8 on Aug 7</li>
-          <li><strong>yente oracle validated</strong> — German transliteration “Wladimir Wladimirowitsch Putin” → <strong>1.000</strong>; clean control name → <strong>0 results</strong></li>
-          <li><strong><span class="mono">&lt;publshInformation&gt;</span></strong> — OFAC's own schema typo, pinned by a unit test: unfakeable proof the feed is real</li>
-          <li><strong>Sentinel book sealed</strong> — 400 entries, SHA-256 committed before any subsequent delta</li>
+          <li><strong>top-1 &nbsp;0.995</strong> &nbsp;vs&nbsp; <strong>0.840</strong> for yente, the independent oracle</li>
+          <li><strong>1 missed hit in 460</strong> · <strong>0 frozen grantees in 76</strong>, against ground truth the screening path never reads</li>
+          <li><strong>456 / 3 / 0</strong> — agreements, cases where we were stricter, cases where we were more permissive. The last number is the one that matters</li>
+          <li><strong>p50 9.3&nbsp;ms</strong> · full 536-counterparty re-screen in <strong>7.6&nbsp;s</strong>. OFAC publishes weekly</li>
+          <li><strong>133 tests</strong> · CI fails if the database tests silently skip</li>
         </ul>
       </div>
       <div>
         <h3 style="margin-bottom:18px">Synthetic — and it says so</h3>
         <ul class="vlist plain">
-          <li>The counterparty ledger is <strong>synthetic</strong>, seeded from public records with per-row provenance — labeled on screen the instant it appears</li>
-          <li>Sentinels carry <span class="mono">sentinel: true</span> in-product and are disclosed in the README</li>
-          <li>The replay fallback is <strong>never presented as live</strong></li>
-          <li>Judge-runnable, not judge-told: <span class="mono">make challenge NAME='…'</span> · <span class="mono">make reproduce</span></li>
+          <li>The OFAC publication, the delta, the 4,393 weak aliases, every date of birth and every
+            delisting action are <strong>Treasury's, unmodified</strong></li>
+          <li>The payment book is <strong>ours and synthetic</strong> — labelled by <span class="mono">origin</span>
+            in the database, on every console screen, and on camera</li>
+          <li>The release leg is a <strong>labelled REPLAY</strong> of the real 2026-08-07 delisting.
+            Those eight are already gone from the list, so a live release cannot be staged without pretending</li>
+          <li>Sentinels were sealed and committed <strong>before</strong> any later publication existed —
+            <span class="mono">git log</span> proves the book predates the removal</li>
         </ul>
-        <p class="body" style="margin-top:24px;font-size:19px">Every audit this idea survived failed
-          other designs on <em>implied</em> liveness. Disclosure plus reproduction is the design,
-          not the apology.</p>
+        <p class="body" style="margin-top:24px;font-size:19px">Disclosure plus a reproduction path is
+          the design, not the apology.</p>
       </div>
     </div>
-    <div class="foot"><span>09 · status</span><div class="rule"></div><span>target by Aug 31: ~2 weeks of Cloud Scheduler runs fired by genuine Treasury publications — logged, not asserted</span></div>
+    <div class="foot"><span>09 · status</span><div class="rule"></div><span><span class="mono">make challenge-set</span> re-derives the 0.995 · <span class="mono">make ci</span> re-runs all of it</span></div>
   </div>
-  <aside class="speaker-notes">Every number on the left came from a clean-machine verification run
-    before real build work started. And we lead with what's synthetic instead of burying it —
-    calibrated honesty plus a reproduction path is worth more here than a prettier claim.</aside>
+  <aside class="speaker-notes">Lead with the honest number, not the flattering one — we say out loud
+    that the verbatim 1.000 is worthless and show the perturbed 0.995 instead. Then the zero: there is
+    no case where we cleared someone the independent oracle flagged. Under strict liability that is the
+    only direction that ends in a payment to a designated party.</aside>
 </section>
 
 <!-- ════════════════════ SLIDE 10 · THE ASK ════════════════════ -->
