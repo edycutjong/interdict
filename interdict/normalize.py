@@ -73,20 +73,49 @@ def tokens(name: str, *, drop_particles: bool = False) -> list[str]:
     return out
 
 
+_MAX_DELETION_TOKEN = 12
+
+
 def blocking_keys(name: str) -> set[str]:
     """Cheap candidate-generation keys.
 
-    Blocking exists so a full-book re-screen does not become 400 x 24,576 string
-    comparisons. Recall here is what bounds recall overall: a true hit that never
-    enters the candidate set can never be scored, so these keys are deliberately
-    generous and the precision work happens later in `score`.
+    Blocking exists so a full-book re-screen does not become 400 x 43,775 string
+    comparisons. Recall here bounds recall overall: a true hit that never enters the
+    candidate set can never be scored, so these keys are deliberately generous and the
+    precision work happens later in `score`.
+
+    The last two key families were added 2026-08-17 after the perturbed challenge run.
+    A prefix block alone loses any short name whose damage lands in the first four
+    characters -- 4 of the 7 misses were exactly that ("INTERNACIONAL" transposed to
+    "INETRNACIONAL", "XZAKT INC"), and yente found all four. Both families target that
+    failure directly and are restricted to short tokens so the index stays small.
     """
     keys: set[str] = set()
     toks = tokens(name, drop_particles=True)
+
     for tok in toks:
+        keys.add(tok)                       # exact-token block
         if len(tok) >= 4:
-            keys.add(tok[:4])      # prefix block
-        keys.add(tok)              # exact-token block
+            keys.add(tok[:4])               # prefix block
+
+            # Sorted characters are invariant under transposition, which is the single
+            # most common transcription error: INETRNACIONAL and INTERNACIONAL collide
+            # here even though they share no 4-char prefix.
+            keys.add("~" + "".join(sorted(tok)))
+
+            # Deletion neighbourhood: dropping each character in turn makes two tokens
+            # collide when they differ by one substitution, insertion or deletion.
+            # Capped by length because the key count per token is O(len).
+            #
+            # The zero-deletion variant is included deliberately. Without it a token
+            # and its own one-character-shorter neighbour never meet: PANIA emits
+            # "-PANA" but PANA would only emit its own deletions, so the insertion
+            # case -- the whole point of the family -- silently fails to block.
+            if len(tok) <= _MAX_DELETION_TOKEN:
+                keys.add("-" + tok)
+                for i in range(len(tok)):
+                    keys.add("-" + tok[:i] + tok[i + 1:])
+
     if toks:
         # Sorted-token fingerprint catches word-order permutations
         # ("RASHID IBRAHIM" vs "IBRAHIM RASHID").
