@@ -87,15 +87,55 @@ def open_run(conn: psycopg.Connection, *, published_at: date, source_hash: str,
     return run_id
 
 
+def _oracle_verdicts(oracle, rows) -> dict[int, str]:
+    """Ask yente about a whole batch at once.
+
+    Recorded against every adjudication, not only where the two disagree -- an oracle
+    consulted selectively is not an oracle. Batched because grading a 500-row batch one
+    HTTP call at a time is slow enough that people stop doing it daily, and a grade you
+    stop collecting is worth nothing.
+
+    Never fatal: the oracle is evidence, not a dependency. If yente is down the run
+    proceeds and the verdict column is simply absent for those decisions.
+    """
+    if oracle is None:
+        return {}
+    try:
+        queries = {
+            str(r["id"]): {
+                "name": r["name"],
+                "schema": "Person" if r["entity_type"] == "Individual" else "Organization",
+                "dob": r["dob"],
+            }
+            for r in rows
+        }
+        hits = oracle.match(queries)
+    except Exception:
+        return {}
+
+    out: dict[int, str] = {}
+    for key, results in hits.items():
+        if results:
+            top = results[0]
+            out[int(key)] = f"HIT {top.sdn_uid} {top.score:.3f}"
+        else:
+            out[int(key)] = "NO HIT"
+    return out
+
+
 def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
                   adjudicator: Adjudicator, publication: dict,
                   batch_size: int = BATCH_SIZE, blocked_on: date | None = None,
-                  stop_after_batches: int | None = None) -> RunSummary:
+                  stop_after_batches: int | None = None,
+                  oracle=None) -> RunSummary:
     """Screen the entire counterparty book under a run.
 
     `stop_after_batches` exists for the kill-worker demo beat: it simulates a worker
     dying mid-book so that resuming can be shown to pick up the unfinished range rather
     than skipping it.
+
+    `oracle` is an optional yente client. When supplied, every adjudication is stored
+    with the independent oracle's verdict beside it.
     """
     summary = RunSummary(run_id=run_id)
 
@@ -122,12 +162,15 @@ def rescreen_book(conn: psycopg.Connection, *, run_id: int, matcher: Matcher,
             )
             rows = cur.fetchall()
 
+        oracle_says = _oracle_verdicts(oracle, rows)
+
         for row in rows:
             decision = screen_counterparty(
                 conn, run_id=run_id, counterparty_id=row["id"], name=row["name"],
                 dob=row["dob"], is_person=(row["entity_type"] == "Individual"),
                 matcher=matcher, adjudicator=adjudicator,
                 publication=publication, blocked_on=blocked_on,
+                oracle_verdict=oracle_says.get(row["id"]),
             )
             summary.screened += 1
             summary.decisions.append(decision)

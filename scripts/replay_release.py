@@ -83,10 +83,14 @@ def main() -> int:
         with conn.cursor() as cur:
             for a in removals:
                 cur.execute(
+                    # expected_verdict is deliberately NULL: these eight are held and
+                    # then RELEASED on purpose, so grading them on screening quality
+                    # would score correct behaviour as eight errors. They exercise the
+                    # release leg, not the screening decision.
                     """
                     INSERT INTO counterparties
                         (external_ref,name,dob,entity_type,origin,expected_verdict,source)
-                    VALUES (%s,%s,NULL,%s,'sentinel','HOLD',%s)
+                    VALUES (%s,%s,NULL,%s,'sentinel',NULL,%s)
                     ON CONFLICT (external_ref) DO NOTHING
                     RETURNING id
                     """,

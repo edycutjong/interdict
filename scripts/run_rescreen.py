@@ -25,6 +25,7 @@ from interdict.db import (connect, relay, resume_point, run_is_complete,  # noqa
                           verify_chain)
 from interdict.matcher import Matcher                                  # noqa: E402
 from interdict.ofac import parse_sdn                                   # noqa: E402
+from interdict.oracle import Oracle                                    # noqa: E402
 from interdict.rescreen import open_run, rescreen_book                 # noqa: E402
 
 
@@ -56,6 +57,8 @@ def main() -> int:
                     help="stop after N batches, simulating a worker dying mid-book")
     ap.add_argument("--resume", type=int, default=None, help="resume an existing run id")
     ap.add_argument("--offline", action="store_true", help="force the offline adjudicator")
+    ap.add_argument("--no-oracle", action="store_true",
+                    help="skip yente grading (faster; the oracle column stays empty)")
     args = ap.parse_args()
 
     entries, publication = parse_sdn(args.sdn)
@@ -88,11 +91,26 @@ def main() -> int:
             )
             print(f"opened run {run_id} against publication {publication['publish_date']}")
 
-        summary = rescreen_book(
-            conn, run_id=run_id, matcher=matcher, adjudicator=adjudicator,
-            publication=publication, batch_size=args.batch_size,
-            blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
-        )
+        oracle = None
+        if not args.no_oracle:
+            candidate = Oracle()
+            if candidate.healthy():
+                oracle = candidate
+                print("oracle: yente /match/us_ofac_sdn (every decision graded)")
+            else:
+                candidate.close()
+                print("oracle: yente unreachable -- decisions will be ungraded")
+
+        try:
+            summary = rescreen_book(
+                conn, run_id=run_id, matcher=matcher, adjudicator=adjudicator,
+                publication=publication, batch_size=args.batch_size,
+                blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
+                oracle=oracle,
+            )
+        finally:
+            if oracle is not None:
+                oracle.close()
         relay(conn)
         conn.commit()
 
