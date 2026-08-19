@@ -152,6 +152,45 @@ def test_no_counterparty_is_skipped_across_a_crash(conn):
     assert total == 20
 
 
+def test_checkpoints_survive_a_process_death(conn):
+    """The checkpoint has to outlive the process, not just the function call.
+
+    `test_no_counterparty_is_skipped_across_a_crash` stops gracefully and resumes on the
+    same connection, so it passes whether or not anything was ever committed. That is
+    the one case resumability does not need. This asserts the real one: work done before
+    the crash is durable, visible to a *different* connection, and still there after
+    everything uncommitted is thrown away.
+
+    It fails if rescreen_book batches the whole run into a single transaction -- which
+    it did until the per-batch commit was added, meaning a SIGKILL rolled the checkpoints
+    back along with the decisions and the resume had nothing to resume from.
+    """
+    _book(conn, n_hits=10, n_clean=10)
+    run = _run(conn)
+    _screen(conn, run, batch_size=4, stop_after_batches=2)
+
+    # The crash: discard everything this connection has not committed.
+    conn.rollback()
+
+    with connect() as other:
+        with other.cursor() as cur:
+            cur.execute(
+                "SELECT count(*) AS n FROM rescreen_batches "
+                "WHERE run_id = %s AND completed_at IS NOT NULL", (run,))
+            assert cur.fetchone()["n"] == 2, "checkpoints did not survive the crash"
+
+            cur.execute(
+                "SELECT count(*) AS n FROM matches WHERE run_id = %s", (run,))
+            assert cur.fetchone()["n"] > 0, "decisions did not survive the crash"
+
+        # And the run is resumable from that durable state -- coverage stops at 8 of 20.
+        assert resume_point(other, run) is None
+        with other.cursor() as cur:
+            cur.execute("SELECT max(batch_end) AS covered FROM rescreen_batches "
+                        "WHERE run_id = %s", (run,))
+            assert cur.fetchone()["covered"] == 8
+
+
 def test_abandoned_batch_is_reclaimed_not_stepped_over(conn):
     """A worker that dies MID-batch leaves a claimed, uncompleted range.
 

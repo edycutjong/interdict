@@ -185,6 +185,16 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
         complete_batch(conn, run_id, start)
         summary.batches += 1
 
+        # COMMIT PER BATCH. This is what makes the checkpointing in claim_batch real.
+        #
+        # Without it the entire re-screen is one transaction, and a genuine crash --
+        # SIGKILL, OOM, a dead container -- rolls back every rescreen_batches row along
+        # with the decisions, leaving nothing to resume from. The resume path would then
+        # only ever work after a *graceful* stop, which is the one case that does not
+        # need it. Committing here is safe precisely because screening is idempotent:
+        # a re-claimed batch collides on the active-hold index and re-decides identically.
+        conn.commit()
+
     # Close the run only when the whole book has actually been screened -- nothing
     # outstanding AND claimed coverage reaching the end. "No incomplete batches" alone
     # would mark a run finished when a worker died between batches, leaving the
