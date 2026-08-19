@@ -46,7 +46,7 @@ Each one acts without a click, and each is graded against something we do not co
 | | Decision | What moves | Who grades it |
 |---|---|---|---|
 | 1 | **HOLD** | an idempotent hold freezes every queued disbursement to the counterparty | the SDN record on treasury.gov; `make challenge` reproduces it for any name |
-| 2 | **CLEAR** | the disbursement proceeds, with a written rationale | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` |
+| 2 | **CLEAR** | the disbursement proceeds, with the reason on record — the signal breakdown that ended it, or the model's rationale when the band was close enough to spend one | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` |
 | 3 | **RELEASE** | a delisting retires the hold and the money moves again | Treasury's own published delta (`/changes/latest`) |
 | 4 | **REPORT** | the blocking report is drafted against the statutory clock and filed to the ledger | the federal calendar, 5 U.S.C. 6103 |
 
@@ -75,33 +75,57 @@ SHA-256 of the name, so the challenge set is byte-identical on any machine.
 
 ### Decision quality — graded against ground truth the system cannot see
 
+Measured on a **stratified sample of 101** counterparties, adjudicated by
+`gemini-3.5-flash-lite`. Free-tier Gemini caps requests per model per project per day, so
+grading every one of 536 against the real model is not something that fits in a day; the
+sample keeps all four strata and holds the two that test judgement at full strength.
+Reproduce with `python scripts/load_book.py --truncate --sentinels 30 --variants 30
+--lookalikes 30`.
+
 The book carries the verdict a correct system must reach. The screening path never reads
 that column — the orchestrator does not know it exists.
 
-| population | | expected | correct |
-|---|---|---|---|
-| **sentinel** (400) | on the list, exact names | HOLD | 400 / 400 |
-| **variant** (60) | same person, different transliteration | HOLD | 59 / 60 |
-| **lookalike** (60) | *different* person, shared surname, contradicting DOB | CLEAR | 60 / 60 |
-| **ordinary** (16) | unrelated grantees | CLEAR | 16 / 16 |
+| population | | expected | correct | reached the model |
+|---|---|---|---|---|
+| **sentinel** (30) | on the list, exact names | HOLD | 30 / 30 | 30 |
+| **variant** (30) | same person, different transliteration | HOLD | 29 / 30 | 29 |
+| **lookalike** (25) | *different* person, shared surname, contradicting DOB | CLEAR | 25 / 25 | **0** |
+| **ordinary** (16) | unrelated grantees | CLEAR | 16 / 16 | **0** |
 
-**1 missed hit in 460. 0 frozen grantees in 76.** The two errors are reported separately
-because they are not equivalent: a missed hit is a payment to a designated party, a
-frozen grantee is aid stopped in error.
+**1 missed hit in 60. 0 frozen grantees in 41.** The two errors are reported separately
+because they are not equivalent: a missed hit is a payment to a designated party, a frozen
+grantee is aid stopped in error. The one miss is `AZIZ ATRIQ` at 0.6594 — a transliteration
+the *screening* plane scored below the adjudication bar, so the model never saw it.
+
+#### The right-hand column is the honest part
+
+**Not one CLEAR-expected counterparty reached the model.** All 59 adjudications came back
+HOLD, and every clear in this book was issued by the deterministic plane, because a
+contradicting date of birth cuts a lookalike below `T_HI` before adjudication is ever
+spent on it.
+
+That is the design working — proving two people are different from documented evidence
+does not need a language model, and the cheap path is also the auditable one. But it
+means this table grades **the matcher on clears and the model on holds**, and an earlier
+revision of it reported "lookalike CLEAR 60/60" as decision quality when the adjudicator
+had played no part. The model's demonstrated contribution here is confirming 59 holds
+with a citation and a signable rationale, and disagreeing with none of them.
 
 ### Agreement with the independent oracle, on every decision
 
 yente is consulted for **every** adjudication, not only where it agrees — an oracle
-consulted selectively is not an oracle. Across a full 536-counterparty re-screen:
+consulted selectively is not an oracle.
 
 | | count |
 |---|---|
-| both flagged a hit | **456** |
-| we held, yente missed | 3 |
+| both flagged a hit | **58** |
+| we held, yente missed | 1 |
 | **we cleared, yente flagged** | **0** |
 
 The zero is the one that matters. Under strict liability the dangerous direction is
 being *more permissive* than the oracle, and we never are.
+
+The oracle guard passed all 59 verdicts (`AGREE`), and nothing reached quarantine.
 
 ### The console
 
@@ -319,9 +343,11 @@ chain are the interesting part, and they are the same code against Cloud SQL.
 ## 📌 Known limitations
 
 - **Vessels and aircraft** are screened by name only; IMO and tail numbers are parsed but not scored.
-- **The adjudication-quality table above was measured on the deterministic stand-in**, so it grades the screening plane rather than model reasoning. Re-run with a Gemini key set to grade the model.
-- **One transliteration in sixty** (`AZIZ ATRIQ`, score 0.659) falls below the adjudication bar.
-- yente's own recall on this set is 0.840, so ~16% of the agreement gap is the oracle missing, not us.
+- **The model has never issued a CLEAR.** Every clear in the graded book came from the deterministic plane, because a contradicting date of birth ends the question before adjudication. So the adjudicator is exercised on confirmation, not on discrimination — see the note under the decision-quality table.
+- **Decision quality is a 101-row stratified sample, not the full book.** Free-tier Gemini allows a fixed number of requests per model per project per day; the full 536 would take several days of quota. The *screening* numbers are unaffected and still measured across all 400.
+- **One transliteration in thirty** (`AZIZ ATRIQ`, score 0.659) falls below the adjudication bar.
+- **Nothing runs on Google Cloud compute.** Firestore holds the audit trail; the agents, Postgres and yente run locally, because the free tier does not extend to Cloud Run and no billing account was available.
+- yente's own recall on the perturbed set is 0.840, so part of the agreement gap is the oracle missing, not us.
 
 ## 📄 Licence
 

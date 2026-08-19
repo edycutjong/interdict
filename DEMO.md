@@ -82,31 +82,40 @@ is near-tautological and we do not report it.
 ## Beat 4 — the full unattended re-screen
 
 ```bash
-python scripts/load_book.py --truncate
-python scripts/run_rescreen.py --trigger SCHEDULER
+python scripts/load_book.py --truncate --sentinels 30 --variants 30 --lookalikes 30
+python scripts/run_rescreen.py --trigger SCHEDULER --batch-size 20
 ```
 
-536 counterparties screened against 19,199 SDN records; ~459 held, money frozen, every
-decision written to the hash-chained ledger. Then grade it against ground truth the
-screening path cannot see:
+A **stratified sample of 101** counterparties screened against 19,199 SDN records; 59
+held, money frozen, every decision written to the hash-chained ledger and adjudicated by
+`gemini-3.5-flash-lite`. Sampled rather than run whole because free-tier Gemini caps
+requests per model per project per day — drop `--sentinels` on a billed project.
+
+Then grade it against ground truth the screening path cannot see:
 
 ```bash
 python scripts/adjudication_quality.py
 ```
 
 ```
-  sentinel    HOLD    400/400      lookalike   CLEAR    60/60
-  variant     HOLD     59/60       ordinary    CLEAR    16/16
-  MISSED HITS  1/460          FROZEN GRANTEES  0/76
+  sentinel    HOLD     30/30       lookalike   CLEAR    25/25
+  variant     HOLD     29/30       ordinary    CLEAR    16/16
+  MISSED HITS  1/60           FROZEN GRANTEES  0/41
 ```
 
-Every one of those 459 decisions also carries yente's independent verdict, because an
+**Read the strata carefully.** All 59 adjudications came back HOLD; not one CLEAR-expected
+row reached the model, because a contradicting date of birth cuts a lookalike below the
+adjudication bar first. The clears are the deterministic plane's work. What the model is
+graded on here is confirming holds with a citation — and it got 59 of 59 past the oracle
+guard, with nothing quarantined.
+
+Every one of those 59 decisions also carries yente's independent verdict, because an
 oracle consulted only where it agrees is not an oracle:
 
 | | count |
 |---|---|
-| both flagged a hit | **456** |
-| we held, yente missed | 3 |
+| both flagged a hit | **58** |
+| we held, yente missed | 1 |
 | **we cleared, yente flagged** | **0** |
 
 The zero is the point. Under strict liability the dangerous direction is being *more

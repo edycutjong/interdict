@@ -1,7 +1,7 @@
 {
   "by_origin": {
     "lookalike": {
-      "correct": 60,
+      "correct": 25,
       "wrong": 0,
       "expected": "CLEAR"
     },
@@ -11,18 +11,18 @@
       "expected": "CLEAR"
     },
     "sentinel": {
-      "correct": 400,
+      "correct": 30,
       "wrong": 0,
       "expected": "HOLD"
     },
     "variant": {
-      "correct": 59,
+      "correct": 29,
       "wrong": 1,
       "expected": "HOLD"
     }
   },
   "missed_hits": 1,
-  "should_hold": 460,
+  "should_hold": 60,
   "frozen_grantees": 0,
-  "should_clear": 76
+  "should_clear": 41
 }
