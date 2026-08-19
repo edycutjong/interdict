@@ -293,10 +293,22 @@ CREATE INDEX IF NOT EXISTS outbox_unpublished_idx
 
 CREATE TABLE IF NOT EXISTS quarantine (
     id           bigserial PRIMARY KEY,
+    -- ADJUDICATOR_UNAVAILABLE is deliberately its own reason rather than a flavour of
+    -- PARSE_ERROR: it is the only one here that is fixed by waiting rather than by a
+    -- human reading the evidence. See interdict/adjudicator.py.
     reason       text NOT NULL CHECK (reason IN
-                 ('ORACLE_DISAGREE','LOOP_CAP','SCHEMA_INVALID','NO_CITATION','PARSE_ERROR')),
+                 ('ORACLE_DISAGREE','LOOP_CAP','SCHEMA_INVALID','NO_CITATION',
+                  'PARSE_ERROR','ADJUDICATOR_UNAVAILABLE')),
     match_id     bigint REFERENCES matches(id),
     payload      jsonb NOT NULL,
     created_at   timestamptz NOT NULL DEFAULT now(),
     resolved_at  timestamptz
 );
+
+-- Migration, idempotent. CREATE TABLE IF NOT EXISTS above does nothing to a database
+-- that already has `quarantine`, so the widened CHECK has to be applied explicitly or
+-- an existing deployment rejects ADJUDICATOR_UNAVAILABLE at insert time.
+ALTER TABLE quarantine DROP CONSTRAINT IF EXISTS quarantine_reason_check;
+ALTER TABLE quarantine ADD CONSTRAINT quarantine_reason_check CHECK (reason IN
+    ('ORACLE_DISAGREE','LOOP_CAP','SCHEMA_INVALID','NO_CITATION',
+     'PARSE_ERROR','ADJUDICATOR_UNAVAILABLE'));

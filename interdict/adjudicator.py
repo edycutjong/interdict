@@ -17,12 +17,16 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
+import time
 from dataclasses import dataclass
 from typing import Protocol
 
 from .matcher import T_HI, Match
 
-MODEL_ID = os.environ.get("INTERDICT_MODEL", "gemini-2.5-flash")
+# The hackathon floor is Gemini 3.5 or newer. Pinned rather than tracking "latest" so a
+# verdict in the ledger can be reproduced against the model that actually issued it.
+MODEL_ID = os.environ.get("INTERDICT_MODEL", "gemini-3.5-flash")
 
 # Structured output. The adjudicator does not get to reply in prose: a free-text verdict
 # cannot be guarded, cannot be diffed against the oracle, and cannot be replayed.
@@ -147,6 +151,44 @@ def render_prompt(context: dict, feedback: str | None = None) -> str:
     return PROMPT.format(extra=extra, **context)
 
 
+class TransientAdjudicationError(RuntimeError):
+    """The model plane was unreachable, not wrong.
+
+    Kept distinct from every other failure because the two demand opposite responses. A
+    malformed or unguardable verdict is a model-integrity problem: quarantine it, escalate
+    to a human, and never let the money move. A 429 or a 503 is infrastructure: the right
+    answer is to wait and ask again.
+
+    Collapsing the two is not a cosmetic bug. The first full run against real Gemini
+    quarantined 438 of 536 counterparties -- not because the model got anything wrong, but
+    because the free tier allows 5 requests a minute and every subsequent call raised. A
+    system that escalates a rate limit to a compliance officer as a suspected hallucination
+    has cried wolf 438 times, and the 439th alert is the one nobody reads.
+    """
+
+
+# Free-tier Gemini is rate limited in requests per minute, and the error carries a
+# "please retry in Ns" hint. Honour the hint when present; otherwise back off
+# exponentially. Sanctions screening is a batch job against a list that changes weekly --
+# waiting is nearly free, and giving up is not.
+MAX_TRANSIENT_RETRIES = 5
+DEFAULT_BACKOFF_S = 30.0
+
+_TRANSIENT_MARKERS = ("RESOURCE_EXHAUSTED", "429", "503", "UNAVAILABLE", "DEADLINE_EXCEEDED")
+
+
+def _is_transient(exc: Exception) -> bool:
+    return any(m in str(exc) for m in _TRANSIENT_MARKERS)
+
+
+def _retry_delay(exc: Exception, attempt: int) -> float:
+    """Seconds to wait. Prefers the server's own hint over our guess."""
+    m = re.search(r"retry in (\d+(?:\.\d+)?)s", str(exc))
+    if m:
+        return min(float(m.group(1)) + 1.0, 120.0)
+    return min(DEFAULT_BACKOFF_S * (2 ** (attempt - 1)), 120.0)
+
+
 class GeminiAdjudicator:
     """The product path. Gemini with enforced structured output.
 
@@ -169,16 +211,29 @@ class GeminiAdjudicator:
 
     def adjudicate(self, context: dict, *, feedback: str | None = None) -> Verdict:
         prompt = render_prompt(context, feedback)
-        response = self._client.models.generate_content(
-            model=self.model_id,
-            contents=prompt,
-            config={
-                "response_mime_type": "application/json",
-                "response_schema": VERDICT_SCHEMA,
-                # Sanctions decisions must not vary run to run.
-                "temperature": 0.0,
-            },
-        )
+        response = None
+        for attempt in range(1, MAX_TRANSIENT_RETRIES + 1):
+            try:
+                response = self._client.models.generate_content(
+                    model=self.model_id,
+                    contents=prompt,
+                    config={
+                        "response_mime_type": "application/json",
+                        "response_schema": VERDICT_SCHEMA,
+                        # Sanctions decisions must not vary run to run.
+                        "temperature": 0.0,
+                    },
+                )
+                break
+            except Exception as exc:
+                if not _is_transient(exc):
+                    raise
+                if attempt == MAX_TRANSIENT_RETRIES:
+                    raise TransientAdjudicationError(
+                        f"model unreachable after {attempt} attempts: {exc}"
+                    ) from exc
+                time.sleep(_retry_delay(exc, attempt))
+
         data = json.loads(response.text)
         return Verdict(
             verdict=data["verdict"],

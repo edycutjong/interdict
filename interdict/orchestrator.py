@@ -28,7 +28,12 @@ from datetime import date
 import psycopg
 from psycopg.rows import DictRow
 
-from .adjudicator import Adjudicator, Verdict, build_context
+from .adjudicator import (
+    Adjudicator,
+    TransientAdjudicationError,
+    Verdict,
+    build_context,
+)
 from .db import emit, one
 from .matcher import T_HI, T_LO, Match, Matcher
 from .money import place_hold
@@ -198,11 +203,24 @@ def screen_counterparty(conn: psycopg.Connection[DictRow], *, run_id: int, count
     for attempt in range(1, MAX_ROUND_TRIPS + 1):
         try:
             verdict = adjudicator.adjudicate(context, feedback=feedback)
+        except TransientAdjudicationError as exc:
+            # The model plane was unreachable, and the adjudicator already exhausted its
+            # own backoff. Still quarantine -- money must never move on a decision that
+            # was never made -- but say so accurately. An operator triaging this queue
+            # needs to tell "the model said something I cannot verify" from "the model
+            # never answered", because only the second one is fixed by waiting.
+            _quarantine(conn, match_id, "ADJUDICATOR_UNAVAILABLE", {
+                "counterparty_id": counterparty_id, "error": str(exc)[:500],
+                "attempt": attempt, "retryable": True,
+            })
+            return Decision(counterparty_id, match.sdn_uid, "QUARANTINE",
+                            f"adjudicator unreachable: {exc}"[:200], attempt,
+                            match.score, "UNAVAILABLE")
         except Exception as exc:
             # A model failure must never become a silent CLEAR.
             _quarantine(conn, match_id, "PARSE_ERROR", {
                 "counterparty_id": counterparty_id, "error": str(exc)[:500],
-                "attempt": attempt,
+                "attempt": attempt, "retryable": False,
             })
             return Decision(counterparty_id, match.sdn_uid, "QUARANTINE",
                             f"adjudicator failed: {exc}"[:200], attempt,
