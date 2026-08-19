@@ -8,7 +8,17 @@ Setup once:
 ```bash
 make install && make up && make oracle-index && make schema && make fetch-sdn
 export GEMINI_API_KEY=...     # free, no billing: https://aistudio.google.com/apikey
+
+# The cloud evidence plane (Beat 9). Optional -- every other beat runs without it.
+export INTERDICT_FIRESTORE_PROJECT=your-project
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json   # roles/datastore.user
 ```
+
+**On pace.** Free-tier Gemini allows **five requests a minute**, so a full-book run takes
+roughly 90 minutes wall clock and spends almost all of it waiting. That is the honest
+number and it is not a problem worth hiding: this is a batch job against a list Treasury
+republishes weekly. The adjudicator honours the server's own `retry in Ns` hint rather
+than hammering it.
 
 `run_rescreen.py` **refuses to run without that key** rather than substituting a test
 double. Every `--offline` run below is the deterministic plane alone and labels itself
@@ -169,6 +179,37 @@ make bench
 | 9.3 ms | 68.8 ms | 106.7 ms | 7.6 s |
 
 OFAC publishes roughly weekly. A full re-screen takes seconds.
+
+## Beat 9 — the audit trail leaves the machine
+
+A hash chain only the operator can read is not much of an audit trail. Every committed
+ledger entry is mirrored to Cloud Firestore with its `seq`, `prev_hash` and `entry_hash`
+intact, so the chain verifies from the cloud copy alone — against a local database the
+verifier does not have and does not have to trust.
+
+The run prints what it published:
+
+```
+  ledger: 3765 entries, chain INTACT
+  firestore: +3765 ledger entries, run summary published -> <project>/(default)
+```
+
+Open the **Firestore console** on `interdict_ledger` while a re-screen is running and
+documents land live. `interdict_runs` holds one summary document per run: trigger,
+publication date, SDN record count, source SHA-256, and the hold / adjudication /
+guard-disagreement counts.
+
+The mirror is resumable with no local state — it asks Firestore for the highest `seq` it
+already holds and republishes everything above it, and document ids are the padded
+sequence number, so re-running it overwrites rather than duplicates:
+
+```bash
+python -c "from interdict.db import connect; from interdict.cloud import publish_ledger; \
+           conn=connect().__enter__(); print(publish_ledger(conn), 'entries mirrored')"
+```
+
+Firestore is a mirror and never a source of truth. A publish failure is loud and retried
+on the next pass; it cannot unmake a decision Postgres has already committed.
 
 ---
 

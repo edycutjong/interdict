@@ -10,11 +10,10 @@
 
 [**Demo video**](#-demo) · [**Reproduce the numbers**](#-reproduce) · [**Architecture**](#-architecture)
 
-![Gemini](https://img.shields.io/badge/Gemini-structured%20output-4285F4)
-![ADK](https://img.shields.io/badge/Google-ADK-34A853)
-![Cloud Run](https://img.shields.io/badge/Cloud%20Run-3%20agents-4285F4)
-![Cloud SQL](https://img.shields.io/badge/Cloud%20SQL-Postgres%2016-EA4335)
-![Cloud Scheduler](https://img.shields.io/badge/Cloud%20Scheduler-6h%20poll-FBBC04)
+![Gemini](https://img.shields.io/badge/Gemini%203.5%20Flash-structured%20output-4285F4)
+![GenAI SDK](https://img.shields.io/badge/Google-GenAI%20SDK-34A853)
+![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04)
+![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335)
 ![Tests](https://img.shields.io/badge/tests-133%20passing-success)
 
 </div>
@@ -132,35 +131,42 @@ OFAC publishes roughly weekly.
 
 ## 🏗 Architecture
 
-Three ADK agents. The deterministic plane is the **oracle for the model plane**, and
-because they are separate agents the check is literal inter-agent routing rather than an
-internal function call.
+Three agents behind one routing boundary. The deterministic plane is the **oracle for the
+model plane**, and the guard sits on the return path so a verdict is checked before it is
+allowed to move money.
+
+**They run in a single process.** The separation is enforced by the `Adjudicator`
+protocol and the oracle guard, not by a network hop — every model call is confined to
+`interdict/adjudicator.py`, which is what makes the guard in `interdict/orchestrator.py`
+a real check rather than a formality. Calling this a fleet of microservices would be a
+nicer diagram and a false one.
 
 ```mermaid
 flowchart TB
     OFAC["OFAC SDN.XML + /changes/latest<br/><i>Treasury, external</i>"]
-    SCHED["Cloud Scheduler<br/>6h poll"]
-    INGEST["ingest job<br/>Cloud Run"]
+    SCHED["6h poll<br/><i>launchd timer</i>"]
+    INGEST["ingest<br/>archive by content hash"]
 
-    subgraph FLEET["the fleet — 3 ADK agents on Cloud Run"]
+    subgraph FLEET["the fleet — 3 agents, one process"]
         ORCH["<b>orchestrator</b><br/>routes · oracle guard · quarantine<br/><i>sole writer of decisions</i>"]
-        MATCH["<b>matcher-agent</b><br/>deterministic, no LLM<br/><i>blocking · scoring · thresholds</i>"]
-        ADJ["<b>adjudicator-agent</b><br/>Gemini, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
+        MATCH["<b>matcher</b><br/>deterministic, no LLM<br/><i>blocking · scoring · thresholds</i>"]
+        ADJ["<b>adjudicator</b><br/>Gemini 3.5 Flash, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
     end
 
-    SQL[("Cloud SQL · Postgres 16<br/>holds · outbox · hash-chained ledger")]
-    PS["Pub/Sub<br/>delta fan-out"]
+    SQL[("Postgres 16<br/>holds · outbox · hash-chained ledger")]
+    FS[("Cloud Firestore<br/><i>evidence plane — readable<br/>without this machine</i>")]
     YENTE["yente / OpenSanctions<br/><i>external oracle</i><br/>scope: us_ofac_sdn ONLY"]
     QUAR["quarantine<br/><i>terminal — escalates to a human</i>"]
 
     OFAC --> SCHED --> INGEST -->|"tx + outbox"| SQL
-    SQL -->|"outbox relay<br/>single writer"| PS --> ORCH
+    SQL -->|"outbox relay<br/>single writer"| ORCH
     ORCH -->|"1 screen"| MATCH
     MATCH -->|"2 score + components"| ORCH
     ORCH -->|"3 adjudicate"| ADJ
     ADJ -->|"4 verdict"| ORCH
     ORCH -->|"5 ORACLE GUARD<br/>score · citation · rationale"| ORCH
     ORCH -->|"HOLD / CLEAR"| SQL
+    SQL -->|"mirror committed ledger<br/>seq + entry_hash preserved"| FS
     ORCH -.->|"guard fails twice<br/>≤2 round-trip cap"| QUAR
     MATCH -.->|"graded daily"| YENTE
 ```
@@ -182,6 +188,30 @@ an unbounded reconsider loop is the classic multi-agent failure.
 It deliberately does **not** block a CLEAR backed by a contradicting date of birth or an
 entity-type mismatch. That case is exactly what the model is for.
 
+### "The model was wrong" and "the model did not answer" are different failures
+
+They were the same failure here until the first full run against real Gemini, which
+quarantined **438 of 536** counterparties. Not one of them was a bad verdict: the free
+tier allows five requests a minute, every call after the first twenty-one returned `429
+RESOURCE_EXHAUSTED`, and each one was caught by a bare `except` and filed as a suspected
+model-integrity failure.
+
+That is a worse bug than the rate limit. Quarantine is the terminal state where a human
+compliance officer is told the system could not safely decide. Spending it on a transient
+network condition means the queue fills with noise, and the one entry that genuinely needs
+a person is buried in 438 that only needed thirty seconds.
+
+So the two are now separated:
+
+| | `PARSE_ERROR` | `ADJUDICATOR_UNAVAILABLE` |
+|---|---|---|
+| means | the verdict cannot be trusted | the verdict was never produced |
+| fixed by | a human reading the evidence | waiting |
+| before reaching quarantine | no retry — the answer was bad | 5 attempts, honouring the server's own `retry in Ns` hint |
+
+Money still moves in neither case. The difference is what the operator is told, and
+whether the system resolves it without them.
+
 ### Correctness lives in the database
 
 | Invariant | How |
@@ -191,6 +221,7 @@ entity-type mismatch. That case is exactly what the model is for.
 | re-screens cannot double-hold | `UNIQUE ... NULLS NOT DISTINCT` on the active hold |
 | screened money cannot skip states | illegal-transition trigger on every disbursement |
 | a crash cannot skip counterparties | batch checkpointing; resume is `MIN(batch_start)` over incomplete batches, and a run closes only when claimed coverage reaches the end of the book |
+| a checkpoint outlives the process that wrote it | **each batch commits.** The whole book used to run in one transaction, so a real `SIGKILL` rolled the checkpoints back with the decisions and the resume had nothing to resume from — it only ever worked after a graceful stop, the one case that does not need it. `test_checkpoints_survive_a_process_death` asserts durability from a second connection |
 
 ## 🔬 Reproduce
 
@@ -206,6 +237,12 @@ make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
 export GEMINI_API_KEY=...                 # free, no billing: aistudio.google.com/apikey
+
+# Optional -- the cloud evidence plane. Without these the run is identical except that
+# nothing is mirrored; Firestore is where the audit trail becomes readable off-machine.
+export INTERDICT_FIRESTORE_PROJECT=your-project
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json   # roles/datastore.user
+
 python scripts/load_book.py --truncate    # the labelled synthetic book
 python scripts/run_rescreen.py            # the unattended loop
 python scripts/adjudication_quality.py    # graded against ground truth
@@ -261,16 +298,23 @@ to the ledger. It does not submit it.
 
 ## 🧰 Stack
 
-| Layer | Choice |
-|---|---|
-| Adjudication | **Gemini** — structured output via `response_schema`, temperature 0 for reproducible verdicts |
-| Agent framework | **Google ADK** — orchestrator, matcher and adjudicator |
-| Compute | **Cloud Run** — 3 agent services, ingest job, yente |
-| State | **Cloud SQL (Postgres 16)** — the constraints above are the product |
-| Messaging | **Pub/Sub** — delta fan-out, transactional outbox relay |
-| Trigger | **Cloud Scheduler** — the unattended 6h poll |
-| Screening | Python 3.11, rapidfuzz |
-| Oracle | OpenSanctions **yente**, scope-pinned |
+| Layer | Choice | Where it runs |
+|---|---|---|
+| Adjudication | **Gemini 3.5 Flash** — structured output via `response_schema`, temperature 0 for reproducible verdicts | Gemini API |
+| Agent framework | **Google GenAI SDK** (`google-genai`) — every model call, confined to one module | — |
+| Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
+| Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
+| Messaging | transactional **outbox** relay in Postgres — single ledger writer | local |
+| Trigger | **launchd** 6h poll | local |
+| Screening | Python 3.11, rapidfuzz | local |
+| Oracle | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` | local, Docker |
+
+**On what is not here.** An earlier revision of this table claimed Cloud Run, Cloud SQL,
+Pub/Sub and Cloud Scheduler. None of them were ever deployed — the GCP billing account
+this project had access to is closed, and Firestore's free tier is the one Google Cloud
+service that runs without one. The table above is what actually executes. Postgres is
+local by consequence and stays local by choice: the triggers and the advisory-lock hash
+chain are the interesting part, and they are the same code against Cloud SQL.
 
 ## 📌 Known limitations
 
