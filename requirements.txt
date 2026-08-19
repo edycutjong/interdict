@@ -1,14 +1,22 @@
-# Screening plane. Deliberately small and cloud-agnostic -- nothing here imports a GCP
-# SDK, which is what makes `make deploy` a re-point rather than a rewrite.
+# Screening plane. Deliberately small and cloud-agnostic: the matching, scoring and
+# ledger code imports no cloud SDK at all, so the correctness core is testable and
+# reproducible with no credentials of any kind.
 rapidfuzz==3.9.7
 psycopg[binary]==3.2.3
 httpx==0.28.1
 
-# Adjudication plane (Gemini) and agent framework.
-# Pins verified to resolve together and against the API this code actually calls:
+# Adjudication plane -- the Google GenAI SDK, and the only model dependency.
+# Pinned against the API this code actually calls:
 # genai.Client(api_key=...).models.generate_content(model, contents, config) with
-# response_schema + temperature. An earlier pair (0.8.0 / 0.4.0) was never installed
-# and could not resolve at all -- `pip install -r requirements.txt` failed outright,
-# which would have broken the reproduce path on any clean machine.
+# response_schema + temperature. An earlier pin (0.8.0) was never installed and could
+# not resolve at all -- `pip install -r requirements.txt` failed outright, which would
+# have broken the reproduce path on any clean machine.
+#
+# google-adk was listed here for a while and never imported by a single line of this
+# codebase. A dependency that exists only to be named in a stack table is worse than no
+# dependency, so it is gone; the GenAI SDK below is what the adjudicator actually uses.
 google-genai==2.18.1
-google-adk==2.7.0
+
+# Evidence plane -- Cloud Firestore. The only GCP SDK in the tree, confined to
+# interdict/cloud.py and inert unless INTERDICT_FIRESTORE_PROJECT is set.
+google-cloud-firestore==2.28.1

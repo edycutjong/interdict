@@ -5,10 +5,13 @@
     python scripts/run_rescreen.py --kill-after 1       # die mid-book (demo beat B5)
     python scripts/run_rescreen.py --resume RUN_ID      # pick the unfinished range back up
 
-The adjudicator defaults to Gemini and falls back to the offline rule-based stand-in
-when no API key is present, so the pipeline is runnable and demonstrable before the key
-lands. The fallback is announced loudly on stdout -- a screening run whose verdicts came
-from a test double must never be mistaken for the product path.
+The adjudicator is Gemini. Running without a key is a hard error rather than a silent
+downgrade -- the stand-in is opt-in via --offline and announces itself on every line, so
+a run whose verdicts came from a test double can never be mistaken for the product path.
+
+When INTERDICT_FIRESTORE_PROJECT is set the committed ledger is mirrored to Cloud
+Firestore at the end of the run, which is where the audit trail becomes readable without
+this machine.
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from interdict.cloud import mirror, publish_ledger, publish_run_summary
 from interdict.db import (
     connect,
     relay,
@@ -167,6 +171,18 @@ def main() -> int:
 
         intact, total = verify_chain(conn)
         print(f"\n  ledger: {total} entries, chain {'INTACT' if intact else 'FORKED'}")
+
+        # The cloud evidence plane. Deliberately after the chain check and after the
+        # commit above: Firestore mirrors decisions that are already durable, and a
+        # publish failure must never be able to unmake one.
+        mir = mirror()
+        if mir is None:
+            print("  firestore: off (set INTERDICT_FIRESTORE_PROJECT to mirror)")
+        else:
+            published = publish_ledger(conn, mir)
+            publish_run_summary(conn, run_id, mir)
+            print(f"  firestore: +{published} ledger entries, run summary published "
+                  f"-> {mir.project}/{mir.database}")
 
     return 0
 
