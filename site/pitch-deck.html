@@ -246,7 +246,7 @@ body.debug-contrast :is(h1,h2,h3,p,li,td,th,.kicker,.subhead,.chip,.code,.stat,.
     </div>
     <div class="foot">
       <span>OFAC SDN · live feed</span><div class="rule"></div>
-      <span>Gemini · ADK · Cloud Run · Cloud SQL · Pub/Sub · Cloud Scheduler</span>
+      <span>Gemini 3.5 Flash Lite · Google GenAI SDK · Cloud Firestore · Postgres 16</span>
     </div>
   </div>
   <aside class="speaker-notes">Interdict watches the Treasury sanctions list so a tiny NGO doesn't
@@ -335,7 +335,7 @@ entities         <span class="c-txt">26</span>
       </div>
       <div>
         <div class="stat"><div class="stat-n">every 6<span class="amber">h</span></div>
-          <div class="stat-l">Cloud Scheduler polls OFAC — no human in the loop; run history is the
+          <div class="stat-l">A 6-hourly timer polls OFAC — no human in the loop; run history is the
             logged proof of weeks of unattended operation</div></div>
         <div class="stat" style="margin-top:36px"><div class="stat-n">4 decisions</div>
           <div class="stat-l">HOLD · CLEAR · RELEASE · REPORT — each executes without a click, each
@@ -356,7 +356,7 @@ entities         <span class="c-txt">26</span>
     <h2 style="font-size:64px">Deterministic code decides what executes.</h2>
     <div style="margin-top:34px">
       <!-- architecture diagram — pure SVG, real labels, real data flow -->
-      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three ADK agents on Cloud Run with an oracle guard at the routing boundary">
+      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three agents on Cloud Run with an oracle guard at the routing boundary">
         <defs>
           <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
@@ -373,18 +373,18 @@ entities         <span class="c-txt">26</span>
         <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
         <!-- scheduler + ingest -->
         <rect x="10" y="270" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
-        <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">Cloud Scheduler</text>
+        <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">6h timer</text>
         <text x="30" y="330" fill="#94a3b8" font-size="14">poll every 6h · unattended</text>
         <rect x="10" y="390" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
-        <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest · Cloud Run job</text>
-        <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch → Pub/Sub</text>
+        <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest job</text>
+        <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch by content hash</text>
         <line x1="160" y1="220" x2="160" y2="270" stroke="#94a3b8" marker-end="url(#ar)"/>
         <line x1="160" y1="360" x2="160" y2="390" stroke="#94a3b8" marker-end="url(#ar)"/>
         <line x1="310" y1="435" x2="470" y2="435" stroke="#94a3b8" marker-end="url(#ar)"/>
         <text x="325" y="425" fill="#556174" font-size="13">rescreen-tasks</text>
         <!-- orchestrator (center) -->
         <rect x="470" y="240" width="430" height="260" rx="12" fill="#121722" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · ADK · thin</text>
+        <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · thin</text>
         <rect x="495" y="298" width="380" height="120" rx="8" fill="rgba(245,158,11,.14)" stroke="#f59e0b"/>
         <text x="513" y="328" fill="#f59e0b" font-size="16" font-weight="700">ORACLE GUARD — at the routing boundary</text>
         <text x="513" y="354" fill="#e7ecf4" font-size="14">schema · citation-vs-record · disagreement</text>
@@ -426,9 +426,9 @@ entities         <span class="c-txt">26</span>
         <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
         <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
         <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
-        <!-- cloud sql -->
+        <!-- postgres -->
         <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
-        <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Cloud SQL · Postgres 16</text>
+        <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Postgres 16 · hash-chained</text>
         <text x="760" y="542" fill="#94a3b8" font-size="14">idempotent holds (UNIQUE) · hash-chained append-only ledger · outbox · quarantine · rescreen_batches</text>
         <line x1="685" y1="500" x2="685" y2="512" stroke="#94a3b8" marker-end="url(#ar)"/>
       </svg>

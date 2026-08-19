@@ -232,7 +232,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 
 <!-- ============================== HERO ============================== -->
 <section class="hero wrap" id="top">
-  <p class="trackline"><b>Fortified Enterprise Fleet</b> · All Things Agentic Hackathon · three ADK agents on Google Cloud</p>
+  <p class="trackline"><b>Fortified Enterprise Fleet</b> · All Things Agentic Hackathon · three agents · Gemini 3.5 · Cloud Firestore</p>
   <h1>Sanctions screening for the people Firco won&rsquo;t sell to.</h1>
 
   <div class="story">
@@ -258,7 +258,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
     <p class="lede">One narrow flow, end to end, with money consequences in both directions.</p>
 
     <ol class="loop">
-      <li><b>Delta lands</b>Cloud Scheduler polls OFAC&rsquo;s delta feed every 6&nbsp;hours; each entry carries an explicit add / remove action.</li>
+      <li><b>Delta lands</b>a 6-hourly timer polls OFAC&rsquo;s delta feed; each entry carries an explicit add / remove action.</li>
       <li><b>Full-book re-screen</b>Every counterparty, checkpointed and crash-safe — a silently skipped row is a compliance breach.</li>
       <li class="hold"><b>True hits HELD</b>Money stops. An idempotent hold lands on the counterparty and every queued disbursement to it.</li>
       <li class="release"><b>Lookalikes CLEARED</b>With a written rationale: weak-alias downweighting per OFAC&rsquo;s own guidance, DOB corroboration from the feed&rsquo;s own flags.</li>
@@ -313,12 +313,12 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
     <p class="eyebrow" data-n="03">Architecture</p>
     <h2>Three agents, two planes, one guard that decides what executes</h2>
     <p class="lede">The deterministic matching plane is the <b>oracle</b> for the LLM plane. Because
-    the planes are separate ADK agents, that check is literal inter-agent routing — not a function
+    the planes are separate agents behind one routing boundary, that check happens on the return path — not inside a
     call inside a monolith. Deterministic code decides what executes; the LLM explains and judges.</p>
 
     <div class="fleet">
       <div class="agent span2 guard">
-        <h3>orchestrator <span class="tag">ADK · Cloud Run · thin</span> <span class="tag" style="color:var(--hold);border-color:var(--hold)">oracle guard</span></h3>
+        <h3>orchestrator <span class="tag">thin · sole writer</span> <span class="tag" style="color:var(--hold);border-color:var(--hold)">oracle guard</span></h3>
         <p>Routes matcher → adjudicator and applies the guard on every hop. Exposes
         <code>screen_counterparty</code> as the A2A-cataloged skill. Owns quarantine.</p>
         <ul class="guardlist">
@@ -352,7 +352,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
     hallucination?</em> — answered by the router itself, not by a paragraph in a README.</p>
 
     <figure class="archfig">
-      <svg style="max-width:100%;height:auto;display:block;margin:0 auto" viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three ADK agents on Cloud Run with an oracle guard at the routing boundary">
+      <svg style="max-width:100%;height:auto;display:block;margin:0 auto" viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three agents in one process with an oracle guard at the routing boundary">
               <defs>
                 <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                   <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
@@ -369,18 +369,18 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
               <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
               <!-- scheduler + ingest -->
               <rect x="10" y="270" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
-              <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">Cloud Scheduler</text>
+              <text x="30" y="305" fill="#e7ecf4" font-size="17" font-weight="700">6h timer</text>
               <text x="30" y="330" fill="#94a3b8" font-size="14">poll every 6h · unattended</text>
               <rect x="10" y="390" width="300" height="90" rx="10" fill="#121722" stroke="#232b3a"/>
-              <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest · Cloud Run job</text>
-              <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch → Pub/Sub</text>
+              <text x="30" y="425" fill="#e7ecf4" font-size="17" font-weight="700">ingest job</text>
+              <text x="30" y="450" fill="#94a3b8" font-size="14">archive every fetch by content hash</text>
               <line x1="160" y1="220" x2="160" y2="270" stroke="#94a3b8" marker-end="url(#ar)"/>
               <line x1="160" y1="360" x2="160" y2="390" stroke="#94a3b8" marker-end="url(#ar)"/>
               <line x1="310" y1="435" x2="470" y2="435" stroke="#94a3b8" marker-end="url(#ar)"/>
               <text x="325" y="425" fill="#556174" font-size="13">rescreen-tasks</text>
               <!-- orchestrator (center) -->
               <rect x="470" y="240" width="430" height="260" rx="12" fill="#121722" stroke="#f59e0b" stroke-width="1.5"/>
-              <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · ADK · thin</text>
+              <text x="495" y="278" fill="#e7ecf4" font-size="19" font-weight="700">orchestrator · thin</text>
               <rect x="495" y="298" width="380" height="120" rx="8" fill="rgba(245,158,11,.14)" stroke="#f59e0b"/>
               <text x="513" y="328" fill="#f59e0b" font-size="16" font-weight="700">ORACLE GUARD — at the routing boundary</text>
               <text x="513" y="354" fill="#e7ecf4" font-size="14">schema · citation-vs-record · disagreement</text>
@@ -422,13 +422,13 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
               <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
               <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
               <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
-              <!-- cloud sql -->
+              <!-- postgres -->
               <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
-              <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Cloud SQL · Postgres 16</text>
+              <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Postgres 16 · hash-chained</text>
               <text x="760" y="542" fill="#94a3b8" font-size="14">idempotent holds (UNIQUE) · hash-chained append-only ledger · outbox · quarantine · rescreen_batches</text>
               <line x1="685" y1="500" x2="685" y2="512" stroke="#94a3b8" marker-end="url(#ar)"/>
             </svg>
-      <figcaption>Three ADK agents on Cloud&nbsp;Run. The oracle guard sits at the routing boundary
+      <figcaption>Three agents in one process. The oracle guard sits at the routing boundary
       between the deterministic and model planes, so a verdict is checked before it can move money.
       Drawn from the code as it stands, not from the plan.</figcaption>
     </figure>
@@ -574,14 +574,19 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
       </table>
     </div>
 
-    <!-- TODO: replace with real capture — Cloud Scheduler run history in Cloud Console
-         (the unattended-operation evidence; accrues only after GCP billing is active). -->
-    <div class="placeholder" role="img" aria-label="Placeholder for Cloud Scheduler run history screenshot">
-      <span class="ptag">pending — GCP billing</span>
-      <p>Cloud Scheduler run history goes here: logged, unattended polls fired by genuine Treasury
-      publications. It accrues in wall-clock time and cannot be backfilled, which is exactly why it
-      counts as evidence — and why this panel stays empty rather than being filled with anything else.
-      A local archiver has captured every publication by content hash in the meantime.</p>
+    <!-- The cloud evidence plane. Real, and reachable without this machine. -->
+    <div class="panel">
+      <h3 style="margin-top:0">The audit trail leaves the machine</h3>
+      <p>Every committed ledger entry is mirrored to <b>Cloud Firestore</b> carrying its
+      <code>seq</code>, <code>prev_hash</code> and <code>entry_hash</code>, so the chain verifies
+      from the cloud copy alone &mdash; against a local database the verifier neither has nor has to
+      trust. <code>interdict_runs</code> holds one summary document per run: trigger, publication
+      date, SDN record count, source SHA-256, and the hold / adjudication / guard-disagreement
+      counts.</p>
+      <p class="dim">Firestore is a mirror and never a source of truth. A publish failure is loud
+      and retried on the next pass; it cannot unmake a decision Postgres has already committed.
+      Its free tier is the one Google Cloud service that runs without a billing account, which is
+      why the unattended trigger is a local 6-hourly timer rather than Cloud Scheduler.</p>
     </div>
 
     <h3 id="sources" style="margin-top:2rem">Sources</h3>
@@ -702,7 +707,7 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
 <footer>
   <div class="wrap">
     <p><b style="color:var(--ink)">Interdict</b> — built solo for the All Things Agentic Hackathon,
-    Fortified Enterprise Fleet track. Gemini · ADK · Cloud Run · Cloud SQL · Pub/Sub · Cloud Scheduler.</p>
+    Fortified Enterprise Fleet track. Gemini 3.5 Flash Lite · Google GenAI SDK · Cloud Firestore · Postgres 16.</p>
     <ul class="pending" aria-label="Links pending until submission">
       <li>demo video — records after build completes</li>
       <li>live .run URL — pending deploy</li>

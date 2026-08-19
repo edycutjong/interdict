@@ -26,7 +26,14 @@ from .matcher import T_HI, Match
 
 # The hackathon floor is Gemini 3.5 or newer. Pinned rather than tracking "latest" so a
 # verdict in the ledger can be reproduced against the model that actually issued it.
-MODEL_ID = os.environ.get("INTERDICT_MODEL", "gemini-3.5-flash")
+#
+# flash-lite rather than flash for a boring reason: free-tier quota is per model per
+# project per day, and flash allows 20 requests -- roughly one twentieth of a single
+# full-book pass. Adjudication here is a narrow, heavily constrained call (fixed schema,
+# temperature 0, one question about two records) and the deterministic oracle guard
+# checks every answer before it can move money, so the smaller model is doing work it is
+# well suited to. Set INTERDICT_MODEL=gemini-3.5-flash on a billed project.
+MODEL_ID = os.environ.get("INTERDICT_MODEL", "gemini-3.5-flash-lite")
 
 # Structured output. The adjudicator does not get to reply in prose: a free-text verdict
 # cannot be guarded, cannot be diffed against the oracle, and cannot be replayed.
@@ -233,6 +240,12 @@ class GeminiAdjudicator:
                         f"model unreachable after {attempt} attempts: {exc}"
                     ) from exc
                 time.sleep(_retry_delay(exc, attempt))
+
+        if response is None or not response.text:
+            # Defensive: the loop above either breaks with a response or raises. An empty
+            # body here would otherwise reach json.loads as None and surface as a
+            # TypeError several frames away from the thing that actually went wrong.
+            raise TransientAdjudicationError("model returned an empty response")
 
         data = json.loads(response.text)
         return Verdict(

@@ -108,10 +108,31 @@ def main() -> int:
     ap.add_argument("--truncate", action="store_true",
                     help="clear the book first (leaves the ledger untouched -- it is "
                          "append-only and refuses TRUNCATE by design)")
+    ap.add_argument("--sentinels", type=int, default=None,
+                    help="cap the number of sentinels loaded (default: all 400)")
     args = ap.parse_args()
 
     with args.book.open(newline="", encoding="utf-8") as fh:
         sentinels = list(csv.DictReader(fh))
+
+    # STRATIFIED SAMPLING, for grading the model plane under a request budget.
+    #
+    # Free-tier Gemini caps requests per day per model per project, so grading every
+    # counterparty against the real adjudicator is not a thing that can happen in one
+    # sitting. Grading only the first N by id would be worse than useless: the book is
+    # laid out one stratum at a time, so the first 100 rows are all sentinels -- names
+    # copied verbatim out of the list being searched, the single easiest case, and the
+    # one whose score means the least.
+    #
+    # Capping sentinels while keeping every variant, lookalike and ordinary row gives a
+    # sample where each stratum is represented, and keeps the two strata that actually
+    # test judgement -- variants (same person, must HOLD) and lookalikes (different
+    # person with a contradicting DOB, must CLEAR) -- at full strength.
+    #
+    # The full-book screening numbers are unaffected: the deterministic plane calls no
+    # model and is still measured across all 400 by `make challenge-set`.
+    if args.sentinels is not None:
+        sentinels = sentinels[:args.sentinels]
 
     # Sentinels ARE the listed parties, so they carry the record's own date of birth.
     # An invented placeholder date would contradict the real one, fire the disjoint-DOB

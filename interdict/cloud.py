@@ -84,7 +84,10 @@ class FirestoreMirror:
             .limit(1)
             .stream()
         )
-        return int(docs[0].to_dict()["seq"]) if docs else 0
+        if not docs:
+            return 0
+        top = docs[0].to_dict() or {}
+        return int(top.get("seq", 0))
 
     # -- publication -------------------------------------------------------
 
