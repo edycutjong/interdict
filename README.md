@@ -176,7 +176,7 @@ nicer diagram and a false one.
 flowchart TB
     OFAC["OFAC SDN.XML + /changes/latest<br/><i>Treasury, external</i>"]
     SCHED["6h poll<br/><i>launchd timer</i>"]
-    INGEST["ingest<br/>archive by content hash<br/><i>new hash -> starts the re-screen</i>"]
+    INGEST["ingest<br/>archive by content hash<br/><i>files only — index.json + heartbeat</i>"]
 
     subgraph FLEET["the fleet — 3 agents, one process"]
         ORCH["<b>orchestrator</b><br/>routes · oracle guard · quarantine<br/><i>sole writer of decisions</i>"]
@@ -189,18 +189,29 @@ flowchart TB
     YENTE["yente / OpenSanctions<br/><i>external oracle</i><br/>scope: us_ofac_sdn ONLY"]
     QUAR["quarantine<br/><i>terminal — escalates to a human</i>"]
 
-    OFAC --> SCHED --> INGEST -->|"tx + outbox"| SQL
-    SQL -->|"outbox relay<br/>single writer"| ORCH
+    OFAC --> SCHED --> INGEST
+    INGEST -->|"a content hash we have not seen<br/>opens a run · trigger=SCHEDULER"| ORCH
     ORCH -->|"1 screen"| MATCH
     MATCH -->|"2 score + components"| ORCH
     ORCH -->|"3 adjudicate"| ADJ
     ADJ -->|"4 verdict"| ORCH
     ORCH -->|"5 ORACLE GUARD<br/>score · citation · rationale"| ORCH
-    ORCH -->|"HOLD / CLEAR"| SQL
+    ORCH -->|"HOLD / CLEAR<br/>decision + outbox, one tx"| SQL
+    SQL -->|"outbox relay<br/>THE single ledger writer"| SQL
     SQL -->|"mirror committed ledger<br/>seq + entry_hash preserved"| FS
     ORCH -.->|"guard fails twice<br/>≤2 round-trip cap"| QUAR
-    MATCH -.->|"graded daily"| YENTE
+    ORCH -.->|"consulted once per batch · stored on<br/>every adjudication · never gates one"| YENTE
 ```
+
+The drawn version below carries the detail this graph leaves out — every block names the
+file that implements it, the trust boundary around everything Interdict does not author
+(Gemini's output and yente's opinion) is drawn rather than described, and the three Google
+technologies actually in the build are marked. It is traced from the source, not from the
+pitch, and the footer names what is deliberately *not* in this repository.
+
+<img src="docs/assets/architecture-diagram.png" width="860" alt="Interdict architecture and data flow: the 6-hourly poll and content-hash archive; the matcher, orchestrator and adjudicator decision path with the oracle guard on the return path and a trust boundary around Gemini and yente; the Postgres region holding money, quarantine and the outbox-relay-ledger chain; and Cloud Firestore mirroring committed ledger rows off-machine">
+
+[Full resolution](docs/assets/architecture-diagram.png)
 
 ### Why the guard is the interesting part
 
