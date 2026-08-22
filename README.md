@@ -6,7 +6,7 @@
 
 **When Treasury updates the OFAC list, it re-screens the whole payment book, holds true hits, clears lookalikes with written reasons, releases funds on delisting, and drafts the 10-day blocking report — unattended.**
 
-<img src="docs/assets/readme-hero.png" width="860" alt="Interdict — autonomous sanctions-delta re-screening and interdiction">
+<img src="docs/assets/screenshots/console-overview-dark.png" width="860" alt="Interdict evidence console — 101 synthetic counterparties re-screened against the 19,199 records of the 08/07/2026 OFAC publication: 59 held, $1,181,434.51 frozen, 0 quarantined, ledger chain intact">
 
 [**Demo video**](#-demo) · [**Reproduce the numbers**](#-reproduce) · [**Architecture**](#-architecture)
 
@@ -129,7 +129,7 @@ The oracle guard passed all 59 verdicts (`AGREE`), and nothing reached quarantin
 
 ### The console
 
-<img src="docs/assets/screenshots/console-overview-dark.png" width="860" alt="Interdict evidence console — overview">
+<img src="docs/assets/screenshots/console-adjudications-dark.png" width="860" alt="Interdict evidence console — adjudications, each with its Gemini rationale, the oracle guard result and yente's independent verdict">
 
 Run history, held money against the statutory clock, every adjudication with its
 rationale and the oracle beside it, quarantine, and the ledger with its chain verified
@@ -137,9 +137,15 @@ on page load. The `model` column names whichever adjudicator produced each verdi
 a viewer can see at a glance whether it came from the product path or the offline
 stand-in.
 
-More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
-[adjudications](docs/assets/screenshots/console-adjudications-dark.png) ·
+Every screenshot in this README is the console reading a real run — the one described
+under [Decision quality](#decision-quality--graded-against-ground-truth-the-system-cannot-see),
+captured after it finished. They are re-taken whenever the numbers change; none of them
+is a mockup.
+
+More: [overview](docs/assets/screenshots/console-overview-dark.png) ·
+[holds](docs/assets/screenshots/console-holds-dark.png) ·
 [runs](docs/assets/screenshots/console-runs-dark.png) ·
+[quarantine](docs/assets/screenshots/console-quarantine-dark.png) ·
 [ledger](docs/assets/screenshots/console-ledger-dark.png)
 
 ### Performance
