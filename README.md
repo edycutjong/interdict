@@ -10,7 +10,7 @@
 
 [**Demo video**](#-demo) · [**Reproduce the numbers**](#-reproduce) · [**Architecture**](#-architecture)
 
-![Gemini](https://img.shields.io/badge/Gemini%203.5%20Flash-structured%20output-4285F4)
+![Gemini](https://img.shields.io/badge/gemini--3.5--flash--lite-structured%20output-4285F4)
 ![GenAI SDK](https://img.shields.io/badge/Google-GenAI%20SDK-34A853)
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335)
@@ -175,7 +175,7 @@ flowchart TB
     subgraph FLEET["the fleet — 3 agents, one process"]
         ORCH["<b>orchestrator</b><br/>routes · oracle guard · quarantine<br/><i>sole writer of decisions</i>"]
         MATCH["<b>matcher</b><br/>deterministic, no LLM<br/><i>blocking · scoring · thresholds</i>"]
-        ADJ["<b>adjudicator</b><br/>Gemini 3.5 Flash, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
+        ADJ["<b>adjudicator</b><br/>gemini-3.5-flash-lite, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
     end
 
     SQL[("Postgres 16<br/>holds · outbox · hash-chained ledger")]
@@ -342,7 +342,7 @@ to the ledger. It does not submit it.
 
 | Layer | Choice | Where it runs |
 |---|---|---|
-| Adjudication | **Gemini 3.5 Flash** — structured output via `response_schema`, temperature 0 for reproducible verdicts | Gemini API |
+| Adjudication | **`gemini-3.5-flash-lite`** — the pinned default (`INTERDICT_MODEL` overrides it); structured output via `response_schema`, a system instruction carrying the compliance framing, temperature 0 for reproducible verdicts | Gemini API |
 | Agent framework | **Google GenAI SDK** (`google-genai`) — every model call, confined to one module | — |
 | Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
 | Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
@@ -375,7 +375,9 @@ chain are the interesting part, and they are the same code against Cloud SQL.
 
 - **OpenSanctions / yente** (MIT) — run unmodified as the external oracle.
 - **rapidfuzz** (MIT), **psycopg** (LGPL), **httpx** (BSD).
-- **Google ADK** and **google-genai** SDKs.
+- **google-genai** SDK — the only model SDK in the tree. Google ADK is *not* used: it was
+  declared as a dependency for a while, never imported by a line of this codebase, and has
+  been removed from `requirements.txt`.
 - Built with AI coding assistance, which the rules permit as standard tooling.
 
 All application code in this repository was written during the submission period.
