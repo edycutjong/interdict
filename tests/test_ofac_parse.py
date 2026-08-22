@@ -3,9 +3,24 @@
 These run against data/SDN.XML rather than a fixture on purpose: the claims this
 project makes on camera ("4,393 weak aliases", "19,199 records") are claims about the
 real feed, and a fixture would let them quietly drift from it.
+
+WHAT THE PINNED FIGURES ARE CLAIMS ABOUT. They are claims about ONE publication -- the
+Standard Action of 08/07/2026, fetched 2026-08-12 and hashed in data/archive/index.json --
+not about the SDN list in perpetuity. Treasury publishes again every time it designates or
+delists anybody, and it did exactly that on 08/20/2026, taking the list to 19,249 records.
+Asserting the frozen numbers against whatever the live endpoint happens to serve therefore
+converts every OFAC action into a red CI run, which trains everyone to ignore the red.
+
+It also asks the wrong question. "Does the feed still say 19,199" is Treasury's business.
+"Does our parser still agree with whatever the feed says, and does it still find the
+schema quirks we depend on" is ours. So the exact figures are asserted when the fetched
+publication IS the pinned one, self-consistency is asserted always, and a newer
+publication is reported loudly rather than failed -- with both dates named, so a number
+that has gone stale in the README or in the demo script is visible instead of silent.
 """
 
 import pathlib
+import warnings
 
 import pytest
 
@@ -13,10 +28,34 @@ from interdict.ofac import WEAK, parse_sdn
 
 SDN = pathlib.Path(__file__).resolve().parents[1] / "data" / "SDN.XML"
 
+# The publication every quoted figure in README.md and DEMO.md refers to.
+PINNED_DATE = "08/07/2026"
+PINNED_RECORDS = 19199
+PINNED_WEAK = 4393
+
 pytestmark = pytest.mark.skipif(
     not SDN.exists(),
     reason="data/SDN.XML is gitignored (27MB); run `make fetch-sdn` first",
 )
+
+
+def _is_pinned(pub) -> bool:
+    """True when the fetched publication is the one the quoted figures describe.
+
+    Warns rather than fails otherwise: a superseded pin is a documentation task, not a
+    parser defect, and it must not be discovered as a mystery CI failure.
+    """
+    if pub["publish_date"] == PINNED_DATE:
+        return True
+    warnings.warn(
+        f"OFAC has published since the pinned figures were taken: live publication is "
+        f"{pub['publish_date']} with {pub['record_count']} records, pinned is "
+        f"{PINNED_DATE} with {PINNED_RECORDS}. Exact-figure assertions are relaxed to "
+        f"self-consistency. Every '{PINNED_RECORDS:,} records' / '{PINNED_WEAK:,} weak "
+        f"aliases' in README.md and DEMO.md must stay labelled {PINNED_DATE}.",
+        stacklevel=2,
+    )
+    return False
 
 
 @pytest.fixture(scope="module")
@@ -32,19 +71,29 @@ def test_ofac_schema_typo_is_pinned(parsed):
     """
     _, pub = parsed
     assert pub["publish_date"], "publication date empty -- did the OFAC typo get fixed?"
-    assert pub["publish_date"] == "08/07/2026"
+    # A date, in Treasury's format, from the misspelled element. Not a specific date:
+    # pinning the value here would mean this regression guard fires for the wrong reason
+    # every time OFAC publishes, and the thing it guards is the element name.
+    assert len(pub["publish_date"].split("/")) == 3, pub["publish_date"]
 
 
 def test_record_count_matches_publication_header(parsed):
     entries, pub = parsed
-    assert len(entries) == int(pub["record_count"]) == 19199
+    assert len(entries) == int(pub["record_count"])
+    if _is_pinned(pub):
+        assert len(entries) == PINNED_RECORDS
 
 
 def test_weak_alias_count_is_as_published(parsed):
-    """The 4,393 figure is quoted in the README and the demo. Pin it."""
-    entries, _ = parsed
+    """The 4,393 figure is quoted in the README and the demo. Pin it to its publication."""
+    entries, pub = parsed
     weak = sum(1 for e in entries for n in e.names if n.category == WEAK)
-    assert weak == 4393
+    if _is_pinned(pub):
+        assert weak == PINNED_WEAK
+    else:
+        # The claim that survives a republication: OFAC still flags a substantial minority
+        # of aliases weak, and the matcher's downweighting still has something to act on.
+        assert weak > 1000, weak
 
 
 def test_every_entry_has_a_uid_and_a_name(parsed):
