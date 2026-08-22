@@ -81,6 +81,7 @@ def main() -> int:
     now = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
     new_count = 0
     failures = 0
+    failed: set[str] = set()
 
     for name, (url, ext) in SOURCES.items():
         try:
@@ -88,6 +89,7 @@ def main() -> int:
         except Exception as exc:  # a transient OFAC/network failure must never kill the poll
             print(f"  {name:6} FETCH FAILED: {exc}", file=sys.stderr)
             failures += 1
+            failed.add(name)
             continue
 
         digest = hashlib.sha256(body).hexdigest()
@@ -106,7 +108,38 @@ def main() -> int:
     index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
     print(f"{now}  new={new_count}  failures={failures}  archive={root}")
 
-    # Non-zero only if everything failed -- a partial poll is still a successful poll.
+    # The heartbeat, and the reason it is separate from index.json. index.json only changes
+    # when OFAC publishes something new, which is irregular -- days can pass between entries
+    # while the archiver is perfectly healthy, so its timestamps cannot answer "is this thing
+    # still running". This file is written on EVERY poll and answers exactly that, which is
+    # what `make archive-status` reads. Gitignored, like the log: it is operational state, not
+    # a deliverable, and committing it would dirty the tree every six hours.
+    streaks = {}
+    hb_path = root / "last-poll.json"
+    if hb_path.exists():
+        try:
+            streaks = json.loads(hb_path.read_text()).get("consecutive_failures", {})
+        except (OSError, ValueError):
+            streaks = {}
+    hb_path.write_text(
+        json.dumps(
+            {
+                "utc": now,
+                "new": new_count,
+                "failures": failures,
+                "consecutive_failures": {
+                    name: (streaks.get(name, 0) + 1 if name in failed else 0) for name in SOURCES
+                },
+            },
+            indent=2, sort_keys=True,
+        )
+        + "\n"
+    )
+
+    # Non-zero only if everything failed -- a partial poll is still a successful poll, and one
+    # transient reset should not mark the scheduled job failed. A source that keeps failing is
+    # caught by the streak above rather than by this exit code, which cannot distinguish
+    # "OFAC blipped once" from "this endpoint has been gone for a week".
     return 1 if failures == len(SOURCES) else 0
 
 

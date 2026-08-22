@@ -1,7 +1,15 @@
 # DEMO — what to run, what you should see
 
-Every command here runs against the real OFAC publication committed to this repo. None
-of the numbers below are typed in by hand; each is printed by the command above it.
+Every command here runs against the real OFAC publication. None of the numbers below are
+typed in by hand; each is printed by the command above it.
+
+**Which publication.** The figures here are from **08/07/2026 — 19,199 records, 4,393 weak
+aliases**, the snapshot the sentinel book is sealed to (`data/PROVENANCE.md`). `make
+fetch-sdn` fetches whatever is *current*, and Treasury has published since: 08/20/2026,
+19,249 records, 4,401 weak aliases. So running these commands today prints the newer
+figures, which is correct and expected — `make verify-book` tells you which publication you
+have and confirms all 400 sentinels are still listed in it. Nothing below is invalidated by
+that; the numbers are labelled rather than frozen.
 
 Setup once:
 
@@ -86,7 +94,8 @@ python scripts/load_book.py --truncate --sentinels 30 --variants 30 --lookalikes
 python scripts/run_rescreen.py --trigger SCHEDULER --batch-size 20
 ```
 
-A **stratified sample of 101** counterparties screened against 19,199 SDN records; 59
+A **stratified sample of 101** counterparties screened against the 19,199 SDN records of
+the 08/07/2026 publication; 59
 held, money frozen, every decision written to the hash-chained ledger and adjudicated by
 `gemini-3.5-flash-lite`. Sampled rather than run whole because free-tier Gemini caps
 requests per model per project per day — drop `--sentinels` on a billed project.

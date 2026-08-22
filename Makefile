@@ -52,11 +52,15 @@ test-coverage:  ## Tests with coverage
 # ---------------------------------------------------------------------------
 
 .PHONY: audit
+# `|| true` on both commands here used to mean the security leg of `make ci` could never
+# fail: a real CVE or a real leaked secret printed and exited 0. Only a MISSING gitleaks is
+# tolerated now, and it says so; a gitleaks that ran and found something fails the target.
 audit:  ## Dependency CVEs + secrets in history
 	@echo "=== pip-audit (dependency CVEs) ==="
-	@$(PY) -m pip_audit || true
+	$(PY) -m pip_audit
 	@echo "=== gitleaks (secrets in history) ==="
-	@gitleaks detect --no-banner --redact || echo "gitleaks not installed locally; CI runs it"
+	@if command -v gitleaks >/dev/null; then gitleaks detect --no-banner --redact; \
+	 else echo "gitleaks not installed locally; CI runs it (.github/workflows/gitleaks.yml)"; fi
 
 .PHONY: ci
 ci: lint typecheck test-coverage audit  ## Everything CI runs
@@ -93,9 +97,12 @@ fetch-sdn:  ## Fetch the current OFAC SDN publication (27MB, follows the S3 redi
 	@shasum -a 256 data/SDN.XML
 
 .PHONY: verify-book
-verify-book:  ## Re-derive the sealed sentinel book and check its hash
-	$(PY) scripts/seed_sentinels.py --sdn data/SDN.XML --out /tmp/sentinels-check.csv
-	@shasum -a 256 /tmp/sentinels-check.csv data/sentinels.csv
+verify-book:  ## Check the sealed sentinel book against its seal, and against the publication
+	$(PY) scripts/verify_book.py --sdn data/SDN.XML
+
+.PHONY: archive-status
+archive-status:  ## Fail if the OFAC archiver has not captured anything recently
+	$(PY) scripts/archive_status.py
 
 # ---------------------------------------------------------------------------
 # The dev loop

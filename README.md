@@ -145,7 +145,8 @@ More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
 ### Performance
 
 `make bench` — deterministic screening plane, 400 counterparties against all 19,199 SDN
-records:
+records of the **08/07/2026 publication** — the snapshot this whole build is sealed to; see
+[What is real, and what is not](#️-what-is-real-and-what-is-not):
 
 | p50 | p95 | p99 | full book |
 |---|---|---|---|
@@ -317,6 +318,23 @@ publication existed — so if OFAC delists one of them, `git log` proves the boo
 the removal. That is the path to a genuinely live release, and it is upside rather than
 the plan.
 
+**As of 08/20/2026 no sentinel has fired.** Treasury published again on 08/20 — 19,199
+records to 19,249, and the archived `changes/latest` delta carries 47 additions and no
+removals — and `make verify-book` reports all 400 sentinels still listed in that
+publication. So the release leg is still the labelled replay, and this paragraph will say
+so until it is not true. (`changes/latest` holds only the most recent action, which is why
+47 additions and a 50-record rise are not the same number.) The 08/20 delta is archived
+alongside the 08/07 one: a real Treasury trigger, published during the build, that nobody
+here chose — the HOLD leg runs against it live.
+
+**The 6-hourly poll had a five-day outage**, 2026-08-17 to 08-22, and the 08/20
+publication was captured late because of it. A lint pass modernised `datetime.timezone.utc`
+into `datetime.UTC` while the timer was invoking Python 3.9, so every poll died into a log
+nobody was reading. It is disclosed here because "unattended" is a claim this project makes
+and that is what an outage in it looks like. The fix is in `git log`; the check that would
+have caught it on the first missed window is `make archive-status`, which did not exist and
+now does.
+
 **Transmission to OFAC stays human.** Interdict drafts the blocking report and files it
 to the ledger. It does not submit it.
 
@@ -329,7 +347,7 @@ to the ledger. It does not submit it.
 | Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
 | Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
 | Messaging | transactional **outbox** relay in Postgres — single ledger writer | local |
-| Trigger | **launchd** 6h poll | local |
+| Trigger | **launchd** 6h poll — the timer is committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
 | Screening | Python 3.11, rapidfuzz | local |
 | Oracle | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` | local, Docker |
 
