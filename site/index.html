@@ -261,7 +261,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
       <li><b>Delta lands</b>a 6-hourly timer polls OFAC&rsquo;s delta feed; each entry carries an explicit add / remove action.</li>
       <li><b>Full-book re-screen</b>Every counterparty, checkpointed and crash-safe — a silently skipped row is a compliance breach.</li>
       <li class="hold"><b>True hits HELD</b>Money stops. An idempotent hold lands on the counterparty and every queued disbursement to it.</li>
-      <li class="release"><b>Lookalikes CLEARED</b>With a written rationale: weak-alias downweighting per OFAC&rsquo;s own guidance, DOB corroboration from the feed&rsquo;s own flags.</li>
+      <li class="release"><b>Lookalikes CLEARED</b>On the record&rsquo;s own evidence &mdash; weak-alias downweighting per OFAC&rsquo;s own guidance, a contradicting date of birth taken from the feed&rsquo;s own fields.</li>
       <li class="release"><b>Funds RELEASED</b>A delisting delta autonomously releases blocked funds and retires the hold.</li>
       <li><b>Report drafted</b>The OFAC blocking report, against the real 10-business-day statutory clock, filed to an append-only ledger.</li>
     </ol>
@@ -288,8 +288,8 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
           </tr>
           <tr>
             <td><b class="release">CLEAR</b> — lookalike auto-cleared</td>
-            <td>Disbursement proceeds, with a written rationale citing fields that actually exist in the record</td>
-            <td>Agreement table vs OpenSanctions <b>yente</b> and OFAC&rsquo;s own Sanctions List Search — whole book, every day</td>
+            <td>Disbursement proceeds. In the graded run every clear was issued by the deterministic plane &mdash; a contradicting date of birth ends the question below the adjudication bar, before a model is spent on it</td>
+            <td>Agreement table vs OpenSanctions <b>yente</b>, consulted on every adjudication and not only where it agrees; spot-checkable against OFAC&rsquo;s own Sanctions List Search</td>
           </tr>
           <tr>
             <td><b class="release">RELEASE</b> — delisting detected</td>
@@ -336,9 +336,12 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
       </div>
 
       <div class="agent">
-        <h3>adjudicator-agent <span class="tag">Gemini plane · structured output</span></h3>
-        <p>Writes every hold/clear rationale as strict structured output: verdict, confidence,
-        cited fields. DOB corroboration and weak-alias downweighting per OFAC&rsquo;s own published guidance.</p>
+        <h3>adjudicator-agent <span class="tag">gemini-3.5-flash-lite · structured output</span></h3>
+        <p>Writes the rationale for every adjudicated verdict as strict structured output: verdict,
+        confidence, cited fields, via the Google GenAI SDK at temperature 0. In the graded run all
+        59 adjudications came back HOLD &mdash; no CLEAR-expected counterparty ever reached the
+        model, so it is exercised on <em>confirming</em> holds with a citation, not on discrimination.
+        We report that rather than hide it.</p>
       </div>
 
       <div class="agent span2">
@@ -363,7 +366,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
               <rect x="10" y="20" width="300" height="200" rx="10" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
               <text x="30" y="52" fill="#556174" font-size="14" letter-spacing="2">EXTERNAL — NOT OURS</text>
               <text x="30" y="88" fill="#e7ecf4" font-size="17" font-weight="700">OFAC SLS</text>
-              <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 records</text>
+              <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 rec. (08/07/2026)</text>
               <text x="30" y="138" fill="#94a3b8" font-size="14">/changes/latest delta</text>
               <text x="30" y="162" fill="#94a3b8" font-size="14">302 → presigned S3</text>
               <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
@@ -397,7 +400,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
               <!-- adjudicator -->
               <rect x="1010" y="390" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
               <text x="1035" y="428" fill="#e7ecf4" font-size="19" font-weight="700">adjudicator-agent · Gemini</text>
-              <text x="1035" y="456" fill="#94a3b8" font-size="14">Gemini API · structured responseSchema</text>
+              <text x="1035" y="456" fill="#94a3b8" font-size="14">GenAI SDK · gemini-3.5-flash-lite</text>
               <text x="1035" y="478" fill="#94a3b8" font-size="14">written rationale · DOB corroboration</text>
               <text x="1035" y="500" fill="#94a3b8" font-size="14">weak-alias downweighting · cited_fields[]</text>
               <!-- routing arrows -->
@@ -421,7 +424,7 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
               <text x="1462" y="202" fill="#94a3b8" font-size="13">/match/us_ofac_sdn only</text>
               <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
               <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
-              <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
+              <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">every decision</text>
               <!-- postgres -->
               <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
               <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Postgres 16 · hash-chained</text>
@@ -454,20 +457,24 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
         by people who have never seen this code. <code>make challenge-set</code> re-derives it.</p>
       </div>
       <div class="stat">
-        <span class="n">1 <small>in 460</small></span>
+        <span class="n">1 <small>in 60</small></span>
         <p>Missed hits, graded against ground truth the screening path never reads — the orchestrator
-        does not know the column exists. <b>0 frozen grantees in 76.</b></p>
+        does not know the column exists. <b>0 frozen grantees in 41.</b> Decision quality is a
+        stratified sample of 101 counterparties, not the whole book: free-tier Gemini caps requests
+        per day.</p>
       </div>
       <div class="stat">
         <span class="n">0</span>
-        <p>Cases where we cleared someone the oracle flagged, across 459 decisions. Under strict
-        liability, being <em>more permissive</em> than the oracle is the direction that ends in a
-        payment to a designated party. 456 agreed; in the other 3 we were stricter.</p>
+        <p>Cases where we cleared someone the oracle flagged, across the 59 adjudications in that
+        sample. Under strict liability, being <em>more permissive</em> than the oracle is the
+        direction that ends in a payment to a designated party. 58 agreed; in the other 1 we were
+        stricter.</p>
       </div>
       <div class="stat">
         <span class="n">9.3 <small>ms p50</small></span>
-        <p>Per counterparty against all 19,199 records. A full 536-counterparty re-screen finishes in
-        <b>7.6&nbsp;s</b>; OFAC publishes roughly weekly.</p>
+        <p>Per counterparty against all 19,199 records of the 08/07/2026 publication; p95
+        <b>68.8&nbsp;ms</b>. A 400-counterparty pass finishes in <b>7.6&nbsp;s</b>; OFAC publishes
+        roughly weekly.</p>
       </div>
       <div class="stat">
         <span class="n">133 <small>tests</small></span>
@@ -494,12 +501,13 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
     <div class="stats">
       <div class="stat">
         <span class="n">19,199</span>
-        <p>SDN records in the live OFAC list, published 08/07/2026 — parsed end to end, 27&nbsp;MB in ~5&nbsp;s.</p>
+        <p>SDN records in the OFAC publication of <b>08/07/2026</b>, the snapshot this build is
+        pinned to — parsed end to end, 27&nbsp;MB in ~5&nbsp;s.</p>
       </div>
       <div class="stat">
         <span class="n">4,393</span>
-        <p>Genuine <code>category=weak</code> aliases in the live list — the raw material that powers
-        false-positive clearing. Nothing synthesized.</p>
+        <p>Genuine <code>category=weak</code> aliases in that same 08/07/2026 publication — the raw
+        material that powers false-positive clearing. Nothing synthesized.</p>
       </div>
       <div class="stat">
         <span class="n">18 <small>adds</small> / 8 <small>removes</small></span>
@@ -522,6 +530,13 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
         uniform sampling of the same 400 rows.</p>
       </div>
     </div>
+
+    <p class="small" style="margin-top:1.2rem"><b>Every figure on this page is pinned to the
+    08/07/2026 publication</b>, which is the snapshot the committed hashes and the sealed sentinel
+    book refer to. Treasury has published since: as of <b>08/20/2026</b> the live list carries
+    <b>19,249</b> records and <b>4,401</b> weak aliases, and the archived <code>changes/latest</code>
+    delta carries <b>47 additions and no removals</b>. If you curl the feed today you will see
+    those numbers, not these — which is the point of labelling them.</p>
 
     <h3>The oracle is outside our control — and it was validated first</h3>
     <p>Before a line of matcher code existed, the grading oracle (self-hosted OpenSanctions
@@ -557,15 +572,16 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
 
     <div class="tablewrap">
       <table>
-        <caption class="small">Every one of 459 adjudications in a full re-screen, graded against
-        yente. Printed by <code>make challenge-set</code> and <code>scripts/adjudication_quality.py</code>.</caption>
+        <caption class="small">Every one of the 59 adjudications in the graded run &mdash; a
+        stratified sample of 101 counterparties &mdash; checked against yente, not only where it
+        agrees. Printed by <code>scripts/adjudication_quality.py</code>.</caption>
         <thead>
           <tr><th scope="col">Outcome</th><th scope="col">Count</th><th scope="col">What it means</th></tr>
         </thead>
         <tbody>
-          <tr><td>Both flagged a hit</td><td><b>456</b></td>
+          <tr><td>Both flagged a hit</td><td><b>58</b></td>
               <td>Independent agreement on the designation.</td></tr>
-          <tr><td>We held, yente missed</td><td><b>3</b></td>
+          <tr><td>We held, yente missed</td><td><b>1</b></td>
               <td>We were the stricter party — the safe direction to differ.</td></tr>
           <tr><td>We cleared, yente flagged</td><td><b>0</b></td>
               <td>The number that matters. Under strict liability, being more permissive than the
@@ -658,6 +674,19 @@ sup a{text-decoration:none;font-family:var(--mono);font-size:.72em}
         Federal Register notice on screen. Never presented as live.</li>
         <li>Report transmission to OFAC stays human. The agent drafts and tracks the deadline; it
         does not file with the government.</li>
+        <li><b>The 6-hourly poll is a local <code>launchd</code> timer, and it was dead for five
+        days.</b> From 2026-08-17 to 08-22 it crashed on every fire — sixteen consecutive failures,
+        the wrong Python interpreter — and OFAC published during the gap. Both surrounding captures
+        are in <code>data/archive/index.json</code> with the hole visible between them. The poll is
+        content-hash keyed and idempotent, so the next successful fire picked the publication up;
+        we are not claiming unbroken unattended operation, and there is no run history shipped that
+        could pretend otherwise.</li>
+        <li><b>Nothing runs on Google Cloud compute.</b> Cloud Firestore&rsquo;s free tier holds the
+        mirrored ledger and is the one Google Cloud service in use; the agents, Postgres and yente
+        run locally, because no billing account was available for Cloud Run or Cloud SQL.</li>
+        <li>Decision quality is a <b>101-row stratified sample</b>, not the full 536-row book —
+        free-tier Gemini caps requests per model per day. The screening numbers are unaffected and
+        measured across all 400.</li>
       </ul>
     </div>
 
@@ -710,7 +739,7 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
     Fortified Enterprise Fleet track. Gemini 3.5 Flash Lite · Google GenAI SDK · Cloud Firestore · Postgres 16.</p>
     <ul class="pending" aria-label="Links pending until submission">
       <li>demo video — records after build completes</li>
-      <li>live .run URL — pending deploy</li>
+      <li>no hosted URL — the fleet, Postgres and yente run locally; <code>make reproduce</code> is the judge&rsquo;s path</li>
       <li>repository — private until submission, flips public with full history</li>
     </ul>
     <p class="small">No real payment rails are touched. All book names come from public records with

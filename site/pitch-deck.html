@@ -317,8 +317,9 @@ entities         <span class="c-txt">26</span>
     <div class="kicker">The solution <span class="k-dim">· one flow, done to the bottom</span></div>
     <h2 style="max-width:1500px">The whole book, re-screened unattended.</h2>
     <p class="body" style="margin-top:26px;max-width:1250px">On every OFAC delta, Interdict
-      re-screens the entire 536-counterparty book: true hits held, lookalikes cleared with written
-      reasons, funds released on delisting, the 10-day blocking report drafted.</p>
+      re-screens the entire 536-counterparty book: true hits held with a written, cited rationale,
+      lookalikes cleared on the record's own evidence, funds released on delisting, the 10-day
+      blocking report drafted.</p>
     <div class="mono" style="margin-top:40px;font-size:21px;color:var(--color-muted);letter-spacing:.02em">
       DELTA LANDS <span class="amber">→</span> FULL-BOOK RE-SCREEN <span class="amber">→</span>
       <span class="hold-pill">HOLD</span> <span style="color:var(--color-faint)">|</span>
@@ -335,8 +336,9 @@ entities         <span class="c-txt">26</span>
       </div>
       <div>
         <div class="stat"><div class="stat-n">every 6<span class="amber">h</span></div>
-          <div class="stat-l">A 6-hourly timer polls OFAC — no human in the loop; run history is the
-            logged proof of weeks of unattended operation</div></div>
+          <div class="stat-l">A local <span class="mono">launchd</span> timer polls OFAC — no human
+            in the loop; every fetch is content-hash keyed and idempotent, and each capture is
+            hashed into <span class="mono">data/archive/index.json</span></div></div>
         <div class="stat" style="margin-top:36px"><div class="stat-n">4 decisions</div>
           <div class="stat-l">HOLD · CLEAR · RELEASE · REPORT — each executes without a click, each
             graded by an external oracle (slide 07)</div></div>
@@ -345,8 +347,10 @@ entities         <span class="c-txt">26</span>
     <div class="foot"><span>04 · solution</span><div class="rule"></div><span>the agent is the product — the console is one evidence view</span></div>
   </div>
   <aside class="speaker-notes">One flow, nothing else — no dashboard product, no multi-list
-    coverage, no notification suite. The scheduler is the heartbeat: real Treasury publications
-    trigger the system, so "little to no hand-holding" shows up as logged run history, not a claim.</aside>
+    coverage, no notification suite. The 6-hourly local timer is the heartbeat: real Treasury
+    publications trigger the system, and the archived captures carry their SHA-256. Say the outage
+    out loud if asked — the timer crashed on every fire from Aug 17 to Aug 22, and slide 09 discloses
+    it rather than claiming unbroken operation.</aside>
 </section>
 
 <!-- ════════════════════ SLIDE 5 · HOW IT WORKS ════════════════════ -->
@@ -356,7 +360,7 @@ entities         <span class="c-txt">26</span>
     <h2 style="font-size:64px">Deterministic code decides what executes.</h2>
     <div style="margin-top:34px">
       <!-- architecture diagram — pure SVG, real labels, real data flow -->
-      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three agents on Cloud Run with an oracle guard at the routing boundary">
+      <svg viewBox="0 0 1680 560" width="1680" height="560" font-family="JetBrains Mono, SF Mono, Menlo, monospace" aria-label="Interdict architecture: three agents in one process with an oracle guard at the routing boundary">
         <defs>
           <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker>
@@ -367,7 +371,7 @@ entities         <span class="c-txt">26</span>
         <rect x="10" y="20" width="300" height="200" rx="10" fill="none" stroke="#232b3a" stroke-dasharray="6 6"/>
         <text x="30" y="52" fill="#556174" font-size="14" letter-spacing="2">EXTERNAL — NOT OURS</text>
         <text x="30" y="88" fill="#e7ecf4" font-size="17" font-weight="700">OFAC SLS</text>
-        <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 records</text>
+        <text x="30" y="114" fill="#94a3b8" font-size="14">SDN.XML · 19,199 rec. (08/07/2026)</text>
         <text x="30" y="138" fill="#94a3b8" font-size="14">/changes/latest delta</text>
         <text x="30" y="162" fill="#94a3b8" font-size="14">302 → presigned S3</text>
         <text x="30" y="196" fill="#556174" font-size="13">&lt;publshInformation&gt; — their typo</text>
@@ -401,7 +405,7 @@ entities         <span class="c-txt">26</span>
         <!-- adjudicator -->
         <rect x="1010" y="390" width="380" height="130" rx="12" fill="#121722" stroke="#232b3a"/>
         <text x="1035" y="428" fill="#e7ecf4" font-size="19" font-weight="700">adjudicator-agent · Gemini</text>
-        <text x="1035" y="456" fill="#94a3b8" font-size="14">Gemini API · structured responseSchema</text>
+        <text x="1035" y="456" fill="#94a3b8" font-size="14">GenAI SDK · gemini-3.5-flash-lite</text>
         <text x="1035" y="478" fill="#94a3b8" font-size="14">written rationale · DOB corroboration</text>
         <text x="1035" y="500" fill="#94a3b8" font-size="14">weak-alias downweighting · cited_fields[]</text>
         <!-- routing arrows -->
@@ -425,7 +429,7 @@ entities         <span class="c-txt">26</span>
         <text x="1462" y="202" fill="#94a3b8" font-size="13">/match/us_ofac_sdn only</text>
         <text x="1462" y="226" fill="#e7ecf4" font-size="15" font-weight="700">OFAC List Search</text>
         <line x1="1390" y1="185" x2="1440" y2="185" stroke="#556174" stroke-dasharray="5 5" marker-end="url(#ar)"/>
-        <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">graded daily</text>
+        <text x="1432" y="172" fill="#556174" font-size="12" text-anchor="end">every decision</text>
         <!-- postgres -->
         <rect x="470" y="512" width="920" height="46" rx="10" fill="#121722" stroke="#232b3a"/>
         <text x="495" y="542" fill="#e7ecf4" font-size="16" font-weight="700">Postgres 16 · hash-chained</text>
@@ -452,8 +456,9 @@ entities         <span class="c-txt">26</span>
     <div class="kicker">The hero moment <span class="k-dim">· one unedited take</span></div>
     <h2 style="font-size:64px">One delta. Both directions.</h2>
     <p class="body" style="margin-top:18px;max-width:1300px">A real OFAC delta lands unattended.
-      The whole book is re-screened. A true hit is held — the money stops. A lookalike is cleared
-      with a written rationale a judge can check against sources we do not control.</p>
+      The whole book is re-screened. A true hit is held — the money stops, with a model-written
+      rationale citing fields that exist in the record. A lookalike is cleared on its contradicting
+      date of birth. Every verdict is checkable against sources we do not control.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:44px;margin-top:44px">
       <div>
         <div class="callout" style="margin-bottom:16px"><span class="num">1</span>
@@ -469,14 +474,14 @@ entities         <span class="c-txt">26</span>
       </div>
       <div>
         <div class="callout" style="margin-bottom:16px"><span class="num">2</span>
-          <div class="c-body"><strong>CLEAR</strong> — lookalike auto-cleared; written rationale
-            cites weak-alias category + DOB flags from the feed itself</div></div>
+          <div class="c-body"><strong>CLEAR</strong> — lookalike auto-cleared by the deterministic
+            plane on the feed&rsquo;s own fields: weak-alias category + a contradicting DOB</div></div>
         <div class="terminal-frame">
           <div class="terminal-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="t-title">adjudication · rationale + cited_fields</span></div>
-          <!-- SWAP: replace with demo-clear-rationale.png (adjudicator rationale for clearing a lookalike, cited fields visible) -->
-          <img src="https://placehold.co/520x300/090b11/44506a?text=CLEAR+%E2%80%94+written+rationale%2C+cited+fields"
-               alt="CLEAR with written rationale and cited fields" width="520" height="300">
+            <span class="t-title">clear · cited record fields</span></div>
+          <!-- SWAP: replace with demo-clear-rationale.png (a lookalike cleared on a contradicting DOB, cited fields visible) -->
+          <img src="https://placehold.co/520x300/090b11/44506a?text=CLEAR+%E2%80%94+contradicting+DOB%2C+cited+fields"
+               alt="CLEAR issued on a contradicting date of birth, cited fields visible" width="520" height="300">
         </div>
       </div>
       <div>
@@ -518,9 +523,10 @@ entities         <span class="c-txt">26</span>
     <div class="d-row">
       <div class="d-verb"><span class="clear-pill" style="font-size:22px;padding:6px 20px">CLEAR</span>
         <span class="d-tag">payment proceeds</span></div>
-      <div class="d-acts">Lookalikes cleared with a written rationale — weak-alias downweighting per OFAC's own guidance, using the <strong style="color:var(--color-primary)">4,393 real weak aliases</strong> in the live list.</div>
-      <div class="d-grade">Daily agreement table vs <strong>OpenSanctions yente</strong> and
-        <strong>OFAC Sanctions List Search</strong> — whole book, every disagreement documented.</div>
+      <div class="d-acts">Lookalikes cleared by the deterministic plane on the record's own evidence — weak-alias downweighting per OFAC's own guidance, using the <strong style="color:var(--color-primary)">4,393 real weak aliases</strong> in the 08/07/2026 publication.</div>
+      <div class="d-grade">Agreement table vs <strong>OpenSanctions yente</strong>, consulted on
+        every adjudication and not only where it agrees; spot-checkable against
+        <strong>OFAC Sanctions List Search</strong>. Every disagreement documented.</div>
     </div>
     <div class="d-row">
       <div class="d-verb">RELEASE<span class="d-tag">money moves again</span></div>
@@ -552,7 +558,7 @@ entities         <span class="c-txt">26</span>
       <div>
         <div style="border:1px solid var(--color-accent);border-radius:14px;padding:34px 38px;background:var(--color-accent-dim)">
           <div class="mono" style="font-size:15px;letter-spacing:.18em;color:var(--color-accent);margin-bottom:16px">SENTINEL BOOK · SEALED &amp; COMMITTED 2026-08-13</div>
-          <div style="font-family:var(--font-display);font-weight:800;font-size:40px;letter-spacing:-.01em">400 currently-listed SDN names</div>
+          <div style="font-family:var(--font-display);font-weight:800;font-size:40px;letter-spacing:-.01em">400 SDN names listed at seal time</div>
           <div class="mono" style="margin-top:18px;font-size:17px;color:var(--color-primary);word-break:break-all">
             sha256&nbsp;<span class="amber">66eb151c</span>c7473024ed3f9fb4f43700edde828a5ab53d7122e6145c58e72b9b1b</div>
           <div style="margin-top:16px;font-size:18px;line-height:1.5;color:var(--color-muted)">
@@ -603,24 +609,28 @@ entities         <span class="c-txt">26</span>
           OFAC's own alias lists, reordering, dropped particles, transcription confusables. Seeded
           from SHA-256, so the challenge set is byte-identical on your machine.</p>
         <ul class="vlist">
-          <li><strong>top-1 &nbsp;0.995</strong> &nbsp;vs&nbsp; <strong>0.840</strong> for yente, the independent oracle</li>
-          <li><strong>1 missed hit in 460</strong> · <strong>0 frozen grantees in 76</strong>, against ground truth the screening path never reads</li>
-          <li><strong>456 / 3 / 0</strong> — agreements, cases where we were stricter, cases where we were more permissive. The last number is the one that matters</li>
-          <li><strong>p50 9.3&nbsp;ms</strong> · full 536-counterparty re-screen in <strong>7.6&nbsp;s</strong>. OFAC publishes weekly</li>
+          <li><strong>top-1 &nbsp;0.995</strong> &nbsp;vs&nbsp; <strong>0.840</strong> for yente, the independent oracle — n&nbsp;=&nbsp;400</li>
+          <li><strong>1 missed hit in 60</strong> · <strong>0 frozen grantees in 41</strong>, against ground truth the screening path never reads — a stratified sample of 101 counterparties, because free-tier Gemini caps requests per day</li>
+          <li><strong>58 / 1 / 0</strong> — agreements, cases where we were stricter, cases where we were more permissive, across the 59 adjudications in that sample. The last number is the one that matters</li>
+          <li><strong>p50 9.3&nbsp;ms</strong> · <strong>p95 68.8&nbsp;ms</strong> · a 400-counterparty pass against the 08/07/2026 publication in <strong>7.6&nbsp;s</strong>. OFAC publishes weekly</li>
           <li><strong>133 tests</strong> · CI fails if the database tests silently skip</li>
         </ul>
       </div>
       <div>
         <h3 style="margin-bottom:18px">Synthetic — and it says so</h3>
         <ul class="vlist plain">
-          <li>The OFAC publication, the delta, the 4,393 weak aliases, every date of birth and every
-            delisting action are <strong>Treasury's, unmodified</strong></li>
+          <li>Treasury's data is <strong>unmodified</strong>; all figures pinned to the
+            <strong>08/07/2026</strong> publication — the live list is 19,249 records as of 08/20</li>
           <li>The payment book is <strong>ours and synthetic</strong> — labelled by <span class="mono">origin</span>
             in the database, on every console screen, and on camera</li>
-          <li>The release leg is a <strong>labelled REPLAY</strong> of the real 2026-08-07 delisting.
-            Those eight are already gone from the list, so a live release cannot be staged without pretending</li>
-          <li>Sentinels were sealed and committed <strong>before</strong> any later publication existed —
-            <span class="mono">git log</span> proves the book predates the removal</li>
+          <li>The release leg is a <strong>labelled REPLAY</strong>; the sentinel book was sealed and
+            committed <strong>before</strong> any later publication existed</li>
+          <li><strong>No CLEAR-expected row reached the model</strong> — all 59 adjudications were
+            HOLD. It is exercised on confirming holds; the clears are the deterministic plane's</li>
+          <li><strong>The 6-hourly poll is local, and it was dead 08-17 to 08-22</strong> — 16
+            crashes, an OFAC publication inside the gap, the hole visible in the archive index</li>
+          <li><strong>Nothing runs on Google Cloud compute</strong> — Firestore's free tier holds the
+            mirrored ledger; agents, Postgres and yente are local</li>
         </ul>
         <p class="body" style="margin-top:24px;font-size:19px">Disclosure plus a reproduction path is
           the design, not the apology.</p>
