@@ -3,15 +3,15 @@
 
 WHY THIS EXISTS
 ---------------
-Interdict's headline claim is unattended operation: Cloud Scheduler polls OFAC and the agent acts
-without anyone watching. Scheduler run history is the evidence for that claim and it cannot be
-backfilled.
+Interdict's headline claim is unattended operation: something polls OFAC on a timer and the agent
+acts without anyone watching. This script is that something. It runs on a local launchd timer
+(ops/com.interdict.ofac-archiver.plist), not on Google Cloud Scheduler -- no billing account was
+available for Google Cloud compute, so the loop closes locally instead. `trigger=SCHEDULER` in the
+run records means THIS timer, never Google Cloud Scheduler.
 
-Until Cloud Scheduler is deployable, this script is the stopgap. It does NOT produce the judged
-artifact -- only the real Scheduler running in Google Cloud does that. What it does guarantee is
-that no OFAC publication is *lost* in the meantime: every delta and every full-list snapshot is
-captured, hashed, and timestamped locally, so once the pipeline is live it can be replayed over the
-complete sequence rather than starting from whenever billing happened to be enabled.
+Its first job is that no OFAC publication is ever *lost*: every delta and every full-list snapshot
+is captured, hashed, and timestamped, so the sequence is complete and replayable rather than
+starting from whenever the archiver happened to be installed.
 
 Content-hash keying means re-polling is free and idempotent: an unchanged publication is recognised
 and not re-stored, so this can run every 6 hours indefinitely without duplicating anything.
