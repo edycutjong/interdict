@@ -73,9 +73,10 @@ jobs:
         # without that guard would mean the data-provenance tests silently vanish.
         continue-on-error: true
         run: |
-          curl -sSL --max-time 180 -o data/SDN.XML \
+          curl -sSL --fail --max-time 180 -o data/SDN.XML \
             "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" \
-            && shasum -a 256 data/SDN.XML || echo "OFAC fetch failed; the guard step will fail the job"
+            && bash scripts/check_sdn.sh data/SDN.XML \
+            || echo "OFAC fetch failed or returned junk; the guard step will fail the job"
 
       - name: Tests + coverage
         run: pytest --cov --cov-report=term-missing --cov-report=xml -ra
@@ -92,24 +93,36 @@ jobs:
           import subprocess, sys, re
           SUITES = ["tests/test_ledger.py", "tests/test_money.py",
                     "tests/test_orchestrator.py", "tests/test_rescreen.py",
-                    "tests/test_ofac_parse.py"]
-          out = subprocess.run(
+                    "tests/test_ofac_parse.py", "tests/test_matcher.py"]
+          collect = subprocess.run(
               [sys.executable, "-m", "pytest", "--collect-only", "-q", *SUITES],
-              capture_output=True, text=True).stdout
-          collected = len(re.findall(r"::", out))
+              capture_output=True, text=True)
+          # A collection error yields zero collected and zero skipped, which would otherwise
+          # read exactly like a clean run. Assert the count, not just the absence of skips --
+          # and take the count from pytest's own summary line. Counting "::" substrings in
+          # stdout, as this did, could be inflated over the floor by one warning line while an
+          # entire suite failed to import: exit 0, nothing run, guard satisfied.
+          m = re.search(r"(\d+) tests? collected", collect.stdout)
+          if collect.returncode != 0 or not m:
+              print(collect.stdout[-3000:])
+              sys.exit(f"FAIL: collection exited {collect.returncode} -- a guarded suite did "
+                       "not import, which is not a passing test run.")
+          collected = int(m.group(1))
           run = subprocess.run(
               [sys.executable, "-m", "pytest", "-q", "-ra", *SUITES],
-              capture_output=True, text=True).stdout
-          print(run[-2000:])
-          skipped = int((re.search(r"(\d+) skipped", run) or [0, 0])[1])
+              capture_output=True, text=True)
+          print(run.stdout[-2000:])
+          if run.returncode != 0:
+              sys.exit(f"FAIL: the guarded suites exited {run.returncode}.")
+          skipped = int((re.search(r"(\d+) skipped", run.stdout) or [0, 0])[1])
           print(f"guarded tests collected={collected} skipped={skipped}")
-          # A collection error yields zero collected and zero skipped, which would otherwise
-          # read exactly like a clean run. Assert the count, not just the absence of skips.
-          # 72 test functions across these five suites today, before parametrisation. 70 is
-          # tight enough that one suite quietly failing to import drops below it.
-          if collected < 70:
-              sys.exit(f"FAIL: only {collected} tests collected across {len(SUITES)} suites -- "
-                       "a collection error, not a test result.")
+          # A fraction of a recorded baseline rather than a hardcoded integer: with a fixed
+          # floor, adding tests elsewhere eventually lets a broken import coast in underneath
+          # a number that stopped tracking reality.
+          BASELINE = 94
+          if collected < BASELINE * 0.9:
+              sys.exit(f"FAIL: only {collected} tests collected across {len(SUITES)} suites "
+                       f"against a baseline of {BASELINE} -- a suite is missing.")
           if skipped:
               sys.exit("FAIL: guarded tests skipped -- Postgres was unreachable or the OFAC "
                        "publication is missing, so the ledger, money, orchestrator and "
@@ -150,8 +163,9 @@ jobs:
 
       - name: Fetch the live OFAC publication
         run: |
-          curl -sSL --max-time 180 -o data/SDN.XML \
+          curl -sSL --fail --max-time 180 -o data/SDN.XML \
             "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
+          bash scripts/check_sdn.sh data/SDN.XML
 
       - name: Verify the sealed sentinel book
         # This step used to echo the committed hash and the re-derived hash and never compare
@@ -161,5 +175,8 @@ jobs:
         # resolves and reports which sentinels Treasury has delisted since.
         run: python scripts/verify_book.py --sdn data/SDN.XML
 
-      - name: Benchmark
-        run: python scripts/bench.py --runs 1
+      - name: Benchmark, and check it against the published figures
+        # --json-out to /tmp because the default is data/bench.json, i.e. CI was overwriting
+        # the committed figures it is supposed to be defending. --against makes the comparison
+        # the job's name has always implied.
+        run: python scripts/bench.py --runs 1 --json-out /tmp/bench.json --against data/bench.json

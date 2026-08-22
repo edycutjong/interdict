@@ -27,6 +27,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import sys
 import urllib.request
 from pathlib import Path
@@ -68,6 +69,18 @@ def already_have(index: dict, name: str, digest: str) -> bool:
     return any(e["sha256"] == digest for e in index.get(name, []))
 
 
+def write_atomic(path: Path, text: str) -> None:
+    """Write via a temp file and rename, so a full disk cannot leave a half-written manifest.
+
+    `Path.write_text` truncates first. A disk that fills mid-write -- one of the failure modes
+    this archiver is supposed to survive -- would destroy index.json, which is the record of
+    everything ever captured and is the file data/PROVENANCE.md points at.
+    """
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dir", type=Path, default=Path("data/archive"))
@@ -105,7 +118,7 @@ def main() -> int:
         new_count += 1
         print(f"  {name:6} NEW -> {out.name} ({len(body):,} bytes)")
 
-    index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n")
+    write_atomic(index_path, json.dumps(index, indent=2, sort_keys=True) + "\n")
     print(f"{now}  new={new_count}  failures={failures}  archive={root}")
 
     # The heartbeat, and the reason it is separate from index.json. index.json only changes
@@ -114,26 +127,37 @@ def main() -> int:
     # still running". This file is written on EVERY poll and answers exactly that, which is
     # what `make archive-status` reads. Gitignored, like the log: it is operational state, not
     # a deliverable, and committing it would dirty the tree every six hours.
-    streaks = {}
+    #
+    # It records WHO invoked this, and carries forward the last scheduled poll separately.
+    # Without that, running this script by hand resets the freshness clock for twelve hours,
+    # so the gate cannot tell "the timer is alive" from "a human ran it once" -- which is the
+    # only distinction it was built to make. The launchd plist sets INTERDICT_ARCHIVER_INVOKER.
+    prev = {}
     hb_path = root / "last-poll.json"
     if hb_path.exists():
         try:
-            streaks = json.loads(hb_path.read_text()).get("consecutive_failures", {})
+            prev = json.loads(hb_path.read_text())
         except (OSError, ValueError):
-            streaks = {}
-    hb_path.write_text(
+            prev = {}
+    streaks = prev.get("consecutive_failures", {})
+    invoker = os.environ.get("INTERDICT_ARCHIVER_INVOKER", "manual")
+    write_atomic(
+        hb_path,
         json.dumps(
             {
                 "utc": now,
+                "invoked_by": invoker,
+                "last_scheduled_utc": now if invoker == "launchd" else prev.get("last_scheduled_utc"),
                 "new": new_count,
                 "failures": failures,
+                "sources": sorted(SOURCES),
                 "consecutive_failures": {
                     name: (streaks.get(name, 0) + 1 if name in failed else 0) for name in SOURCES
                 },
             },
             indent=2, sort_keys=True,
         )
-        + "\n"
+        + "\n",
     )
 
     # Non-zero only if everything failed -- a partial poll is still a successful poll, and one

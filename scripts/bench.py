@@ -47,6 +47,8 @@ def main() -> int:
     ap.add_argument("--book", type=Path, default=Path("data/sentinels.csv"))
     ap.add_argument("--runs", type=int, default=3, help="full-book passes to time")
     ap.add_argument("--json-out", type=Path, default=Path("data/bench.json"))
+    ap.add_argument("--against", type=Path, default=None,
+                    help="published bench.json to check the measurement against; non-zero on drift")
     args = ap.parse_args()
 
     print(f"python {platform.python_version()} on {platform.platform()}")
@@ -126,6 +128,32 @@ def main() -> int:
         "stats": stats,
     }, indent=2))
     print(f"\nwrote {args.json_out}")
+
+    if args.against is None:
+        return 0
+
+    # The job that runs this is called "reproduce the published numbers", and until now it
+    # reproduced them and compared nothing -- the same shape as the step that echoed two
+    # hashes. A published figure that nothing checks drifts, and the README's is the figure a
+    # judge reads. So: compare, and fail.
+    #
+    # The tolerance is wide on purpose. This measures a shared CI runner against a laptop, and
+    # p95 in particular is dominated by whatever else the host is doing. What it is defending
+    # against is an order-of-magnitude regression or a figure quietly copied from a faster
+    # machine -- not runner jitter, which would make the check noise and get it disabled.
+    published = json.loads(args.against.read_text())["stats"]
+    drifted = []
+    for key, tolerance in (("p50_ms", 4.0), ("p95_ms", 4.0), ("full_book_s", 4.0)):
+        was, now = published[key], stats[key]
+        if now > was * tolerance:
+            drifted.append(f"{key}: published {was}, measured {now} ({now / was:.1f}x slower)")
+    if drifted:
+        print("\nFAIL: measured performance has drifted from the published figures:")
+        for line in drifted:
+            print(f"  {line}")
+        print(f"  published figures: {args.against}")
+        return 1
+    print(f"within tolerance of the published figures in {args.against}")
     return 0
 
 

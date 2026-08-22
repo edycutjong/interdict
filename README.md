@@ -148,7 +148,7 @@ More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
 records of the **08/07/2026 publication** — the snapshot this whole build is sealed to; see
 [What is real, and what is not](#️-what-is-real-and-what-is-not):
 
-| p50 | p95 | p99 | full book |
+| p50 | p95 | p99 | 400-counterparty pass |
 |---|---|---|---|
 | **9.3 ms** | 68.8 ms | 106.7 ms | **7.6 s** |
 

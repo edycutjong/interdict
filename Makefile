@@ -92,9 +92,9 @@ schema:  ## Apply the database schema
 
 .PHONY: fetch-sdn
 fetch-sdn:  ## Fetch the current OFAC SDN publication (27MB, follows the S3 redirect)
-	curl -sSL -o data/SDN.XML \
+	curl -sSL --fail -o data/SDN.XML \
 	  "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
-	@shasum -a 256 data/SDN.XML
+	@bash scripts/check_sdn.sh data/SDN.XML
 
 .PHONY: verify-book
 verify-book:  ## Check the sealed sentinel book against its seal, and against the publication
