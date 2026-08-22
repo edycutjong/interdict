@@ -16,6 +16,24 @@ complete sequence rather than starting from whenever billing happened to be enab
 Content-hash keying means re-polling is free and idempotent: an unchanged publication is recognised
 and not re-stored, so this can run every 6 hours indefinitely without duplicating anything.
 
+AND IT CLOSES THE LOOP
+----------------------
+Archiving alone is not the claim this project makes. The claim is that when Treasury publishes,
+the book is re-screened without anybody asking -- and for most of the build that was not true:
+this script archived, and a human then ran scripts/run_rescreen.py. The poll and the work were
+two halves that never touched, which made "OFAC delta lands -> full-book re-screen" a description
+of an intention rather than of the system. Chaining them was Cloud Scheduler's job in the intended
+deployment and Cloud Scheduler was never deployed, so the gap sat there behind a true-sounding
+sentence.
+
+So the content hash now decides. A publication whose hash is one we have already seen changes
+nothing -- that is the overwhelmingly common case and it must stay free. A publication we have
+never seen is Treasury changing the sanctions list, which is precisely the event the whole system
+exists to react to, so it starts a re-screen with trigger=SCHEDULER, under a lock, without a human.
+
+Set INTERDICT_RESCREEN_ON_NEW=1 to arm it (the launchd plist in ops/ does). Set it to `dry` to log
+the exact command and spawn nothing, which is how it is tested without touching a live book.
+
 USAGE
     python3 scripts/archive_delta.py                     # poll once
     python3 scripts/archive_delta.py --dir data/archive  # custom archive root
@@ -25,9 +43,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import fcntl
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import urllib.request
 from pathlib import Path
@@ -69,6 +89,53 @@ def already_have(index: dict, name: str, digest: str) -> bool:
     return any(e["sha256"] == digest for e in index.get(name, []))
 
 
+def trigger_rescreen(new_sources: set[str], root: Path) -> str:
+    """Start a re-screen because Treasury published something we have not seen.
+
+    Returns a short status string for the poll log. Never raises: archiving is the guarantee
+    this script makes, and a re-screen that cannot start must not cost us the publication.
+
+    The lock is the reason this is safe on a six-hourly timer. A full-book re-screen against
+    free-tier Gemini takes tens of minutes, so a second publication -- or a manual run -- can
+    easily land while one is still going. Two concurrent re-screens would both write decisions
+    for the same counterparties. flock is held for the child's whole life by holding the fd
+    open in the parent, and a stale lock cannot outlive the process because the kernel drops it.
+    """
+    mode = os.environ.get("INTERDICT_RESCREEN_ON_NEW", "").lower()
+    if mode not in {"1", "true", "yes", "dry"}:
+        return "not armed (set INTERDICT_RESCREEN_ON_NEW=1)"
+    if not new_sources:
+        return "nothing new"
+
+    cmd = [sys.executable, str(Path(__file__).with_name("run_rescreen.py")), "--trigger", "SCHEDULER"]
+    if mode == "dry":
+        return "DRY RUN, would spawn: " + " ".join(cmd)
+
+    lock_path = root / "rescreen.lock"
+    try:
+        lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o644)
+    except OSError as exc:
+        return f"could not open {lock_path}: {exc}"
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        os.close(lock_fd)
+        return "a re-screen is already running; not starting a second"
+
+    try:
+        proc = subprocess.Popen(cmd, cwd=Path(__file__).resolve().parents[1],
+                                stdout=sys.stdout, stderr=sys.stderr)
+    except OSError as exc:
+        fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        os.close(lock_fd)
+        return f"failed to spawn: {exc}"
+
+    rc = proc.wait()
+    fcntl.flock(lock_fd, fcntl.LOCK_UN)
+    os.close(lock_fd)
+    return f"re-screen finished, exit {rc}" if rc == 0 else f"re-screen FAILED, exit {rc}"
+
+
 def write_atomic(path: Path, text: str) -> None:
     """Write via a temp file and rename, so a full disk cannot leave a half-written manifest.
 
@@ -95,6 +162,7 @@ def main() -> int:
     new_count = 0
     failures = 0
     failed: set[str] = set()
+    new_sources: set[str] = set()
 
     for name, (url, ext) in SOURCES.items():
         try:
@@ -116,6 +184,7 @@ def main() -> int:
             {"sha256": digest, "bytes": len(body), "fetched_utc": now, "file": out.name, "url": url}
         )
         new_count += 1
+        new_sources.add(name)
         print(f"  {name:6} NEW -> {out.name} ({len(body):,} bytes)")
 
     write_atomic(index_path, json.dumps(index, indent=2, sort_keys=True) + "\n")
@@ -159,6 +228,12 @@ def main() -> int:
         )
         + "\n",
     )
+
+    # The loop closes here, after the heartbeat is on disk. Order matters: the re-screen can run
+    # for tens of minutes, and if the heartbeat were written afterwards `make archive-status`
+    # would call the archiver stale for the whole time it was doing exactly what it should.
+    status = trigger_rescreen(new_sources, root)
+    print(f"  rescreen: {status}")
 
     # Non-zero only if everything failed -- a partial poll is still a successful poll, and one
     # transient reset should not mark the scheduled job failed. A source that keeps failing is

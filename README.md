@@ -176,7 +176,7 @@ nicer diagram and a false one.
 flowchart TB
     OFAC["OFAC SDN.XML + /changes/latest<br/><i>Treasury, external</i>"]
     SCHED["6h poll<br/><i>launchd timer</i>"]
-    INGEST["ingest<br/>archive by content hash"]
+    INGEST["ingest<br/>archive by content hash<br/><i>new hash -> starts the re-screen</i>"]
 
     subgraph FLEET["the fleet — 3 agents, one process"]
         ORCH["<b>orchestrator</b><br/>routes · oracle guard · quarantine<br/><i>sole writer of decisions</i>"]
@@ -275,7 +275,7 @@ export INTERDICT_FIRESTORE_PROJECT=your-project
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json   # roles/datastore.user
 
 python scripts/load_book.py --truncate    # the labelled synthetic book
-python scripts/run_rescreen.py            # the unattended loop
+python scripts/run_rescreen.py            # what the timer starts on its own
 python scripts/adjudication_quality.py    # graded against ground truth
 python scripts/replay_release.py          # the labelled Aug-7 release replay
 python -m interdict.console               # evidence console on :8080
@@ -353,7 +353,7 @@ to the ledger. It does not submit it.
 | Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
 | Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
 | Messaging | transactional **outbox** relay in Postgres — single ledger writer | local |
-| Trigger | **launchd** 6h poll — the timer is committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
+| Trigger | **launchd** 6h poll — a content hash we have not seen starts the re-screen itself, under a lock. Timer committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
 | Screening | Python 3.11, rapidfuzz | local |
 | Oracle | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` | local, Docker |
 
