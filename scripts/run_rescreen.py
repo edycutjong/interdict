@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Run a full-book re-screen -- the loop Cloud Scheduler triggers unattended.
+"""Run a full-book re-screen -- what the 6-hourly poll starts on its own.
+
+scripts/archive_delta.py spawns this with --trigger SCHEDULER, under a lock, when Treasury
+publishes a content hash the archive has not seen. The launchd timer in ops/ arms that. It
+is not Cloud Scheduler and there is no Google Cloud compute in this build; see README.md,
+"On what is not here". Run it by hand any time -- the trigger column records which it was.
 
     python scripts/run_rescreen.py                      # screen the whole book
     python scripts/run_rescreen.py --kill-after 1       # die mid-book (demo beat B5)
