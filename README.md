@@ -14,7 +14,7 @@
 ![GenAI SDK](https://img.shields.io/badge/Google-GenAI%20SDK-34A853)
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335)
-![Tests](https://img.shields.io/badge/tests-133%20passing-success)
+![Tests](https://img.shields.io/badge/tests-134%20passing-success)
 
 </div>
 
@@ -257,7 +257,7 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 133 tests
+make test             # 134 tests
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
