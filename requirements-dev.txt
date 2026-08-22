@@ -6,7 +6,7 @@ mypy==1.13.0
 
 # Tests
 pytest==9.0.3
-pytest-cov==6.0.0
+pytest-cov==7.1.0
 
 # Security
 pip-audit==2.7.3
