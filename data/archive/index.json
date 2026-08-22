@@ -6,6 +6,13 @@
       "file": "delta-20260812T221237+0000-9403f40d9496.xml",
       "sha256": "9403f40d949617405bdcddd25bb1f3784ce6ba25a7137101d5b27742ddeb05bc",
       "url": "https://sanctionslistservice.ofac.treas.gov/changes/latest"
+    },
+    {
+      "bytes": 218801,
+      "fetched_utc": "2026-08-22T09:19:42+00:00",
+      "file": "delta-20260822T091942+0000-0a448453ae79.xml",
+      "sha256": "0a448453ae799461dfc3db94f748639c2bd98e789193bec8737729cf30e6d8f5",
+      "url": "https://sanctionslistservice.ofac.treas.gov/changes/latest"
     }
   ],
   "sdn": [
@@ -14,6 +21,13 @@
       "fetched_utc": "2026-08-12T22:12:37+00:00",
       "file": "sdn-20260812T221237+0000-ac00228a6834.xml",
       "sha256": "ac00228a68345e5c0d7174713cf97e5d5a8efe7cec5c2f540ed87106f49f7474",
+      "url": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
+    },
+    {
+      "bytes": 28875846,
+      "fetched_utc": "2026-08-22T09:19:42+00:00",
+      "file": "sdn-20260822T091942+0000-899d1d3766f8.xml",
+      "sha256": "899d1d3766f88a4c4289b86226130548ebe1d6d0a9712e925c910cd61971a6d2",
       "url": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
     }
   ]

@@ -31,6 +31,22 @@ import sys
 import urllib.request
 from pathlib import Path
 
+# A poll that dies is worse than no poll, because the log looks like it ran. This script is
+# invoked by a launchd shim whose interpreter is configured outside the repo, and when that
+# pointed at Apple's /usr/bin/python3 (3.9.6) every run died on `datetime.UTC`, which is 3.11+.
+# Five days of publications were lost that way. Fail here, naming the cause, rather than in the
+# middle of main() with a traceback that reads like a code bug.
+#
+# UP036 is suppressed below: ruff reads `target-version = "py311"` and calls this block dead. It
+# is dead for every caller ruff can see, and it was precisely the caller it cannot see that broke.
+# The same ruff pass that modernised `dt.timezone.utc` into `dt.UTC` is what made an out-of-repo
+# 3.9 interpreter fatal. The check stays.
+if sys.version_info < (3, 11):  # noqa: UP036
+    raise SystemExit(
+        f"archive_delta.py needs Python 3.11+; got {sys.version.split()[0]} at {sys.executable}. "
+        "Point the caller (launchd plist ProgramArguments, cron, CI) at a 3.11 interpreter."
+    )
+
 SOURCES = {
     # name              url                                                                     ext
     "delta": ("https://sanctionslistservice.ofac.treas.gov/changes/latest", "xml"),
