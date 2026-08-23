@@ -1,11 +1,16 @@
-# Local development stack for Interdict.
+# Local stack for Interdict. All three services run in Docker on this machine; none of
+# them is deployed anywhere, and there is no deploy target in the Makefile.
 #
-# Two services, both of which have cloud counterparts at deploy time:
-#   postgres -> Cloud SQL (Postgres 16)   — holds, ledger, outbox, rescreen_batches
-#   yente    -> Cloud Run container       — the external screening oracle
+#   postgres        holds, ledger, outbox, rescreen_batches — the correctness core
+#   elasticsearch   the index yente searches
+#   yente           the external screening oracle (OpenSanctions, run unmodified)
 #
-# The screening plane talks to both over env-var connection strings and imports no
-# GCP SDK, so `make deploy` is a re-point rather than a rewrite.
+# The screening plane reaches all three over env-var connection strings and imports no
+# GCP SDK, so the same code would run against a hosted Postgres without a rewrite. That
+# is a property of the code, not a deployment that exists: see README.md, "On what is not
+# here" — no Cloud Run, Cloud SQL, Cloud Scheduler or Pub/Sub was ever deployed, because
+# the GCP billing account is closed. Cloud Firestore's free tier is the one hosted
+# service in this build, and it is reached from interdict/cloud.py, not from here.
 
 name: interdict
 

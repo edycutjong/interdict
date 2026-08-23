@@ -1,0 +1,67 @@
+# Publishes site/ to GitHub Pages — https://interdict.edycu.dev/
+#
+# site/ is two self-contained HTML files plus the card and icon art. There is no
+# build step and there must never be one: the pages are meant to open from
+# file:// as well, so a judge who clones the repo sees the same thing.
+#
+# The custom domain lives in site/CNAME, which GitHub reads from the deployed
+# artifact. Deleting that file silently reverts the site to the github.io URL and
+# breaks every absolute og:image in both pages, so the check below asserts it.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a run mid-deploy; queue instead.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # The og:image is declared as exactly 1200x630 in both pages' metadata.
+      # Platforms resample anything else themselves, so a drift here silently
+      # degrades every social card. Fail the deploy instead.
+      - name: Assert og-image dimensions match the declared metadata
+        run: |
+          read -r w h < <(python3 -c "
+          import struct
+          b = open('site/og-image.png','rb').read(24)
+          print(*struct.unpack('>II', b[16:24]))
+          ")
+          echo "og-image.png is ${w}x${h}"
+          [ "$w" = "1200" ] && [ "$h" = "630" ] || {
+            echo "::error::og-image.png is ${w}x${h}, but the pages declare 1200x630"
+            exit 1
+          }
+
+      - name: Assert the custom domain is still declared
+        run: |
+          grep -qx 'interdict.edycu.dev' site/CNAME || {
+            echo "::error::site/CNAME must contain interdict.edycu.dev — every og:url and og:image in site/ is absolute against it"
+            exit 1
+          }
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

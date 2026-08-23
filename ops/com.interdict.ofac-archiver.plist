@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Interdict — local OFAC archiver.
+
+  This is the timer that stands in for Cloud Scheduler. It is committed here so the schedule
+  is auditable and reproducible rather than being a claim about a file on one laptop.
+
+  Install:
+      sed -e "s|__REPO__|$(pwd)|" ops/com.interdict.ofac-archiver.plist \
+        > ~/Library/LaunchAgents/com.interdict.ofac-archiver.plist
+      launchctl load ~/Library/LaunchAgents/com.interdict.ofac-archiver.plist
+      make archive-status          # must print OK within one poll
+
+  Remove:
+      launchctl unload ~/Library/LaunchAgents/com.interdict.ofac-archiver.plist
+      rm ~/Library/LaunchAgents/com.interdict.ofac-archiver.plist
+
+  WHAT THIS IS NOT. It is not Cloud Scheduler, and the run history it produces is not the
+  Cloud Scheduler run history the README would rather be able to show. GCP billing was never
+  available to this project. See README.md, "On what is not here".
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.interdict.ofac-archiver</string>
+
+    <!--
+      MUST be a Python 3.11+ interpreter, by absolute path, and this line has a history.
+      /usr/bin/python3 is Apple's 3.9.6; the script uses datetime.UTC, which is 3.11+; and
+      launchd runs with no user PATH, so pyenv/homebrew shims are not usable here either.
+      Pointing this at the system python is what killed every poll between 2026-08-17 and
+      2026-08-22, into a log nobody was reading. archive_delta.py now refuses to start on
+      the wrong interpreter, and `make archive-status` fails when the polls stop arriving.
+    -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Library/Frameworks/Python.framework/Versions/3.11/bin/python3</string>
+        <string>scripts/archive_delta.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- archive_status.py measures freshness against SCHEDULED polls only. Without this,
+             any manual `python scripts/archive_delta.py` resets the freshness clock for 12h
+             and the gate cannot tell a live timer from a human who ran it once. -->
+        <key>INTERDICT_ARCHIVER_INVOKER</key>
+        <string>launchd</string>
+        <!-- Arms the closed loop: a publication whose content hash we have never seen starts a
+             re-screen with trigger=SCHEDULER, under a lock, with nobody watching. Unset it and
+             this timer goes back to archiving only. -->
+        <key>INTERDICT_RESCREEN_ON_NEW</key>
+        <string>1</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- Every 6 hours, matching the Cloud Scheduler cadence this stands in for. -->
+    <key>StartInterval</key>
+    <integer>21600</integer>
+
+    <!-- Catch up after sleep/shutdown rather than silently skipping the window. -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>__REPO__/data/archive/archiver.log</string>
+    <key>StandardErrorPath</key>
+    <string>__REPO__/data/archive/archiver.log</string>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>LowPriorityIO</key>
+    <true/>
+</dict>
+</plist>
