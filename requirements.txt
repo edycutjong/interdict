@@ -1,8 +1,8 @@
 # Screening plane. Deliberately small and cloud-agnostic: the matching, scoring and
 # ledger code imports no cloud SDK at all, so the correctness core is testable and
 # reproducible with no credentials of any kind.
-rapidfuzz==3.9.7
-psycopg[binary]==3.2.3
+rapidfuzz==3.14.5
+psycopg[binary]==3.3.4
 httpx==0.28.1
 
 # Adjudication plane -- the Google GenAI SDK, and the only model dependency.
