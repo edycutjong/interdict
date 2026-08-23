@@ -12,6 +12,10 @@ fails the build if the version, this file and the package ever disagree.
 
 <!-- release-workflow inserts new sections directly below this line -->
 
+## [1.0.3] — 2026-08-23
+
+- A world-readable lock file, flagged high by the scanner
+
 ## [1.0.2] — 2026-08-23
 
 - A three-minute run that printed nothing until it was over
@@ -59,7 +63,8 @@ the working system got a version number rather than the point at which it was wr
 - The 6-hourly poll archives publications; a re-screen is started by hand, so the ledger's
   `trigger` column reads `MANUAL`.
 
-[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.3...HEAD
 [1.0.0]: https://github.com/edycutjong/interdict/releases/tag/v1.0.0
 [1.0.1]: https://github.com/edycutjong/interdict/releases/tag/v1.0.1
 [1.0.2]: https://github.com/edycutjong/interdict/releases/tag/v1.0.2
+[1.0.3]: https://github.com/edycutjong/interdict/releases/tag/v1.0.3
