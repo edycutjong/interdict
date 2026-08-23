@@ -55,8 +55,8 @@ def test_disjoint_dob_cuts_score_hard():
 
 def test_circa_dob_still_corroborates():
     from interdict.normalize import parse_dob
-    score, comp = score_pair("Abu Abbas", Name("Abu ABBAS", "primary", "primary"),
-                             parse_dob("1952"), ("circa 1951",))
+    _, comp = score_pair("Abu Abbas", Name("Abu ABBAS", "primary", "primary"),
+                         parse_dob("1952"), ("circa 1951",))
     assert comp.dob_signal == "corroborated"
 
 
