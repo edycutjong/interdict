@@ -17,8 +17,10 @@ data/archive/sdn-*.xml
 # Delta files are ~130KB and ARE the replay evidence for the release leg -- keep them.
 # (no ignore rule for data/archive/delta-*.xml, by design)
 
-# Local archiver log (launchd stopgap; not part of the deliverable)
+# Local archiver log and heartbeat (launchd stopgap; operational state, not a deliverable).
+# The heartbeat is rewritten on every poll, so committing it would dirty the tree every 6h.
 data/archive/archiver.log
+data/archive/last-poll.json
 
 # Tooling
 .ruff_cache/

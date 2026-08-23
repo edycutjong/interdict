@@ -1,0 +1,170 @@
+# Automatic semantic version bump, tag and GitHub Release.
+#
+# WHY THIS IS NOT semantic-release / conventional-commits-only
+# ------------------------------------------------------------
+# This repository's history is deliberate prose -- "The archiver is the timer, not a
+# stopgap for one" -- and not one of its commits carries a `feat:` / `fix:` prefix. A
+# stock conventional-commits release action would find nothing to release, on every
+# push, forever, and would look green while doing nothing.
+#
+# So the rule here is: conventional prefixes are HONOURED when present, and the default
+# when they are absent is a PATCH bump. Every merge to main therefore produces a real
+# release, and a commit that wants more can say so:
+#
+#     feat: ...            -> minor
+#     feat!: ... | fix!:   -> major
+#     BREAKING CHANGE:     -> major   (anywhere in the body)
+#     anything else        -> patch
+#
+# Or run the workflow by hand from the Actions tab and pick the level outright.
+name: release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      level:
+        description: 'Bump level (overrides commit inspection)'
+        required: true
+        default: patch
+        type: choice
+        options: [patch, minor, major]
+
+permissions:
+  contents: write
+
+# Two releases racing would produce two tags for one version. Queue instead.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Never react to the workflow's own bump commit, or it releases in a loop.
+    if: "!contains(github.event.head_commit.message, '[release]')"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # tags and full history are both needed below
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Work out the next version
+        id: bump
+        run: |
+          set -euo pipefail
+          current=$(sed -nE 's/^__version__ = "([^"]+)".*/\1/p' interdict/__init__.py)
+          [ -n "$current" ] || { echo "::error::could not read __version__"; exit 1; }
+          echo "current is $current"
+
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$last_tag" ]; then range="${last_tag}..HEAD"; else range="HEAD"; fi
+          log=$(git log --format='%B' "$range")
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            level="${{ inputs.level }}"
+            echo "level $level (chosen by hand)"
+          elif grep -qE '^(feat|fix)(\([^)]*\))?!:' <<<"$log" || grep -q 'BREAKING CHANGE' <<<"$log"; then
+            level=major
+          elif grep -qE '^feat(\([^)]*\))?:' <<<"$log"; then
+            level=minor
+          else
+            level=patch
+          fi
+          echo "level $level over $range"
+
+          IFS=. read -r ma mi pa <<<"$current"
+          case "$level" in
+            major) ma=$((ma+1)); mi=0; pa=0 ;;
+            minor) mi=$((mi+1)); pa=0 ;;
+            patch) pa=$((pa+1)) ;;
+          esac
+          next="${ma}.${mi}.${pa}"
+
+          if git rev-parse "v${next}" >/dev/null 2>&1; then
+            echo "::error::tag v${next} already exists -- refusing to move it"
+            exit 1
+          fi
+
+          {
+            echo "current=$current"
+            echo "next=$next"
+            echo "level=$level"
+            echo "range=$range"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Rewrite the version and the changelog
+        env:
+          NEXT: ${{ steps.bump.outputs.next }}
+          RANGE: ${{ steps.bump.outputs.range }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import datetime, os, pathlib, re, subprocess
+
+          nxt = os.environ["NEXT"]
+          rng = os.environ["RANGE"]
+
+          init = pathlib.Path("interdict/__init__.py")
+          init.write_text(
+              re.sub(r'^__version__ = "[^"]+"',
+                     f'__version__ = "{nxt}"',
+                     init.read_text(encoding="utf-8"),
+                     count=1, flags=re.M),
+              encoding="utf-8")
+
+          subjects = subprocess.run(
+              ["git", "log", "--no-merges", "--format=- %s", rng],
+              capture_output=True, text=True, check=True).stdout.strip()
+          if not subjects:
+              subjects = "- No commit subjects in range."
+
+          # UTC, not the runner's local time, so the dates are comparable across runs.
+          day = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+          anchor = "<!-- release-workflow inserts new sections directly below this line -->"
+          section = f"\n\n## [{nxt}] — {day}\n\n{subjects}"
+
+          cl = pathlib.Path("CHANGELOG.md")
+          text = cl.read_text(encoding="utf-8")
+          if anchor not in text:
+              raise SystemExit("CHANGELOG.md anchor missing -- see tests/test_version.py")
+          text = text.replace(anchor, anchor + section, 1)
+
+          # Keep the link refs at the foot of the file pointing at real things.
+          text = re.sub(r"^\[Unreleased\]: .*$",
+                        f"[Unreleased]: https://github.com/{os.environ.get('GITHUB_REPOSITORY','edycutjong/interdict')}/compare/v{nxt}...HEAD",
+                        text, count=1, flags=re.M)
+          text = text.rstrip("\n") + (
+              f"\n[{nxt}]: https://github.com/{os.environ.get('GITHUB_REPOSITORY','edycutjong/interdict')}/releases/tag/v{nxt}\n")
+          cl.write_text(text, encoding="utf-8")
+          print(f"changelog updated for {nxt}")
+          PY
+
+      - name: Prove the bump did not break the invariants
+        run: |
+          python -m pip install --quiet pytest
+          python -m pytest tests/test_version.py -q
+
+      - name: Commit, tag and push
+        env:
+          NEXT: ${{ steps.bump.outputs.next }}
+          LEVEL: ${{ steps.bump.outputs.level }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add interdict/__init__.py CHANGELOG.md
+          git commit -m "[release] v${NEXT} (${LEVEL})"
+          git tag -a "v${NEXT}" -m "v${NEXT}"
+          git push origin HEAD:main --follow-tags
+
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT: ${{ steps.bump.outputs.next }}
+          RANGE: ${{ steps.bump.outputs.range }}
+        run: |
+          set -euo pipefail
+          git log --no-merges --format='- %s' "${RANGE}" > /tmp/notes.md
+          gh release create "v${NEXT}" --title "v${NEXT}" --notes-file /tmp/notes.md

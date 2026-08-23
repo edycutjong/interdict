@@ -37,12 +37,19 @@ ignore_missing_imports = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 # Deliberately not strict. This is a 14-day build and the correctness that matters is
-# enforced by database constraints and 133 tests, not by exhaustive annotation.
+# enforced by database constraints and 134 tests, not by exhaustive annotation.
 check_untyped_defs = true
 exclude = ["\\.venv", "docs"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Put the repo root on sys.path so `from interdict.ofac import ...` resolves without an
+# editable install. Without this, `python -m pytest` works (it puts CWD on the path) and the
+# bare `pytest` console script does not -- which is exactly the difference between running
+# the suite locally and running it in CI, where every one of the nine test modules failed to
+# import while the local run was green. The suite is not installed as a package on purpose:
+# dependencies live in requirements.txt, and this file is tool configuration only.
+pythonpath = ["."]
 # -ra surfaces the skip reasons. Skipped database tests are the ones that matter most,
 # so they must never scroll past silently -- CI asserts on the skip count too.
 addopts = "-ra --strict-markers"

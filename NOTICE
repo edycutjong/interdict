@@ -1,0 +1,10 @@
+NOTE ON USE
+
+Interdict is a hackathon project, not a compliance product. It drafts OFAC blocking
+reports; it does not file them, and no output of this software is legal advice or a
+substitute for a qualified compliance officer.
+
+This paragraph previously sat at the foot of LICENSE. It was moved here because appending
+anything to the MIT text stops GitHub's licence detector from recognising the file, so the
+repository advertised its licence as "Other" instead of MIT. The terms are unchanged; only
+the file this note lives in changed.

@@ -172,6 +172,13 @@ def main() -> int:
 
     print("\n  Every party, uid, programme and removal above is Treasury's.")
     print("  The payment book is synthetic and labelled synthetic.")
+
+    # A forked chain is the one failure this system exists to make impossible, and until now
+    # this script printed the word FORKED and exited 0 -- so the demo would have shown a green
+    # prompt under a broken audit trail, and any CI step running it would have passed.
+    if not intact:
+        print("\n  FAIL: the ledger chain is FORKED. Nothing else on this run is trustworthy.")
+        return 1
     return 0
 
 
