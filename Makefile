@@ -52,11 +52,15 @@ test-coverage:  ## Tests with coverage
 # ---------------------------------------------------------------------------
 
 .PHONY: audit
+# `|| true` on both commands here used to mean the security leg of `make ci` could never
+# fail: a real CVE or a real leaked secret printed and exited 0. Only a MISSING gitleaks is
+# tolerated now, and it says so; a gitleaks that ran and found something fails the target.
 audit:  ## Dependency CVEs + secrets in history
 	@echo "=== pip-audit (dependency CVEs) ==="
-	@$(PY) -m pip_audit || true
+	$(PY) -m pip_audit
 	@echo "=== gitleaks (secrets in history) ==="
-	@gitleaks detect --no-banner --redact || echo "gitleaks not installed locally; CI runs it"
+	@if command -v gitleaks >/dev/null; then gitleaks detect --no-banner --redact; \
+	 else echo "gitleaks not installed locally; CI runs it (.github/workflows/gitleaks.yml)"; fi
 
 .PHONY: ci
 ci: lint typecheck test-coverage audit  ## Everything CI runs
@@ -88,14 +92,17 @@ schema:  ## Apply the database schema
 
 .PHONY: fetch-sdn
 fetch-sdn:  ## Fetch the current OFAC SDN publication (27MB, follows the S3 redirect)
-	curl -sSL -o data/SDN.XML \
+	curl -sSL --fail -o data/SDN.XML \
 	  "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
-	@shasum -a 256 data/SDN.XML
+	@bash scripts/check_sdn.sh data/SDN.XML
 
 .PHONY: verify-book
-verify-book:  ## Re-derive the sealed sentinel book and check its hash
-	$(PY) scripts/seed_sentinels.py --sdn data/SDN.XML --out /tmp/sentinels-check.csv
-	@shasum -a 256 /tmp/sentinels-check.csv data/sentinels.csv
+verify-book:  ## Check the sealed sentinel book against its seal, and against the publication
+	$(PY) scripts/verify_book.py --sdn data/SDN.XML
+
+.PHONY: archive-status
+archive-status:  ## Fail if the OFAC archiver has not captured anything recently
+	$(PY) scripts/archive_status.py
 
 # ---------------------------------------------------------------------------
 # The dev loop
@@ -122,8 +129,24 @@ verify-ledger:  ## Verify the ledger hash chain end to end
 # ---------------------------------------------------------------------------
 
 .PHONY: test
-test:  ## Run the test suite
+test:  ## Run the test suite (WARNING: destroys the demo book -- see demo-state)
+	@echo "note: the test fixtures TRUNCATE counterparties, disbursements, holds and"
+	@echo "      adjudications. If you were holding a loaded book for a demo or a"
+	@echo "      screenshot, run 'make demo-state' afterwards to rebuild it."
 	$(PY) -m pytest tests/ -q
+
+.PHONY: demo-state
+demo-state:  ## Rebuild the labelled demo book and re-screen it (restores the console)
+	@# The test fixtures truncate the payment book, so a full 'make test' leaves the
+	@# evidence console showing test rows instead of the demo. This puts it back. The
+	@# book is deterministic -- same strata, same amounts, same $1,181,434.51 held.
+	$(PY) scripts/load_book.py --truncate --sentinels 30 --variants 30 --lookalikes 30
+	$(PY) scripts/run_rescreen.py --batch-size 20 --progress
+
+.PHONY: demo-ids
+demo-ids:  ## Print the live Firestore document ids the demo video's cloud shots need
+	@# These move on every re-screen, so never write them down -- read them before filming.
+	$(PY) scripts/demo_ids.py
 
 .PHONY: test-v
 test-v:  ## Run the test suite, verbose

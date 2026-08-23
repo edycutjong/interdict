@@ -180,7 +180,9 @@ def main() -> int:
         }, indent=2))
         print(f"\nwrote {args.json_out}")
 
-    # G1, graduated per _specs/decision.md. This script reports; a human reads the verdict.
+    # The quality bar this project set for itself before measuring: top-1 >= 0.85 proceeds,
+    # 0.60-0.85 narrows scope and publishes the measured gap, below 0.60 stops. This script
+    # reports; a human reads the verdict.
     print()
     if top1 >= 0.85:
         print(f"G1 verdict: PROCEED (top-1 {top1:.3f} >= 0.85)")
