@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Run a full-book re-screen -- the loop Cloud Scheduler triggers unattended.
+"""Run a full-book re-screen -- what the 6-hourly poll starts on its own.
+
+scripts/archive_delta.py spawns this with --trigger SCHEDULER, under a lock, when Treasury
+publishes a content hash the archive has not seen. The launchd timer in ops/ arms that. It
+is not Cloud Scheduler and there is no Google Cloud compute in this build; see README.md,
+"On what is not here". Run it by hand any time -- the trigger column records which it was.
 
     python scripts/run_rescreen.py                      # screen the whole book
     python scripts/run_rescreen.py --kill-after 1       # die mid-book (demo beat B5)
@@ -85,6 +90,8 @@ def main() -> int:
                     help="stop after N batches, simulating a worker dying mid-book")
     ap.add_argument("--resume", type=int, default=None, help="resume an existing run id")
     ap.add_argument("--offline", action="store_true", help="force the offline adjudicator")
+    ap.add_argument("--progress", action="store_true",
+                    help="print each decision as it commits, instead of only the summary")
     ap.add_argument("--no-oracle", action="store_true",
                     help="skip yente grading (faster; the oracle column stays empty)")
     args = ap.parse_args()
@@ -129,12 +136,26 @@ def main() -> int:
                 candidate.close()
                 print("oracle: yente unreachable -- decisions will be ungraded")
 
+        def report(name: str, d) -> None:
+            """One line per decision, printed as it commits.
+
+            Every field is read straight off the Decision -- nothing here recomputes a
+            verdict or rounds a score into a different number than the ledger holds. The
+            guard column is printed even when it says SKIPPED, because a run where the
+            oracle went unreachable must look different from one where it agreed.
+            """
+            uid = d.sdn_uid or "--"
+            print(f"  [{d.verdict:<10}] {name[:38]:<38} "
+                  f"score {d.det_score:.4f}  uid {uid:<6} "
+                  f"guard {d.guard:<8} rt {d.round_trips}  {d.reason[:52]}",
+                  flush=True)
+
         try:
             summary = rescreen_book(
                 conn, run_id=run_id, matcher=matcher, adjudicator=adjudicator,
                 publication=publication, batch_size=args.batch_size,
                 blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
-                oracle=oracle,
+                oracle=oracle, on_decision=report if args.progress else None,
             )
         finally:
             if oracle is not None:

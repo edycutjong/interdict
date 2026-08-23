@@ -39,6 +39,20 @@
         <string>scripts/archive_delta.py</string>
     </array>
 
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- archive_status.py measures freshness against SCHEDULED polls only. Without this,
+             any manual `python scripts/archive_delta.py` resets the freshness clock for 12h
+             and the gate cannot tell a live timer from a human who ran it once. -->
+        <key>INTERDICT_ARCHIVER_INVOKER</key>
+        <string>launchd</string>
+        <!-- Arms the closed loop: a publication whose content hash we have never seen starts a
+             re-screen with trigger=SCHEDULER, under a lock, with nobody watching. Unset it and
+             this timer goes back to archiving only. -->
+        <key>INTERDICT_RESCREEN_ON_NEW</key>
+        <string>1</string>
+    </dict>
+
     <key>WorkingDirectory</key>
     <string>__REPO__</string>
 

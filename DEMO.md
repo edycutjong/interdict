@@ -40,7 +40,7 @@ as such on every line of output.
 make test
 ```
 
-133 tests. Two of them are worth watching:
+140 tests. Two of them are worth watching:
 
 - `test_ofac_schema_typo_is_pinned` — OFAC's schema misspells `publishInformation` as
   **`publshInformation`**. We match OFAC's spelling and pin it, so if Treasury ever
@@ -95,8 +95,8 @@ python scripts/run_rescreen.py --trigger SCHEDULER --batch-size 20
 ```
 
 A **stratified sample of 101** counterparties screened against the 19,199 SDN records of
-the 08/07/2026 publication; 59
-held, money frozen, every decision written to the hash-chained ledger and adjudicated by
+the 08/07/2026 publication; 59 held, money frozen, every decision written to the
+hash-chained ledger and adjudicated by
 `gemini-3.5-flash-lite`. Sampled rather than run whole because free-tier Gemini caps
 requests per model per project per day — drop `--sentinels` on a billed project.
 
