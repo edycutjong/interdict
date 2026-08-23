@@ -6,15 +6,15 @@
 
 **When Treasury updates the OFAC list, it re-screens the whole payment book, holds true hits, clears lookalikes with written reasons, releases funds on delisting, and drafts the 10-day blocking report — unattended.**
 
-<img src="docs/assets/readme-hero.png" width="860" alt="Interdict — autonomous sanctions-delta re-screening and interdiction">
+<img src="docs/assets/screenshots/console-overview-dark.png" width="860" alt="Interdict evidence console — 101 synthetic counterparties re-screened against the 19,199 records of the 08/07/2026 OFAC publication: 59 held, $1,181,434.51 frozen, 0 quarantined, ledger chain intact">
 
 [**Demo video**](#-demo) · [**Reproduce the numbers**](#-reproduce) · [**Architecture**](#-architecture)
 
-![Gemini](https://img.shields.io/badge/Gemini%203.5%20Flash-structured%20output-4285F4)
+![Gemini](https://img.shields.io/badge/gemini--3.5--flash--lite-structured%20output-4285F4)
 ![GenAI SDK](https://img.shields.io/badge/Google-GenAI%20SDK-34A853)
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335)
-![Tests](https://img.shields.io/badge/tests-134%20passing-success)
+![Tests](https://img.shields.io/badge/tests-140%20passing-success)
 
 </div>
 
@@ -129,7 +129,7 @@ The oracle guard passed all 59 verdicts (`AGREE`), and nothing reached quarantin
 
 ### The console
 
-<img src="docs/assets/screenshots/console-overview-dark.png" width="860" alt="Interdict evidence console — overview">
+<img src="docs/assets/screenshots/console-adjudications-dark.png" width="860" alt="Interdict evidence console — adjudications, each with its Gemini rationale, the oracle guard result and yente's independent verdict">
 
 Run history, held money against the statutory clock, every adjudication with its
 rationale and the oracle beside it, quarantine, and the ledger with its chain verified
@@ -137,9 +137,15 @@ on page load. The `model` column names whichever adjudicator produced each verdi
 a viewer can see at a glance whether it came from the product path or the offline
 stand-in.
 
-More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
-[adjudications](docs/assets/screenshots/console-adjudications-dark.png) ·
+Every screenshot in this README is the console reading a real run — the one described
+under [Decision quality](#decision-quality--graded-against-ground-truth-the-system-cannot-see),
+captured after it finished. They are re-taken whenever the numbers change; none of them
+is a mockup.
+
+More: [overview](docs/assets/screenshots/console-overview-dark.png) ·
+[holds](docs/assets/screenshots/console-holds-dark.png) ·
 [runs](docs/assets/screenshots/console-runs-dark.png) ·
+[quarantine](docs/assets/screenshots/console-quarantine-dark.png) ·
 [ledger](docs/assets/screenshots/console-ledger-dark.png)
 
 ### Performance
@@ -148,7 +154,7 @@ More: [holds](docs/assets/screenshots/console-holds-dark.png) ·
 records of the **08/07/2026 publication** — the snapshot this whole build is sealed to; see
 [What is real, and what is not](#️-what-is-real-and-what-is-not):
 
-| p50 | p95 | p99 | full book |
+| p50 | p95 | p99 | 400-counterparty pass |
 |---|---|---|---|
 | **9.3 ms** | 68.8 ms | 106.7 ms | **7.6 s** |
 
@@ -170,12 +176,12 @@ nicer diagram and a false one.
 flowchart TB
     OFAC["OFAC SDN.XML + /changes/latest<br/><i>Treasury, external</i>"]
     SCHED["6h poll<br/><i>launchd timer</i>"]
-    INGEST["ingest<br/>archive by content hash"]
+    INGEST["ingest<br/>archive by content hash<br/><i>files only — index.json + heartbeat</i>"]
 
     subgraph FLEET["the fleet — 3 agents, one process"]
         ORCH["<b>orchestrator</b><br/>routes · oracle guard · quarantine<br/><i>sole writer of decisions</i>"]
         MATCH["<b>matcher</b><br/>deterministic, no LLM<br/><i>blocking · scoring · thresholds</i>"]
-        ADJ["<b>adjudicator</b><br/>Gemini 3.5 Flash, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
+        ADJ["<b>adjudicator</b><br/>gemini-3.5-flash-lite, structured output<br/><i>HOLD / CLEAR + rationale</i>"]
     end
 
     SQL[("Postgres 16<br/>holds · outbox · hash-chained ledger")]
@@ -183,18 +189,29 @@ flowchart TB
     YENTE["yente / OpenSanctions<br/><i>external oracle</i><br/>scope: us_ofac_sdn ONLY"]
     QUAR["quarantine<br/><i>terminal — escalates to a human</i>"]
 
-    OFAC --> SCHED --> INGEST -->|"tx + outbox"| SQL
-    SQL -->|"outbox relay<br/>single writer"| ORCH
+    OFAC --> SCHED --> INGEST
+    INGEST -->|"a content hash we have not seen<br/>opens a run · trigger=SCHEDULER"| ORCH
     ORCH -->|"1 screen"| MATCH
     MATCH -->|"2 score + components"| ORCH
     ORCH -->|"3 adjudicate"| ADJ
     ADJ -->|"4 verdict"| ORCH
     ORCH -->|"5 ORACLE GUARD<br/>score · citation · rationale"| ORCH
-    ORCH -->|"HOLD / CLEAR"| SQL
+    ORCH -->|"HOLD / CLEAR<br/>decision + outbox, one tx"| SQL
+    SQL -->|"outbox relay<br/>THE single ledger writer"| SQL
     SQL -->|"mirror committed ledger<br/>seq + entry_hash preserved"| FS
     ORCH -.->|"guard fails twice<br/>≤2 round-trip cap"| QUAR
-    MATCH -.->|"graded daily"| YENTE
+    ORCH -.->|"consulted once per batch · stored on<br/>every adjudication · never gates one"| YENTE
 ```
+
+The drawn version below carries the detail this graph leaves out — every block names the
+file that implements it, the trust boundary around everything Interdict does not author
+(Gemini's output and yente's opinion) is drawn rather than described, and the three Google
+technologies actually in the build are marked. It is traced from the source, not from the
+pitch, and the footer names what is deliberately *not* in this repository.
+
+<img src="docs/assets/architecture-diagram.png" width="860" alt="Interdict architecture and data flow: the 6-hourly poll and content-hash archive; the matcher, orchestrator and adjudicator decision path with the oracle guard on the return path and a trust boundary around Gemini and yente; the Postgres region holding money, quarantine and the outbox-relay-ledger chain; and Cloud Firestore mirroring committed ledger rows off-machine">
+
+[Full resolution](docs/assets/architecture-diagram.png)
 
 ### Why the guard is the interesting part
 
@@ -257,7 +274,7 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 134 tests
+make test             # 140 tests
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
@@ -269,7 +286,7 @@ export INTERDICT_FIRESTORE_PROJECT=your-project
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json   # roles/datastore.user
 
 python scripts/load_book.py --truncate    # the labelled synthetic book
-python scripts/run_rescreen.py            # the unattended loop
+python scripts/run_rescreen.py            # what the timer starts on its own
 python scripts/adjudication_quality.py    # graded against ground truth
 python scripts/replay_release.py          # the labelled Aug-7 release replay
 python -m interdict.console               # evidence console on :8080
@@ -342,12 +359,12 @@ to the ledger. It does not submit it.
 
 | Layer | Choice | Where it runs |
 |---|---|---|
-| Adjudication | **Gemini 3.5 Flash** — structured output via `response_schema`, temperature 0 for reproducible verdicts | Gemini API |
+| Adjudication | **`gemini-3.5-flash-lite`** — the pinned default (`INTERDICT_MODEL` overrides it); structured output via `response_schema`, a system instruction carrying the compliance framing, temperature 0 for reproducible verdicts | Gemini API |
 | Agent framework | **Google GenAI SDK** (`google-genai`) — every model call, confined to one module | — |
 | Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
 | Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
 | Messaging | transactional **outbox** relay in Postgres — single ledger writer | local |
-| Trigger | **launchd** 6h poll — the timer is committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
+| Trigger | **launchd** 6h poll — a content hash we have not seen starts the re-screen itself, under a lock. Timer committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
 | Screening | Python 3.11, rapidfuzz | local |
 | Oracle | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` | local, Docker |
 
@@ -367,15 +384,46 @@ chain are the interesting part, and they are the same code against Cloud SQL.
 - **Nothing runs on Google Cloud compute.** Firestore holds the audit trail; the agents, Postgres and yente run locally, because the free tier does not extend to Cloud Run and no billing account was available.
 - yente's own recall on the perturbed set is 0.840, so part of the agreement gap is the oracle missing, not us.
 
+## 🏷 Versioning
+
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html), starting at **1.0.0**. The
+version lives in one place — `__version__` in [`interdict/__init__.py`](interdict/__init__.py)
+— and [`CHANGELOG.md`](CHANGELOG.md) records what each release changed.
+
+Releases are cut by [`.github/workflows/release.yml`](.github/workflows/release.yml) on every
+push to `main`: it works out the bump, rewrites the version, prepends a changelog section,
+tags `vX.Y.Z` and publishes a GitHub Release.
+
+This repository's commit subjects are prose rather than `feat:` / `fix:` prefixes, and a
+conventional-commits-only release tool would therefore find nothing to release on any push,
+forever, while reporting success. So prefixes are honoured **when present** and the default
+is a patch bump:
+
+| Commit | Bump |
+|---|---|
+| `feat: …` | minor |
+| `feat!: …`, `fix!: …`, or `BREAKING CHANGE:` in the body | major |
+| anything else — including this project's ordinary prose subjects | patch |
+
+The level can also be chosen by hand from the Actions tab. Six tests in
+[`tests/test_version.py`](tests/test_version.py) fail the build if the version, the changelog
+and the workflow's insertion anchor ever drift apart.
+
 ## 📄 Licence
 
 [MIT](LICENSE).
+
+**Note on use.** Interdict is a hackathon project, not a compliance product. It drafts OFAC
+blocking reports; it does not file them, and no output of this software is legal advice or a
+substitute for a qualified compliance officer. Also in [`NOTICE`](NOTICE).
 
 ## 🙏 Pre-existing code and tooling
 
 - **OpenSanctions / yente** (MIT) — run unmodified as the external oracle.
 - **rapidfuzz** (MIT), **psycopg** (LGPL), **httpx** (BSD).
-- **Google ADK** and **google-genai** SDKs.
+- **google-genai** SDK — the only model SDK in the tree. Google ADK is *not* used: it was
+  declared as a dependency for a while, never imported by a line of this codebase, and has
+  been removed from `requirements.txt`.
 - Built with AI coding assistance, which the rules permit as standard tooling.
 
 All application code in this repository was written during the submission period.

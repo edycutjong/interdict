@@ -88,13 +88,13 @@
   <text x="56" y="216" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="15.5" fill="#A09A90">when Treasury updates the SDN list, the whole book re-screens —</text>
   <text x="56" y="238" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="15.5" fill="#A09A90">true hits held, lookalikes cleared in writing, funds freed on delisting</text>
   <text class="metric" x="56" y="272" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700" fill="#54BD8F">19,199 SDN records · full book · unattended</text>
-  <text x="56" y="298" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#928D84">Gemini · ADK · A2A · Cloud Run · Postgres</text>
+  <text x="56" y="298" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#928D84">Gemini 3.5 Flash Lite · google-genai · Firestore · Postgres 16</text>
 
   <!-- ===== right: the mechanism, on the master timeline ===== -->
   <!-- scene (visible at t=0): book node, rail, payee node -->
   <rect x="606" y="140" width="106" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)"/>
   <text x="659" y="166" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#E9E7E2">book</text>
-  <text x="659" y="184" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#A09A90">5,000 names</text>
+  <text x="659" y="184" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#A09A90">536 names</text>
   <rect x="1148" y="140" width="92" height="60" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.15)"/>
   <text x="1194" y="174" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#E9E7E2">payee</text>
   <path d="M712 170 H1148" stroke="rgba(255,255,255,0.18)" stroke-width="4" fill="none"/>

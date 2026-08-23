@@ -37,7 +37,7 @@ ignore_missing_imports = true
 warn_unused_ignores = true
 warn_redundant_casts = true
 # Deliberately not strict. This is a 14-day build and the correctness that matters is
-# enforced by database constraints and 133 tests, not by exhaustive annotation.
+# enforced by database constraints and 134 tests, not by exhaustive annotation.
 check_untyped_defs = true
 exclude = ["\\.venv", "docs"]
 
