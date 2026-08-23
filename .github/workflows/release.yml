@@ -47,6 +47,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # main at its tip, NOT the SHA that triggered this run. Four PR merges landing
+          # within seconds each queue a release; if every one checks out its own commit,
+          # they all read the same stale __version__, all compute the same next version,
+          # and only the first to tag survives. That is exactly what happened on
+          # 2026-08-23 -- seven consecutive failures and an orphan v1.0.4 tag pointing at
+          # a commit that never reached main.
+          ref: main
           fetch-depth: 0          # tags and full history are both needed below
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -54,12 +61,29 @@ jobs:
         id: bump
         run: |
           set -euo pipefail
-          current=$(sed -nE 's/^__version__ = "([^"]+)".*/\1/p' interdict/__init__.py)
-          [ -n "$current" ] || { echo "::error::could not read __version__"; exit 1; }
-          echo "current is $current"
+          # The newest tag is the source of truth for what has been released, not the
+          # file: a half-finished run can leave the two disagreeing, and only the tag
+          # records what the world actually saw. Fall back to the file before any release.
+          last_tag=$(git tag --list 'v*' --sort=-v:refname | head -1)
+          if [ -n "$last_tag" ]; then
+            current="${last_tag#v}"
+            echo "current is $current (from tag $last_tag)"
+          else
+            current=$(sed -nE 's/^__version__ = "([^"]+)".*/\1/p' interdict/__init__.py)
+            [ -n "$current" ] || { echo "::error::could not read __version__"; exit 1; }
+            echo "current is $current (from __version__; no tags yet)"
+          fi
 
-          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -n "$last_tag" ]; then range="${last_tag}..HEAD"; else range="HEAD"; fi
+
+          # Nothing new since the last tag means an earlier queued run already released
+          # this state. That is a no-op, not a failure.
+          if [ -n "$last_tag" ] && [ -z "$(git log --oneline "$range")" ]; then
+            echo "nothing to release since $last_tag"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           log=$(git log --format='%B' "$range")
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -95,6 +119,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Rewrite the version and the changelog
+        if: steps.bump.outputs.skip != 'true'
         env:
           NEXT: ${{ steps.bump.outputs.next }}
           RANGE: ${{ steps.bump.outputs.range }}
@@ -142,11 +167,13 @@ jobs:
           PY
 
       - name: Prove the bump did not break the invariants
+        if: steps.bump.outputs.skip != 'true'
         run: |
           python -m pip install --quiet pytest
           python -m pytest tests/test_version.py -q
 
       - name: Commit, tag and push
+        if: steps.bump.outputs.skip != 'true'
         env:
           NEXT: ${{ steps.bump.outputs.next }}
           LEVEL: ${{ steps.bump.outputs.level }}
@@ -160,6 +187,7 @@ jobs:
           git push origin HEAD:main --follow-tags
 
       - name: Publish the GitHub Release
+        if: steps.bump.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT: ${{ steps.bump.outputs.next }}
