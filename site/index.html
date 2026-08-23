@@ -166,6 +166,12 @@ section{padding-block:clamp(48px,7vw,92px);border-top:1px solid var(--line);scro
   box-shadow:var(--shadow-lift);font-size:.9rem;text-decoration:none}
 .skip:focus{left:10px}
 
+/* Screen-reader-only. The visible cue that a link leaves the page is the ↗ glyph, which
+   is aria-hidden and therefore announces nothing -- so every external link carries this
+   text instead. Clipping rather than display:none keeps it in the accessibility tree. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
 /* ═══ header ═══ */
 header.site{
   border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
@@ -190,9 +196,11 @@ nav.top a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,tran
 nav.top a.repo{color:var(--ink);border:1px solid var(--line-strong);margin-left:.35rem;
   display:inline-flex;align-items:center;gap:.42em}
 nav.top a.repo:hover{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 8%,transparent)}
-/* Inline mark — currentColor so it follows the link through hover and both themes,
-   and flex:none so it never squeezes when the header wraps. */
-nav.top a.repo .gh{width:15px;height:15px;fill:currentColor;flex:none;display:block}
+/* Inline mark - currentColor so it follows the link through hover and both themes,
+   flex:none so it never squeezes, and sized in em so one rule serves the 0.845rem
+   header link and the 0.93rem buttons. Defined once as a sprite symbol at the top of
+   the document and pulled in with a use element. */
+.gh{width:1.05em;height:1.05em;fill:currentColor;flex:none;display:block}
 @media (max-width:760px){ nav.top a{font-size:.8rem;padding:.35em .5em} }
 /* Below this the section links wrap the header onto two rows and eat the fold.
    The page is a linear read on a phone — keep the wordmark and the one real CTA. */
@@ -220,7 +228,10 @@ nav.top a.repo .gh{width:15px;height:15px;fill:currentColor;flex:none;display:bl
 .btn-ghost:active{transform:translateY(0)}
 
 /* ═══ hero ═══ */
-.hero{padding-block:clamp(46px,8vw,96px) clamp(38px,5.5vw,68px);border-top:none}
+/* Top padding was clamp(...,96px), which put 96px of nothing between the header rule
+   and an 18px eyebrow, leaving the eyebrow stranded and pushing the headline to y=197
+   on a 900px viewport. 62px still reads as deliberate space rather than a mistake. */
+.hero{padding-block:clamp(38px,5vw,62px) clamp(38px,5.5vw,68px);border-top:none}
 .herogrid{display:grid;gap:clamp(30px,4.5vw,54px);align-items:start}
 @media (min-width:920px){ .herogrid{grid-template-columns:minmax(0,1.35fr) minmax(300px,.95fr)} }
 @media (max-width:560px){ .trackline{font-size:.655rem;gap:.4em .6em;margin-bottom:1.15rem} }
@@ -491,6 +502,12 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
 </style>
 </head>
 <body>
+<span id="newtab-note" class="sr-only">opens in a new tab</span>
+<!-- GitHub mark, defined once. Every "source" link pulls it in with <use> rather than
+     repeating this path three times in a file that ships over the wire. -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <symbol id="gh-mark" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+</svg>
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="site">
@@ -503,7 +520,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
       <a href="#fleet">Architecture</a>
       <a href="#results">Results</a>
       <a href="#reproduce">Reproduce</a>
-      <a class="repo" href="https://github.com/edycutjong/interdict" rel="noopener"><svg class="gh" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>Repository&nbsp;<span aria-hidden="true">↗</span></a>
+      <a class="repo" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Repository&nbsp;<span aria-hidden="true">↗</span></a>
     </nav>
   </div>
 </header>
@@ -537,7 +554,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
 
         <div class="btnrow anim d3">
           <a class="btn btn-primary" href="#reproduce">Reproduce the numbers <span class="arw" aria-hidden="true">→</span></a>
-          <a class="btn btn-ghost" href="https://github.com/edycutjong/interdict" rel="noopener">Read the source <span class="arw" aria-hidden="true">↗</span></a>
+          <a class="btn btn-ghost" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Read the source <span class="arw" aria-hidden="true">↗</span></a>
         </div>
 
         <p class="herofoot anim d4" style="margin-top:1.9rem">Every decision it makes is graded by
@@ -595,7 +612,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
     whether the right record appears anywhere in the results; top-1 asks whether it is ranked first.
     Interdict clears yente&rsquo;s easier bar using the harder one. Our own recall on the same set is
     <b>1.000</b>, and <b>97.8%</b> of variants land at or above the adjudication threshold.
-    yente is <a href="https://www.opensanctions.org/" rel="noopener">OpenSanctions</a>&rsquo; matcher,
+    yente is <a href="https://www.opensanctions.org/" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">OpenSanctions</a>&rsquo; matcher,
     self-hosted here and scope-pinned to <code>us_ofac_sdn</code> — an independent implementation
     written by people who have never seen this code.</p>
 
@@ -664,7 +681,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
         <p class="dec-move">Money stops. An idempotent hold lands on the counterparty and on every
         queued disbursement to it, in the same transaction that writes the decision.</p>
         <p class="dec-grade"><span class="gl">Graded by</span> the SDN record itself on
-        <a href="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" rel="noopener">treasury.gov</a>
+        <a href="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">treasury.gov</a>
         — name, date of birth, passport. <code>make challenge NAME="…"</code> reproduces the whole
         decision for a name you pick, not one we chose.</p>
       </li>
@@ -675,7 +692,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
         breakdown that ended it, or the model&rsquo;s written rationale when the band was close
         enough to spend one. In the graded run <b>every clear came from the deterministic plane</b>:
         a contradicting date of birth ends the question before adjudication is paid for.</p>
-        <p class="dec-grade"><span class="gl">Graded by</span> <a href="https://www.opensanctions.org/" rel="noopener">OpenSanctions yente</a>,
+        <p class="dec-grade"><span class="gl">Graded by</span> <a href="https://www.opensanctions.org/" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">OpenSanctions yente</a>,
         scope-pinned to <code>us_ofac_sdn</code> and consulted on <em>every</em> adjudication — an
         oracle consulted only where it agrees is not an oracle.</p>
       </li>
@@ -687,7 +704,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
         parties are already gone from the current publication, so a live release cannot be staged
         without pretending. It says REPLAY on every screen.</p>
         <p class="dec-grade"><span class="gl">Graded by</span> Treasury&rsquo;s own published delta,
-        <a href="https://sanctionslistservice.ofac.treas.gov/changes/latest" rel="noopener">/changes/latest</a>,
+        <a href="https://sanctionslistservice.ofac.treas.gov/changes/latest" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">/changes/latest</a>,
         archived at sha256 <code>9403f40d9496…</code>. The path to a live one is
         <a href="#sentinel">the sentinel book</a>.</p>
       </li>
@@ -848,10 +865,12 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
 
           <!-- routing: the orchestrator calls out and reads the answer back through the guard -->
           <line x1="900" y1="300" x2="1010" y2="250" stroke="#f59e0b" marker-end="url(#arA)"/>
-          <text x="908" y="288" fill="#f59e0b" font-size="13">score()</text>
+          <text x="955" y="275" fill="#f59e0b" font-size="13" text-anchor="middle"
+                transform="rotate(-24.44 955 275)" dy="-7">score()</text>
           <line x1="1010" y1="285" x2="900" y2="322" stroke="#94a3b8" marker-end="url(#ar)"/>
           <line x1="900" y1="430" x2="1010" y2="400" stroke="#f59e0b" marker-end="url(#arA)"/>
-          <text x="908" y="420" fill="#f59e0b" font-size="13">adjudicate()</text>
+          <text x="955" y="415" fill="#f59e0b" font-size="13" text-anchor="middle"
+                transform="rotate(-15.26 955 415)" dy="-7">adjudicate()</text>
           <line x1="1010" y1="440" x2="900" y2="458" stroke="#94a3b8" marker-end="url(#ar)"/>
 
           <!-- yente answers into the GUARD, not into the matcher: the guard is what consults it.
@@ -1137,7 +1156,7 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
     </figure>
 
     <div class="btnrow reveal">
-      <a class="btn btn-primary" href="https://github.com/edycutjong/interdict" rel="noopener">Read the source on GitHub <span class="arw" aria-hidden="true">↗</span></a>
+      <a class="btn btn-primary" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Read the source on GitHub <span class="arw" aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
@@ -1169,18 +1188,18 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
         <h4>Sources</h4>
         <ul class="srclist">
           <li>OFAC Sanctions List Service, full SDN export —
-            <a href="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" rel="noopener">SDN.XML</a>
+            <a href="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">SDN.XML</a>
             (302 → presigned S3; the fetch must follow redirects)</li>
           <li>OFAC delta feed —
-            <a href="https://sanctionslistservice.ofac.treas.gov/changes/latest" rel="noopener">/changes/latest</a></li>
+            <a href="https://sanctionslistservice.ofac.treas.gov/changes/latest" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">/changes/latest</a></li>
           <li>OFAC Recent Actions, 2026-08-07 —
-            <a href="https://ofac.treasury.gov/recent-actions/20260807" rel="noopener">Counter Narcotics Designations Removals</a>,
+            <a href="https://ofac.treasury.gov/recent-actions/20260807" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">Counter Narcotics Designations Removals</a>,
             naming all eight removed parties</li>
           <li>Federal Register notice <span class="mono">2026-16153</span> — determination 2026-08-05,
             property &ldquo;unblocked and&hellip; removed from the SDN List&rdquo;</li>
-          <li><a href="https://www.opensanctions.org/" rel="noopener">OpenSanctions yente</a>,
+          <li><a href="https://www.opensanctions.org/" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">OpenSanctions yente</a>,
             self-hosted, scope pinned to <code>us_ofac_sdn</code> — the independent oracle</li>
-          <li><a href="https://github.com/edycutjong/interdict" rel="noopener">github.com/edycutjong/interdict</a>
+          <li><a href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">github.com/edycutjong/interdict</a>
             — source, tests, <code>data/PROVENANCE.md</code> and every result file quoted above</li>
         </ul>
       </div>
