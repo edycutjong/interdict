@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 import time
@@ -242,6 +243,14 @@ class GeminiAdjudicator:
                 "No Gemini API key. Set GEMINI_API_KEY (a free AI Studio key at "
                 "https://aistudio.google.com/apikey needs no billing account)."
             )
+        # The SDK logs a four-line advisory on every generate_content call, telling us to
+        # use Chat.send_message for automatic function calling. This adjudicator issues
+        # one-shot structured-output calls and declares no tools, so AFC is not in play
+        # and the advice does not apply. Filtered by message rather than by silencing the
+        # logger, so anything else google_genai has to say still comes through.
+        logging.getLogger("google_genai.models").addFilter(
+            lambda record: "automatic function calling" not in record.getMessage().lower()
+        )
         self._client = genai.Client(api_key=key)
         self.model_id = model_id
 

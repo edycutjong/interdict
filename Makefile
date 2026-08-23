@@ -129,8 +129,24 @@ verify-ledger:  ## Verify the ledger hash chain end to end
 # ---------------------------------------------------------------------------
 
 .PHONY: test
-test:  ## Run the test suite
+test:  ## Run the test suite (WARNING: destroys the demo book -- see demo-state)
+	@echo "note: the test fixtures TRUNCATE counterparties, disbursements, holds and"
+	@echo "      adjudications. If you were holding a loaded book for a demo or a"
+	@echo "      screenshot, run 'make demo-state' afterwards to rebuild it."
 	$(PY) -m pytest tests/ -q
+
+.PHONY: demo-state
+demo-state:  ## Rebuild the labelled demo book and re-screen it (restores the console)
+	@# The test fixtures truncate the payment book, so a full 'make test' leaves the
+	@# evidence console showing test rows instead of the demo. This puts it back. The
+	@# book is deterministic -- same strata, same amounts, same $1,181,434.51 held.
+	$(PY) scripts/load_book.py --truncate --sentinels 30 --variants 30 --lookalikes 30
+	$(PY) scripts/run_rescreen.py --batch-size 20 --progress
+
+.PHONY: demo-ids
+demo-ids:  ## Print the live Firestore document ids the demo video's cloud shots need
+	@# These move on every re-screen, so never write them down -- read them before filming.
+	$(PY) scripts/demo_ids.py
 
 .PHONY: test-v
 test-v:  ## Run the test suite, verbose

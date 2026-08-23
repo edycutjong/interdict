@@ -90,6 +90,8 @@ def main() -> int:
                     help="stop after N batches, simulating a worker dying mid-book")
     ap.add_argument("--resume", type=int, default=None, help="resume an existing run id")
     ap.add_argument("--offline", action="store_true", help="force the offline adjudicator")
+    ap.add_argument("--progress", action="store_true",
+                    help="print each decision as it commits, instead of only the summary")
     ap.add_argument("--no-oracle", action="store_true",
                     help="skip yente grading (faster; the oracle column stays empty)")
     args = ap.parse_args()
@@ -134,12 +136,26 @@ def main() -> int:
                 candidate.close()
                 print("oracle: yente unreachable -- decisions will be ungraded")
 
+        def report(name: str, d) -> None:
+            """One line per decision, printed as it commits.
+
+            Every field is read straight off the Decision -- nothing here recomputes a
+            verdict or rounds a score into a different number than the ledger holds. The
+            guard column is printed even when it says SKIPPED, because a run where the
+            oracle went unreachable must look different from one where it agreed.
+            """
+            uid = d.sdn_uid or "--"
+            print(f"  [{d.verdict:<10}] {name[:38]:<38} "
+                  f"score {d.det_score:.4f}  uid {uid:<6} "
+                  f"guard {d.guard:<8} rt {d.round_trips}  {d.reason[:52]}",
+                  flush=True)
+
         try:
             summary = rescreen_book(
                 conn, run_id=run_id, matcher=matcher, adjudicator=adjudicator,
                 publication=publication, batch_size=args.batch_size,
                 blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
-                oracle=oracle,
+                oracle=oracle, on_decision=report if args.progress else None,
             )
         finally:
             if oracle is not None:

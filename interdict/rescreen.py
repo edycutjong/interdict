@@ -128,7 +128,7 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
                   adjudicator: Adjudicator, publication: dict,
                   batch_size: int = BATCH_SIZE, blocked_on: date | None = None,
                   stop_after_batches: int | None = None,
-                  oracle=None) -> RunSummary:
+                  oracle=None, on_decision=None) -> RunSummary:
     """Screen the entire counterparty book under a run.
 
     `stop_after_batches` exists for the kill-worker demo beat: it simulates a worker
@@ -137,6 +137,13 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
 
     `oracle` is an optional yente client. When supplied, every adjudication is stored
     with the independent oracle's verdict beside it.
+
+    `on_decision(name, decision)` is called as each decision commits. A full-book run
+    takes minutes and printed nothing at all until the closing summary, which left an
+    operator unable to tell a working run from a hung one -- and made the run
+    unwatchable. The callback reports only fields the Decision already carries; it
+    never computes or reformats a verdict, so what it shows cannot drift from what the
+    ledger stored.
     """
     summary = RunSummary(run_id=run_id)
 
@@ -175,6 +182,8 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
             )
             summary.screened += 1
             summary.decisions.append(decision)
+            if on_decision is not None:
+                on_decision(row["name"], decision)
             if decision.verdict == "HOLD":
                 summary.holds += 1
             elif decision.verdict == "QUARANTINE":
