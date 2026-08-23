@@ -113,7 +113,10 @@ def trigger_rescreen(new_sources: set[str], root: Path) -> str:
 
     lock_path = root / "rescreen.lock"
     try:
-        lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o644)
+        # 0o600, not 0o644: nothing but this process needs to read the lock, and a
+        # world-readable file in the archive directory is the kind of default that is
+        # only ever noticed by a scanner. CodeQL py/overly-permissive-file, high.
+        lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
     except OSError as exc:
         return f"could not open {lock_path}: {exc}"
     try:
