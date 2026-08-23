@@ -73,6 +73,19 @@ SHA-256 of the name, so the challenge set is byte-identical on any machine.
 
 `make challenge-set` · full result set in [`data/g1-perturbed.json`](data/g1-perturbed.json)
 
+**Our two figures are reproducible; the oracle's is not, and it should not be.** The
+perturbations are derived from the SHA-256 of each name, so `recall` and `top-1` come back
+byte-identical on any machine — re-running them against a five-version `rapidfuzz` upgrade
+(3.9.7 → 3.14.5) returned exactly `0.995` again. yente's column is different: it queries a
+live OpenSanctions index that keeps tracking Treasury, so it drifts. The recorded run
+measured **0.840**; a re-run on 2026-08-23 measured **0.845**, and a screenshot taken in
+between caught **0.843**.
+
+Those are the same result, not three results — the gap we clear is roughly sixteen points
+wide and no version of the oracle's number changes the conclusion. The committed JSON is
+kept as the dated evidence of one run rather than silently refreshed, because a file that
+quietly tracks whatever the oracle said this morning is not evidence of anything.
+
 ### Decision quality — graded against ground truth the system cannot see
 
 Measured on a **stratified sample of 101** counterparties, adjudicated by
