@@ -14,7 +14,7 @@
 ![GenAI SDK](https://img.shields.io/badge/Google-GenAI%20SDK-34A853)
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335)
-![Tests](https://img.shields.io/badge/tests-134%20passing-success)
+![Tests](https://img.shields.io/badge/tests-140%20passing-success)
 
 </div>
 
@@ -274,7 +274,7 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 134 tests
+make test             # 140 tests
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
@@ -384,9 +384,38 @@ chain are the interesting part, and they are the same code against Cloud SQL.
 - **Nothing runs on Google Cloud compute.** Firestore holds the audit trail; the agents, Postgres and yente run locally, because the free tier does not extend to Cloud Run and no billing account was available.
 - yente's own recall on the perturbed set is 0.840, so part of the agreement gap is the oracle missing, not us.
 
+## 🏷 Versioning
+
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html), starting at **1.0.0**. The
+version lives in one place — `__version__` in [`interdict/__init__.py`](interdict/__init__.py)
+— and [`CHANGELOG.md`](CHANGELOG.md) records what each release changed.
+
+Releases are cut by [`.github/workflows/release.yml`](.github/workflows/release.yml) on every
+push to `main`: it works out the bump, rewrites the version, prepends a changelog section,
+tags `vX.Y.Z` and publishes a GitHub Release.
+
+This repository's commit subjects are prose rather than `feat:` / `fix:` prefixes, and a
+conventional-commits-only release tool would therefore find nothing to release on any push,
+forever, while reporting success. So prefixes are honoured **when present** and the default
+is a patch bump:
+
+| Commit | Bump |
+|---|---|
+| `feat: …` | minor |
+| `feat!: …`, `fix!: …`, or `BREAKING CHANGE:` in the body | major |
+| anything else — including this project's ordinary prose subjects | patch |
+
+The level can also be chosen by hand from the Actions tab. Six tests in
+[`tests/test_version.py`](tests/test_version.py) fail the build if the version, the changelog
+and the workflow's insertion anchor ever drift apart.
+
 ## 📄 Licence
 
 [MIT](LICENSE).
+
+**Note on use.** Interdict is a hackathon project, not a compliance product. It drafts OFAC
+blocking reports; it does not file them, and no output of this software is legal advice or a
+substitute for a qualified compliance officer. Also in [`NOTICE`](NOTICE).
 
 ## 🙏 Pre-existing code and tooling
 
