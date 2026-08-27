@@ -139,6 +139,41 @@ jobs:
                      count=1, flags=re.M),
               encoding="utf-8")
 
+          # package.json is the browser toolchain behind the e2e and Lighthouse gates, not
+          # the product -- but a release that leaves it behind means two version numbers in
+          # one repo disagreeing, and the one a reader checks first is not always the one we
+          # remembered to bump. tests/test_version.py asserts they match.
+          #
+          # package-lock.json has to move with it or `npm ci` refuses the tree, which would
+          # take the e2e and Lighthouse jobs down on the release commit.
+          def rewrite_json_version(path: str) -> None:
+              """Rewrite the package's OWN version, never a dependency's.
+
+              Anchored rather than a blind substitution: the lockfile carries a "version"
+              key for every dependency, and a bare replace would rewrite any that happened
+              to share the outgoing number.
+              """
+              p = pathlib.Path(path)
+              if not p.exists():
+                  return
+              text = p.read_text(encoding="utf-8")
+              before = text
+              # Top-level "version", two-space indent, first occurrence only.
+              text, n = re.subn(r'^(  "version": ")[^"]*(")',
+                                rf'\g<1>{nxt}\g<2>', text, count=1, flags=re.M)
+              if n != 1:
+                  raise SystemExit(f"{path}: no top-level version key found")
+              # The lockfile repeats the root package under packages[""].
+              text, _ = re.subn(
+                  r'("": \{\s*\n\s*"name": "[^"]*",\s*\n\s*"version": ")[^"]*(")',
+                  rf'\g<1>{nxt}\g<2>', text, count=1)
+              if text != before:
+                  p.write_text(text, encoding="utf-8")
+                  print(f"{path} -> {nxt}")
+
+          for f in ("package.json", "package-lock.json"):
+              rewrite_json_version(f)
+
           subjects = subprocess.run(
               ["git", "log", "--no-merges", "--format=- %s", rng],
               capture_output=True, text=True, check=True).stdout.strip()
@@ -181,7 +216,7 @@ jobs:
           set -euo pipefail
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add interdict/__init__.py CHANGELOG.md
+          git add interdict/__init__.py CHANGELOG.md package.json package-lock.json
           git commit -m "[release] v${NEXT} (${LEVEL})"
           git tag -a "v${NEXT}" -m "v${NEXT}"
           git push origin HEAD:main --follow-tags

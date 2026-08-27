@@ -87,7 +87,7 @@ permissive* than the oracle you are checked against.
 
 | | |
 |---|---|
-| tests | **351 passing** · **100% coverage** (948/948 statements) |
+| tests | **353 passing** · **100% coverage** (948/948 statements) |
 | screening latency | p50 **9.3 ms** · p95 **68.8 ms** · p99 **106.7 ms** |
 | full book (400 counterparties) | **7.6 s** |
 | second model | **`gemma-4-31b-it` agreed 59/59** — but read the limitation: all 59 are HOLD confirmations, so it has not been asked to discriminate either |
@@ -105,7 +105,7 @@ make reproduce
 ```
 
 Installs, brings up Postgres + Elasticsearch + yente, indexes the oracle, applies the schema,
-runs the 351 tests, and prints the perturbed screening number.
+runs the 353 tests, and prints the perturbed screening number.
 
 For the adjudication and interdiction legs:
 

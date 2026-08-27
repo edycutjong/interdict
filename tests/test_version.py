@@ -1,15 +1,16 @@
 """Version-integrity tests.
 
-The version exists in three places that can silently drift apart: the package, the
-changelog, and the git tag the release workflow writes. These tests assert the first two
-agree and are well-formed, so a release that forgets the changelog fails in CI rather
-than shipping a tag nobody can read.
+The version exists in four places that can silently drift apart: the package, the
+changelog, package.json, and the git tag the release workflow writes. These tests assert
+the first three agree and are well-formed, so a release that forgets one fails in CI
+rather than shipping a tag nobody can read.
 
 The git tag itself is deliberately not asserted here -- a fresh clone at an untagged
 commit is a legitimate state, and a test that fails on it would fail for every
 contributor before their first release.
 """
 
+import json
 import pathlib
 import re
 
@@ -68,3 +69,30 @@ def test_release_workflow_anchor_is_present():
     or deleted, every future release silently appends nothing -- catch it here."""
     text = CHANGELOG.read_text(encoding="utf-8")
     assert "<!-- release-workflow inserts new sections directly below this line -->" in text
+
+
+def test_package_json_version_matches_the_package():
+    """package.json is the browser toolchain, not the product -- and it still has to agree.
+
+    Two version numbers in one repository that disagree is a question a reader has to stop
+    and resolve, and the one they check first is not always the one we remembered to bump.
+    The release workflow rewrites this file; this test is what makes forgetting it loud.
+    """
+    pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    assert pkg["version"] == interdict.__version__, (
+        f"package.json is {pkg['version']!r} but __version__ is {interdict.__version__!r}"
+    )
+
+
+def test_package_lock_agrees_with_package_json():
+    """npm ci refuses a tree whose lockfile and manifest disagree.
+
+    The release workflow bumps both. If only one moved, the e2e and Lighthouse jobs would
+    fail on the release commit itself -- after the tag was already pushed. Fail here first.
+    """
+    pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+    assert lock["version"] == pkg["version"], "package-lock.json root version drifted"
+    assert lock["packages"][""]["version"] == pkg["version"], (
+        'package-lock.json packages[""] version drifted'
+    )
