@@ -220,7 +220,12 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Lighthouse CI
-        run: npx lhci autorun
+        # Run through npx rather than as a devDependency. @lhci/cli bundles lighthouse ->
+        # puppeteer-core -> extract-zip, which drags 12 advisories (5 of them HIGH) into
+        # package-lock.json for a tool that never ships and only runs here. No published
+        # version fixes it -- 0.15.1 makes it worse. Fetched at run time instead, so the
+        # committed lockfile stays at 0 vulnerabilities.
+        run: npx --yes @lhci/cli@0.14.0 autorun
       - if: always()
         uses: actions/upload-artifact@v4
         with:
