@@ -37,7 +37,7 @@ Reproduce the whole thing with `make reproduce`.
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04?style=flat&logo=firebase&logoColor=white)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335?style=flat&logo=postgresql&logoColor=white)
 ![Python](https://img.shields.io/badge/Python%203.11-3776AB?style=flat&logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-343%20passing-success?style=flat)
+![Tests](https://img.shields.io/badge/tests-351%20passing-success?style=flat)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-success?style=flat)
 [![Release](https://img.shields.io/github/v/release/edycutjong/interdict?style=flat&color=1e6f50&label=release)](https://github.com/edycutjong/interdict/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)](https://opensource.org/licenses/MIT)
@@ -385,7 +385,7 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 343 tests, 100% coverage
+make test             # 351 tests, 100% coverage
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
@@ -423,7 +423,7 @@ make challenge NAME="Abu Abbas" DOB="3 Mar 1990"     # contradicting DOB kills t
 ## 🧪 Testing & CI
 
 ```bash
-make test                       # 343 tests, 100% coverage
+make test                       # 351 tests, 100% coverage
 make verify-ledger              # hash chain, end to end
 make verify-book                # all 400 sentinels still listed in the current publication
 make archive-status             # fails if the 6h poll has stopped
