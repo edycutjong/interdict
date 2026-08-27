@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interdict — for judges</title>
+<meta name="description" content="One page, one reader: the claim, a 30-second verification path, every real-run number with its source, and the honest limitations.">
+<link rel="canonical" href="https://interdict.edycu.dev/judge/">
+<meta name="author" content="Edy Cu">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icon-512.png">
+
+<!-- Social card. Same 1200x630 asset as the landing page, absolute against the CNAME.
+     Bump ?v= only when og-image.png itself changes — every platform caches by URL. -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Interdict">
+<meta property="og:url" content="https://interdict.edycu.dev/judge/">
+<meta property="og:title" content="Interdict — for judges">
+<meta property="og:description" content="A 30-second verification path: the claim, every real-run number with its source, and the limitations.">
+<meta property="og:image" content="https://interdict.edycu.dev/og-image.png?v=2">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Interdict — when Treasury updates the OFAC list, a three-agent fleet re-screens the whole payment book unattended">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Interdict — for judges">
+<meta name="twitter:description" content="The claim, a 30-second verification path, every real-run number with its source, and the limitations.">
+<meta name="twitter:image" content="https://interdict.edycu.dev/og-image.png?v=2">
+<meta name="twitter:image:alt" content="Interdict — autonomous OFAC sanctions re-screening">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   Same tokens as the landing page, deliberately duplicated rather than linked:
+   this page must render standalone if everything else on the domain is down.
+   Red = money stops. Green = money moves. Semantic, never decorative.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#faf9f6;
+  --bg-sunk:#f3f1ea;
+  --surface:#ffffff;
+  --ink:#191817;
+  --ink-soft:#3b3833;
+  --muted:#5f5a53;
+  --line:#e3dfd7;
+  --line-strong:#c9c3b8;
+  --hold:#a4262c;
+  --hold-wash:rgba(164,38,44,.07);
+  --release:#1e6f50;
+  --release-wash:rgba(30,111,80,.07);
+  --accent:#1a4d8f;
+  --accent-wash:rgba(26,77,143,.09);
+  --code-bg:#14161a;
+  --code-ink:#e8e6e1;
+  --code-muted:#9198a4;
+  --shadow:0 1px 2px rgba(25,24,23,.05), 0 8px 22px -14px rgba(25,24,23,.22);
+  --shadow-lift:0 2px 4px rgba(25,24,23,.06), 0 16px 34px -16px rgba(25,24,23,.30);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua","Times New Roman",Georgia,serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#131417; --bg-sunk:#191b1f; --surface:#1b1d21;
+    --ink:#e9e7e2; --ink-soft:#cbc7c0; --muted:#a09a90;
+    --line:#2b2e34; --line-strong:#41454d;
+    --hold:#e0776b; --hold-wash:rgba(224,119,107,.11);
+    --release:#54bd8f; --release-wash:rgba(84,189,143,.10);
+    --accent:#7aa7dd; --accent-wash:rgba(122,167,221,.13);
+    --code-bg:#0e0f12; --code-ink:#dcdad5; --code-muted:#9198a4;
+    --shadow:0 1px 2px rgba(0,0,0,.34), 0 10px 26px -16px rgba(0,0,0,.7);
+    --shadow-lift:0 2px 5px rgba(0,0,0,.4), 0 18px 38px -18px rgba(0,0,0,.8);
+  }
+}
+
+/* ═══ base ═══ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img,svg{max-width:100%}
+h1,h2,h3,h4{margin:0 0 .5em;font-weight:600}
+h1,h2{font-family:var(--serif);letter-spacing:-.012em;line-height:1.08;font-weight:600}
+h1{font-size:clamp(2.05rem,5.1vw,3.2rem)}
+h2{font-size:clamp(1.5rem,3.3vw,2.2rem)}
+h3{font-size:1.06rem;line-height:1.3;letter-spacing:-.005em;font-weight:650}
+p{margin:0 0 1em}
+ul,ol{margin:0 0 1em}
+b,strong{font-weight:650}
+code,pre,.mono{font-family:var(--mono);font-variant-ligatures:none}
+code{font-size:.86em;background:color-mix(in srgb,var(--ink) 7%,transparent);
+  padding:.1em .38em;border-radius:4px;overflow-wrap:anywhere}
+
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:.16em;
+  transition:color .16s var(--ease),background-color .16s var(--ease),text-decoration-color .16s var(--ease)}
+a:hover{color:var(--ink);background:var(--accent-wash);text-decoration-thickness:2px;border-radius:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+/* ═══ layout ═══ */
+.wrap{max-width:1080px;margin:0 auto;padding-inline:clamp(18px,4.4vw,36px)}
+.narrow{max-width:70ch}
+section{padding-block:clamp(42px,6vw,78px);border-top:1px solid var(--line);scroll-margin-top:70px}
+.sunk{background:var(--bg-sunk)}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 1.15rem;display:flex;align-items:baseline;gap:.85em}
+.eyebrow::before{content:attr(data-n);color:var(--hold);font-weight:700;letter-spacing:.06em}
+.eyebrow::after{content:"";flex:1 1 auto;height:1px;background:var(--line);align-self:center}
+.lede{font-size:clamp(1.04rem,1.9vw,1.2rem);color:var(--ink-soft);max-width:66ch;line-height:1.58}
+.small{font-size:.855rem;color:var(--muted);line-height:1.6}
+.note{font-size:.875rem;color:var(--muted);border-left:2px solid var(--line-strong);
+  padding-left:.95rem;margin-top:1.3rem;max-width:74ch}
+.hold-ink{color:var(--hold)}
+.release-ink{color:var(--release)}
+
+.skip{position:fixed;left:-9999px;top:10px;background:var(--surface);color:var(--ink);
+  padding:.65em 1.1em;z-index:99;border:1px solid var(--line-strong);border-radius:8px;
+  box-shadow:var(--shadow-lift);font-size:.9rem;text-decoration:none}
+.skip:focus{left:10px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* ═══ header ═══ */
+header.site{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+header.site .wrap{display:flex;align-items:center;gap:.9rem;min-height:58px;flex-wrap:wrap;padding-block:9px}
+.wordmark{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);
+  font-weight:700;font-size:1.02rem;letter-spacing:.01em;color:var(--ink);
+  text-decoration:none;padding:.25em .45em;margin-left:-.45em;border-radius:7px;
+  transition:background-color .16s var(--ease)}
+.wordmark img{width:23px;height:23px;display:block;border-radius:5px}
+.wordmark span{color:var(--hold)}
+.wordmark:hover{background:color-mix(in srgb,var(--ink) 6%,transparent);color:var(--ink)}
+nav.top{margin-left:auto;display:flex;gap:.15rem;flex-wrap:wrap;align-items:center}
+nav.top a{color:var(--muted);text-decoration:none;font-size:.845rem;padding:.4em .65em;border-radius:7px;
+  transition:color .16s var(--ease),background-color .16s var(--ease)}
+nav.top a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
+nav.top a.repo{color:var(--ink);border:1px solid var(--line-strong);margin-left:.35rem;
+  display:inline-flex;align-items:center;gap:.42em}
+nav.top a.repo:hover{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.gh{width:1.05em;height:1.05em;fill:currentColor;flex:none;display:block}
+@media (max-width:760px){ nav.top a{font-size:.8rem;padding:.35em .5em} }
+@media (max-width:720px){ nav.top a:not(.repo){display:none} nav.top a.repo{margin-left:0} }
+
+/* ═══ buttons ═══ */
+.btnrow{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.9rem}
+.btn{display:inline-flex;align-items:center;gap:.55em;font-size:.93rem;font-weight:600;
+  padding:.72em 1.25em;border-radius:9px;text-decoration:none;border:1px solid transparent;
+  transition:transform .16s var(--ease),box-shadow .16s var(--ease),
+             background-color .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease)}
+.btn .arw{font-family:var(--mono);font-size:.9em;transition:transform .18s var(--ease)}
+.btn-primary{background:var(--ink);color:var(--bg);box-shadow:var(--shadow)}
+.btn-primary:hover{background:var(--hold);color:#fff;transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.btn-primary:hover .arw{transform:translateX(3px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line-strong);box-shadow:var(--shadow)}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink);transform:translateY(-2px);
+  box-shadow:var(--shadow-lift);background:var(--surface)}
+.btn-ghost:hover .arw{transform:translateX(3px)}
+.btn-ghost:active{transform:translateY(0)}
+
+/* ═══ hero ═══ */
+.hero{padding-block:clamp(36px,4.6vw,58px) clamp(36px,5vw,62px);border-top:none}
+.trackline{font-family:var(--mono);font-size:.715rem;color:var(--muted);letter-spacing:.11em;
+  text-transform:uppercase;margin:0 0 1.5rem;display:flex;flex-wrap:wrap;gap:.5em .85em;align-items:center}
+.trackline b{color:var(--hold);font-weight:700}
+.trackline .sep{color:var(--line-strong)}
+@media (max-width:560px){ .trackline{font-size:.655rem;gap:.4em .6em;margin-bottom:1.15rem} }
+.hero h1{max-width:15ch;margin-bottom:.42em}
+
+/* the claim — the one sentence the whole page is accountable to */
+.claim{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--hold);
+  border-radius:12px;padding:1.35rem 1.5rem;margin:1.9rem 0 0;box-shadow:var(--shadow);max-width:76ch}
+.claim p{font-family:var(--serif);font-size:clamp(1.12rem,2.2vw,1.38rem);line-height:1.45;
+  color:var(--ink);margin:0}
+.claim .em{background:linear-gradient(transparent 63%,var(--hold-wash) 63%);
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+/* ═══ the 30-second path ═══ */
+.path{display:grid;gap:11px;counter-reset:step;margin:1.9rem 0 0;padding:0;list-style:none;
+  grid-template-columns:1fr}
+@media (min-width:620px){ .path{grid-template-columns:1fr 1fr} }
+@media (min-width:980px){ .path{grid-template-columns:repeat(4,1fr)} }
+.path li{counter-increment:step;background:var(--surface);border:1px solid var(--line);
+  border-top:3px solid var(--line-strong);border-radius:11px;padding:.95rem 1.05rem 1rem;
+  font-size:.875rem;line-height:1.5;color:var(--muted);display:flex;flex-direction:column;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}
+.path li:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
+.path li:hover{border-top-color:var(--hold)}
+.path li .t{display:flex;justify-content:space-between;align-items:baseline;gap:.6em;
+  font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.12em;margin-bottom:.5rem}
+.path li .t::before{content:counter(step,decimal-leading-zero)}
+.path li .t .clock{color:var(--hold);font-weight:700}
+.path li a.h{display:block;font-size:.955rem;font-weight:650;margin-bottom:.34rem;
+  color:var(--ink);letter-spacing:-.005em;text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.path li a.h:hover{color:var(--hold);border-bottom-color:var(--hold);background:none}
+.path li p{margin:0;flex:1 1 auto}
+
+/* ═══ stats ═══ */
+.stats{display:grid;gap:12px;grid-template-columns:1fr;margin:1.9rem 0 0;align-items:start}
+@media (min-width:600px){ .stats{grid-template-columns:1fr 1fr} }
+@media (min-width:900px){ .stats{grid-template-columns:repeat(3,1fr)} }
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:1.1rem 1.15rem;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
+.stat .n{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:-.03em;
+  display:block;margin-bottom:.35rem;line-height:1.05;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .n small{font-size:.78rem;font-weight:500;color:var(--muted);letter-spacing:0}
+.stat.good .n{color:var(--release)}
+.stat.alarm .n{color:var(--hold)}
+.stat p{font-size:.845rem;color:var(--muted);margin:0;line-height:1.55}
+.stat .src{display:block;margin-top:.55rem;font-family:var(--mono);font-size:.66rem;
+  letter-spacing:.06em;color:var(--muted);opacity:.85;overflow-wrap:anywhere}
+
+/* ═══ tables ═══ */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--surface);
+  margin:1.5rem 0 0;-webkit-overflow-scrolling:touch}
+.tablewrap table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
+.tablewrap th,.tablewrap td{text-align:left;padding:.72rem .95rem;border-bottom:1px solid var(--line);vertical-align:top}
+.tablewrap tr:last-child td{border-bottom:none}
+.tablewrap tbody tr{transition:background-color .16s var(--ease)}
+.tablewrap tbody tr:hover{background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.tablewrap th{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:600;background:color-mix(in srgb,var(--ink) 3.5%,transparent)}
+.tablewrap td.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tablewrap caption{caption-side:bottom;padding:.85rem .95rem;color:var(--muted);text-align:left;
+  font-size:.83rem;line-height:1.55;border-top:1px solid var(--line)}
+.row-zero td{background:var(--release-wash)}
+.row-zero td:first-child{box-shadow:inset 3px 0 0 var(--release)}
+
+/* ═══ code ═══ */
+.codeblock{position:relative;margin:1.4rem 0 0}
+.codeblock pre{background:var(--code-bg);color:var(--code-ink);border-radius:11px;
+  padding:1.15rem 1.25rem;overflow-x:auto;font-size:.825rem;line-height:1.7;margin:0;
+  border:1px solid color-mix(in srgb,var(--code-ink) 13%,transparent);-webkit-overflow-scrolling:touch}
+.codeblock pre code{background:none;padding:0;font-size:inherit}
+.codeblock pre .c{color:var(--code-muted)}
+.copybtn{position:absolute;top:.62rem;right:.62rem;font-family:var(--mono);font-size:.73rem;
+  letter-spacing:.06em;background:var(--code-bg);color:var(--code-muted);border:1px solid var(--code-muted);
+  border-radius:6px;padding:.34em .85em;cursor:pointer;
+  transition:color .16s var(--ease),border-color .16s var(--ease),background-color .16s var(--ease)}
+.copybtn:hover{color:var(--code-bg);border-color:var(--code-ink);background:var(--code-ink)}
+.copybtn:focus-visible{outline:3px solid var(--code-ink);outline-offset:2px}
+.copybtn:active{transform:translateY(1px)}
+
+.hash{font-family:var(--mono);font-size:.755rem;overflow-wrap:anywhere;line-height:1.7;
+  background:color-mix(in srgb,var(--ink) 5%,transparent);border:1px solid var(--line);
+  border-left:3px solid var(--hold);border-radius:8px;padding:.65rem .9rem;display:block;margin:1.3rem 0 0}
+.hash b{color:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:.9em}
+
+/* ═══ screenshot ═══ */
+.shotfig{margin:1.9rem 0 0}
+.shotfig img{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line-strong);
+  box-shadow:var(--shadow)}
+.shotfig figcaption{margin-top:15px;color:var(--muted);font-size:.875rem;line-height:1.62;max-width:72ch}
+
+/* ═══ honesty ═══ */
+.honesty{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--hold);
+  border-radius:12px;padding:1.35rem 1.5rem;margin-top:1.7rem}
+.honesty h3{margin-top:0;font-family:var(--mono);font-size:.94rem;letter-spacing:.02em}
+.honesty ol,.honesty ul{margin:.85rem 0 0;padding-left:1.25rem;font-size:.915rem;color:var(--muted);line-height:1.6}
+.honesty li{margin-bottom:.75rem}
+.honesty li:last-child{margin-bottom:0}
+.honesty b{color:var(--ink)}
+
+/* ═══ footer ═══ */
+footer{border-top:1px solid var(--line);padding:2.6rem 0 3.4rem;color:var(--muted);font-size:.875rem;
+  background:var(--bg-sunk)}
+footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:.75rem}
+.linklist{list-style:none;margin:0;padding:0;font-size:.885rem}
+.linklist li{padding:.5rem 0;border-bottom:1px dotted var(--line);display:flex;
+  justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+.linklist li:last-child{border-bottom:none}
+.linklist .k{color:var(--ink);font-weight:650}
+.linklist .v{overflow-wrap:anywhere;text-align:right}
+
+/* ═══ motion — one reveal, surrendered on request ═══ */
+@keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.js .anim{opacity:0;animation:riseIn .62s var(--ease) forwards}
+.js .anim.d1{animation-delay:.06s}
+.js .anim.d2{animation-delay:.16s}
+.js .anim.d3{animation-delay:.26s}
+.js .reveal{opacity:0;transform:translateY(15px)}
+.js .reveal.in{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease)}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0ms!important;
+    animation-iteration-count:1!important;transition-duration:.001ms!important;transition-delay:0ms!important}
+  .js .anim{opacity:1!important;animation:none!important}
+  .js .reveal{opacity:1!important;transform:none!important}
+  .btn:hover,.stat:hover,.path li:hover{transform:none!important}
+}
+@media print{
+  header.site{position:static}
+  .js .anim,.js .reveal{opacity:1!important;transform:none!important}
+  .copybtn{display:none}
+}
+</style>
+</head>
+<body>
+<span id="newtab-note" class="sr-only">opens in a new tab</span>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <symbol id="gh-mark" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="wrap">
+    <a class="wordmark" href="../"><img src="../icon.svg" alt="" width="23" height="23">interdict<span>.</span></a>
+    <nav class="top" aria-label="Sections">
+      <a href="#path">30-second path</a>
+      <a href="#receipts">Receipts</a>
+      <a href="#reproduce">Reproduce</a>
+      <a href="#limits">Limitations</a>
+      <a href="../">Landing page</a>
+      <a class="repo" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Repository&nbsp;<span aria-hidden="true">↗</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ══════════════════════════ HERO / THE CLAIM ══════════════════════════ -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="trackline anim"><b>All Things Agentic</b><span class="sep">·</span>Fortified Enterprise Fleet<span class="sep">·</span>Solo build<span class="sep">·</span>MIT</p>
+    <h1 class="anim d1">For judges.</h1>
+    <p class="lede anim d1">One page with exactly one reader. Everything below is verifiable
+    from this browser tab &mdash; no account, no key, no clone. Where something cannot be
+    verified that way, it says so instead of being dressed up.</p>
+
+    <div class="claim anim d2">
+      <p>When Treasury updates the OFAC list, it re-screens the whole payment book,
+      <span class="em">holds true hits</span>, clears lookalikes with written reasons,
+      <span class="em">releases funds on delisting</span>, and drafts the 10-day blocking
+      report &mdash; unattended.</p>
+    </div>
+    <p class="note anim d2">That sentence is unchanged across the README, the landing page and
+    the Devpost entry. If the rest of this page does not support it, the rest of this page is
+    wrong.</p>
+
+    <div class="btnrow anim d3">
+      <a class="btn btn-primary" href="#path">Start the 30-second path <span class="arw" aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Repository <span class="arw" aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ THE 30-SECOND PATH ══════════════════════════ -->
+<section class="sunk" id="path">
+  <div class="wrap">
+    <p class="eyebrow" data-n="01">The 30-second path</p>
+    <h2 class="reveal">Four clicks, in order.</h2>
+    <p class="lede reveal">Nothing to install. Each card opens one artifact and tells you what
+    you are looking at before you get there.</p>
+
+    <ol class="path reveal">
+      <li>
+        <span class="t"><span class="clock">0:00</span></span>
+        <a class="h" href="../#oracle">The number</a>
+        <p>Top-1 <b class="hold-ink">0.995</b> against the independent oracle&rsquo;s
+        <b>0.840</b> &mdash; measured on names that are <em>not</em> on the SDN list
+        character-for-character. The only screening number worth reading.</p>
+      </li>
+      <li>
+        <span class="t"><span class="clock">0:10</span></span>
+        <a class="h" href="../console-adjudications.png">The console</a>
+        <p>Real adjudications: the model&rsquo;s written rationale, its citation, and the
+        oracle&rsquo;s independent verdict on the same row. Captured from the running console,
+        not drawn.</p>
+      </li>
+      <li>
+        <span class="t"><span class="clock">0:20</span></span>
+        <a class="h" href="#receipts">The ground-truth grade</a>
+        <p>59 holds graded against strata the screening path cannot see:
+        <b class="hold-ink">1 missed hit in 60</b>, <b class="release-ink">0 frozen grantees
+        in 41</b>.</p>
+      </li>
+      <li>
+        <span class="t"><span class="clock">0:25</span></span>
+        <a class="h" href="https://github.com/edycutjong/interdict/blob/main/data/PROVENANCE.md" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">PROVENANCE.md&nbsp;<span aria-hidden="true">↗</span></a>
+        <p>The SHA-256 of the OFAC publication every number above was computed against. Hash
+        Treasury&rsquo;s own file and compare it yourself.</p>
+      </li>
+    </ol>
+
+    <div class="honesty reveal">
+      <h3>There is no hosted application.</h3>
+      <p class="small" style="margin:.6rem 0 0">The fleet, Postgres and yente run locally
+      &mdash; the free tier does not extend to Cloud Run and no billing account was available.
+      So the four clicks above are <b>evidence</b>, and
+      <a href="#reproduce">make reproduce</a> is <b>execution</b>. Neither is dressed up as the
+      other, and the demo path is not a hosted URL that would quietly become a mock.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ RECEIPTS ══════════════════════════ -->
+<section id="receipts">
+  <div class="wrap">
+    <p class="eyebrow" data-n="02">The receipts</p>
+    <h2 class="reveal">Every number is printed by a command, not typed in.</h2>
+    <p class="lede reveal">All figures are against the <b>08/07/2026 OFAC publication &mdash;
+    19,199 records, 4,393 OFAC-flagged weak aliases</b>, the snapshot the sentinel book is
+    sealed to. Each command sits above its own output in
+    <a href="https://github.com/edycutjong/interdict/blob/main/DEMO.md" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">DEMO.md&nbsp;<span aria-hidden="true">↗</span></a>.</p>
+
+    <div class="stats reveal">
+      <div class="stat alarm">
+        <span class="n">0.995</span>
+        <p><b>Top-1</b> &mdash; true uid ranked first, on 400 deterministically perturbed names.
+        <span class="src">make challenge-set</span></p>
+      </div>
+      <div class="stat">
+        <span class="n">0.840</span>
+        <p><b>yente&rsquo;s own recall</b> on the identical set &mdash; the independent oracle,
+        and the bar to clear.<span class="src">make challenge-set</span></p>
+      </div>
+      <div class="stat good">
+        <span class="n">1.000</span>
+        <p><b>Recall</b> &mdash; true uid present anywhere in the candidate set.
+        <span class="src">make challenge-set</span></p>
+      </div>
+      <div class="stat alarm">
+        <span class="n">$1,181,434.51</span>
+        <p><b>Frozen</b> across 59 holds in the graded run, every decision written to the
+        hash-chained ledger.<span class="src">scripts/run_rescreen.py</span></p>
+      </div>
+      <div class="stat">
+        <span class="n">342 <small>passing</small></span>
+        <p><b>Tests</b>, including OFAC&rsquo;s own <code>publshInformation</code> schema typo,
+        pinned so a Treasury fix fails loudly.<span class="src">make test</span></p>
+      </div>
+      <div class="stat">
+        <span class="n">9.3 <small>ms p50</small></span>
+        <p>p95 <b>68.8 ms</b> · p99 <b>106.7 ms</b> · full 400-counterparty book in
+        <b>7.6 s</b>.<span class="src">make bench</span></p>
+      </div>
+    </div>
+
+    <h3 class="reveal" style="margin-top:2.6rem">Decision quality &mdash; graded against ground truth the screening path cannot see</h3>
+    <div class="codeblock reveal">
+      <button class="copybtn" type="button" data-copy="grade">copy</button>
+      <pre id="grade"><code>  sentinel    HOLD     30/30       lookalike   CLEAR    25/25
+  variant     HOLD     29/30       ordinary    CLEAR    16/16
+
+  MISSED HITS  1/60           FROZEN GRANTEES  0/41</code></pre>
+    </div>
+    <p class="note reveal">101-row stratified sample · 59 held · 0 quarantined · ledger chain
+    INTACT · adjudicated by <code>gemini-3.5-flash-lite</code>. Read the strata carefully: all
+    59 adjudications came back HOLD, because a contradicting date of birth cuts a lookalike
+    below the adjudication bar before the model is ever consulted. The clears are the
+    deterministic plane&rsquo;s work &mdash; see the limitations.</p>
+
+    <h3 class="reveal" style="margin-top:2.6rem">Agreement with the independent oracle, on every decision</h3>
+    <div class="tablewrap reveal">
+      <table>
+        <caption>An oracle consulted only where it already agrees is not an oracle. Under
+        strict liability the dangerous direction is being <em>more permissive</em> than the
+        thing checking you &mdash; so the bottom row is the one that matters.</caption>
+        <thead><tr><th scope="col">Outcome</th><th scope="col">Count</th></tr></thead>
+        <tbody>
+          <tr><td>both flagged a hit</td><td class="num"><b>58</b></td></tr>
+          <tr><td>we held, yente missed</td><td class="num">1</td></tr>
+          <tr class="row-zero"><td><b>we cleared, yente flagged</b></td><td class="num"><b>0</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="shotfig reveal">
+      <!-- Not lazy, and the intrinsic dimensions are the file's real 2880x1800. This is step 2
+           of the 30-second path — the one piece of visual evidence on the page — and it must
+           not depend on a lazy-load heuristic firing on a tall phone viewport. -->
+      <img src="../console-adjudications.png" width="2880" height="1800" decoding="async"
+           alt="The adjudications view of the evidence console: each row carries the model's written rationale, its citation into the OFAC record, and yente's independent verdict beside it">
+      <figcaption>The adjudications view, exactly as it renders on <code>:8080</code> after a
+      re-screen. Every row carries the rationale, the citation and the oracle&rsquo;s verdict
+      side by side.</figcaption>
+    </figure>
+
+    <p class="hash reveal"><b>OFAC delta, archived by content hash</b><br>
+    sha256 <code>9403f40d9496…</code> &mdash; full digests in
+    <a href="https://github.com/edycutjong/interdict/blob/main/data/PROVENANCE.md" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">data/PROVENANCE.md&nbsp;<span aria-hidden="true">↗</span></a></p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ REPRODUCE ══════════════════════════ -->
+<section class="sunk" id="reproduce">
+  <div class="wrap">
+    <p class="eyebrow" data-n="03">The reproduce command</p>
+    <h2 class="reveal">The real path &mdash; it runs the thing being judged.</h2>
+
+    <div class="codeblock reveal">
+      <button class="copybtn" type="button" data-copy="repro">copy</button>
+      <pre id="repro"><code>make reproduce</code></pre>
+    </div>
+    <p class="reveal small" style="margin-top:1rem;max-width:74ch">Installs, brings up Postgres
+    + Elasticsearch + yente, indexes the oracle, applies the schema, runs the 343 tests, and
+    prints the perturbed screening number.</p>
+
+    <p class="reveal" style="margin-top:1.6rem"><b>For the adjudication and interdiction legs:</b></p>
+    <div class="codeblock reveal">
+      <button class="copybtn" type="button" data-copy="legs">copy</button>
+      <pre id="legs"><code>export GEMINI_API_KEY=...          <span class="c"># free, no billing: aistudio.google.com/apikey</span>
+
+python scripts/load_book.py --truncate
+python scripts/run_rescreen.py     <span class="c"># what the timer starts on its own</span>
+python scripts/adjudication_quality.py
+python -m interdict.console        <span class="c"># evidence console on :8080</span></code></pre>
+    </div>
+
+    <p class="reveal" style="margin-top:1.6rem"><b>Screen a name we never chose</b> &mdash; this is the point of the command:</p>
+    <div class="codeblock reveal">
+      <button class="copybtn" type="button" data-copy="chal">copy</button>
+      <pre id="chal"><code>make challenge NAME="Ibrahim Al Rashid"
+make challenge NAME="Abu Abbas" DOB="3 Mar 1990"   <span class="c"># contradicting DOB kills the hit</span></code></pre>
+    </div>
+
+    <div class="honesty reveal">
+      <h3><code>run_rescreen.py</code> refuses to run without a Gemini key.</h3>
+      <p class="small" style="margin:.6rem 0 0">It does not fall back to a test double, because
+      a reproduce command that quietly disables the thing being judged is worse than one that
+      fails loudly.</p>
+      <p class="small" style="margin:.9rem 0 0"><b>CI / deterministic replay &mdash; not the
+      product.</b> <code>--offline</code> runs the deterministic plane alone and labels itself
+      as such on every line of output. That is what CI uses. It is named here only so it can
+      never be mistaken for the demo path above.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ LIMITATIONS ══════════════════════════ -->
+<section id="limits">
+  <div class="wrap">
+    <p class="eyebrow" data-n="04">Honest limitations</p>
+    <h2 class="reveal">Three that matter to anyone scoring this.</h2>
+    <p class="lede reveal">Six are listed in the README. These are the ones that would change a
+    score if you found them yourself instead of reading them here.</p>
+
+    <div class="honesty reveal">
+      <ol>
+        <li><b>The model has never issued a CLEAR.</b> Every clear in the graded book came from
+        the deterministic plane, because a contradicting date of birth ends the question before
+        adjudication is reached. The adjudicator is therefore exercised on <em>confirmation</em>,
+        not on discrimination &mdash; read the grade above with that in mind.</li>
+        <li><b>Decision quality is a 101-row stratified sample, not the full 536-row book.</b>
+        Free-tier Gemini allows a fixed number of requests per model per project per day; the
+        full book would take several days of quota. The <em>screening</em> numbers are
+        unaffected &mdash; those are measured across all 400.</li>
+        <li><b>The release leg is a labelled REPLAY and says so on screen.</b> The eight
+        delisted parties are already gone from the 08/07 publication, so a live release cannot
+        be staged against today&rsquo;s list without pretending. Their uids, names, programmes
+        and removal actions all come from Treasury&rsquo;s archived delta; the payment book
+        they sit in is synthetic and labelled everywhere it appears.</li>
+      </ol>
+    </div>
+
+    <p class="note reveal">Also worth stating plainly: <b>nothing runs on Google Cloud
+    compute</b> &mdash; Firestore holds the audit trail, the agents, Postgres and yente run
+    locally. Vessels and aircraft are screened by name only. One transliteration in thirty
+    (<code>AZIZ ATRIQ</code>, score 0.659) falls below the adjudication bar. And yente&rsquo;s
+    own recall on the perturbed set is 0.840, so part of the agreement gap above is the oracle
+    missing, not us.</p>
+
+    <h3 class="reveal" style="margin-top:2.6rem">What is real, and what is not</h3>
+    <div class="tablewrap reveal">
+      <table>
+        <caption>Stated plainly, because a screening demo that blurs this line is worthless.</caption>
+        <thead><tr><th scope="col">Real &mdash; none of it ours</th><th scope="col">Ours, and labelled synthetic</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>The OFAC SDN publication (08/07/2026, 19,199 records); the
+            <code>/changes/latest</code> delta and its 18 additions / 8 removals; every alias
+            category including the 4,393 OFAC-flagged weak aliases; every date of birth; every
+            sanctions programme; the delisting actions. Archived by content hash in
+            <code>data/archive/</code>.</td>
+            <td>The payment book. A real NGO&rsquo;s grantee ledger is not ours to publish.
+            Counterparties carry an <code>origin</code> column, and both the console and the
+            demo label them on screen wherever they appear.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h4>Links</h4>
+    <ul class="linklist">
+      <li><span class="k">Repository</span><span class="v"><a href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">github.com/edycutjong/interdict&nbsp;<span aria-hidden="true">↗</span></a></span></li>
+      <li><span class="k">Landing page</span><span class="v"><a href="../">interdict.edycu.dev</a></span></li>
+      <li><span class="k">Pitch deck</span><span class="v"><a href="../pitch-deck.html">interdict.edycu.dev/pitch-deck.html</a></span></li>
+      <li><span class="k">Full demo walkthrough</span><span class="v"><a href="https://github.com/edycutjong/interdict/blob/main/DEMO.md" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">DEMO.md &mdash; nine beats, each command above its output&nbsp;<span aria-hidden="true">↗</span></a></span></li>
+      <li><span class="k">This page, in the repo</span><span class="v"><a href="https://github.com/edycutjong/interdict/blob/main/JUDGE.md" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">JUDGE.md&nbsp;<span aria-hidden="true">↗</span></a></span></li>
+      <li><span class="k">Demo video</span><span class="v"><a href="https://youtu.be/C1VFGSwS7w4" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer">youtu.be/C1VFGSwS7w4&nbsp;<span aria-hidden="true">↗</span></a> &mdash; 3:43, unedited live execution</span></li>
+    </ul>
+    <p class="small" style="margin-top:1.6rem"><b style="color:var(--ink)">Interdict</b> &mdash;
+    built solo for the All Things Agentic Hackathon, Fortified Enterprise Fleet track.
+    gemini-3.5-flash-lite · Google GenAI SDK · Cloud Firestore · Postgres 16 · OpenSanctions
+    yente. MIT licensed.</p>
+    <p class="small">No real payment rails are touched. The counterparty book is synthetic and
+    labelled; the sanctions data behind it is public federal record.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  root.classList.add('js');
+
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+  var revealables = [].slice.call(document.querySelectorAll('.reveal'));
+  function revealAll(){ revealables.forEach(function(el){ el.classList.add('in'); }); }
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealAll();
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    revealables.forEach(function(el){ io.observe(el); });
+
+    // Content must never be trapped invisible by the decoration that reveals it.
+    var ticking = false;
+    function sweep(){
+      ticking = false;
+      var vh = window.innerHeight || 0;
+      revealables.forEach(function(el){
+        if (el.classList.contains('in')) return;
+        if (el.getBoundingClientRect().top < vh) el.classList.add('in');
+      });
+    }
+    function onScroll(){ if (!ticking) { ticking = true; requestAnimationFrame(sweep); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('beforeprint', revealAll);
+
+    // Sweep once on the first frame. The observer's own callback is async, so without
+    // this everything above the fold spends a beat at opacity 0 for no reason.
+    requestAnimationFrame(sweep);
+
+    // A deep link (/judge/#receipts) jumps the browser to a section before the observer
+    // has seen anything. We cannot know what is in view at that moment, so we do not
+    // guess: arriving with a hash reveals the whole document immediately. This page is
+    // linked BY anchor from the landing page and the submission entry — a judge landing
+    // mid-document must never meet a blank section.
+    if (location.hash) revealAll();
+    window.addEventListener('hashchange', revealAll);
+
+    // Absolute backstop for headless captures, embed previews and screenshot tools, none
+    // of which scroll. 800ms, not 4000: four seconds of blank sections is itself the bug.
+    setTimeout(revealAll, 800);
+  }
+
+  // Copy buttons — progressive enhancement; the page is fully usable without JS.
+  document.querySelectorAll('.copybtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = document.getElementById(btn.getAttribute('data-copy'));
+      var text = pre ? pre.innerText : '';
+      function done(ok){
+        btn.textContent = ok ? 'copied' : 'select + copy';
+        setTimeout(function(){ btn.textContent = 'copy'; }, 1800);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); });
+      } else { done(false); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

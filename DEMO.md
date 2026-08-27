@@ -40,7 +40,7 @@ as such on every line of output.
 make test
 ```
 
-140 tests. Two of them are worth watching:
+343 tests, 100% statement coverage. Two of them are worth watching:
 
 - `test_ofac_schema_typo_is_pinned` — OFAC's schema misspells `publishInformation` as
   **`publshInformation`**. We match OFAC's spelling and pin it, so if Treasury ever

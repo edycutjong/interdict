@@ -205,7 +205,7 @@ def holds(cur) -> str:
 def adjudications(cur) -> str:
     cur.execute("""
         SELECT a.id, c.name, m.sdn_uid, m.det_score, a.verdict, a.oracle_guard_result,
-               a.yente_verdict, a.round_trips, a.model_id, a.rationale,
+               a.yente_verdict, a.gemma_verdict, a.round_trips, a.model_id, a.rationale,
                m.components->>'matched_name' AS matched,
                m.components->>'dob_signal' AS dob,
                m.components->>'weak_alias' AS weak
@@ -226,6 +226,10 @@ def adjudications(cur) -> str:
             f"<td class='{_e(r['verdict'])}'>{_e(r['verdict'])}</td>"
             f"<td class='{_e(r['oracle_guard_result'])}'>{_e(r['oracle_guard_result'])}</td>"
             f"<td>{_e(r['yente_verdict']) or '<span class=dim>—</span>'}</td>"
+            # A second Google model, asked the same question and shown whether or not it
+            # agreed. An em dash means it was not asked or was unreachable -- never that
+            # it agreed, which is the same rule the yente column above follows.
+            f"<td>{_e(r['gemma_verdict']) or '<span class=dim>—</span>'}</td>"
             f"<td class='r'>{r['round_trips']}</td>"
             f"<td class='dim'>{_e(r['model_id'])}</td>"
             f"<td>{_e(r['rationale'])[:150]}"
@@ -237,7 +241,7 @@ def adjudications(cur) -> str:
             "name, a HOLD below the no-hit floor, a fabricated identifier, or a "
             "rationale too thin to file are all refused.</p>"
             + _table(["id", "counterparty", "uid", "score", "verdict", "guard",
-                      "yente", "trips", "model", "rationale"], rows))
+                      "yente", "gemma", "trips", "model", "rationale"], rows))
 
 
 def quarantine(cur) -> str:

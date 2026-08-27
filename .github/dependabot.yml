@@ -21,3 +21,15 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
+
+  # The browser toolchain behind the site/ E2E and Lighthouse gates. It ships nothing,
+  # but it runs in CI against this repository, so an unwatched CVE here is still a CVE
+  # in the build. Listed after the product ecosystems on purpose.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]

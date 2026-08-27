@@ -5,6 +5,7 @@ on whoever happens to be on the list this week. The end-to-end tests use the rea
 publication, because that is what the demo screens.
 """
 
+import json
 import pathlib
 
 import pytest
@@ -82,6 +83,48 @@ def test_type_signal_inert_when_caller_does_not_say():
 def test_scoring_is_deterministic():
     args = ("Ibrahim Al-Rashid", Name("Ibrāhīm al Rashid", "strong", "a.k.a."), None, ())
     assert score_pair(*args) == score_pair(*args)
+
+
+def test_query_of_only_noise_tokens_earns_no_coverage_credit():
+    score, comp = score_pair("The Company Limited",
+                             Name("The Company Limited", "primary", "primary"), None, ())
+    # Every token is a stopword or corporate suffix, so nothing significant survives
+    # tokenisation. An empty query must score 0.0 coverage, not vacuous-truth 1.0 --
+    # otherwise a name carrying no identifying signal collects the coverage weight for
+    # free and outranks names that actually had to earn it.
+    assert comp.token_coverage == 0.0
+    assert score < 1.0
+    # The other three signals still work: the two strings are identical.
+    assert comp.sort_ratio == 1.0 and score >= T_HI
+    # ...and zero coverage is not a leveller -- an unrelated name still falls away.
+    unrelated, _ = score_pair("The Company Limited",
+                              Name("Abu ABBAS", "primary", "primary"), None, ())
+    assert unrelated < T_LO
+
+
+def test_components_survive_the_json_round_trip_that_persists_them():
+    _, comp = score_pair("Abu Abbas", Name("Abu ABBAS", "primary", "primary"), None, (),
+                         cand_sdn_type="Individual", query_is_person=True)
+    d = comp.as_dict()
+    assert d["matched_name"] == "Abu ABBAS"
+    assert d["type_signal"] == "consistent"
+    # The orchestrator writes this with json.dumps(..., sort_keys=True). A breakdown that
+    # cannot serialise breaks the audit trail at write time, and an oracle whose
+    # reasoning is not persisted cannot be replayed against the model plane.
+    assert json.loads(json.dumps(d, sort_keys=True)) == d
+
+
+def test_name_count_counts_aliases_not_entries():
+    m = Matcher([
+        entry(uid="a", names=[Name("Acme Trading", "primary", "primary"),
+                              Name("ACME", "weak", "a.k.a.")]),
+        entry(uid="b", names=[Name("Ibrahim Rashid", "primary", "primary")]),
+    ])
+    # Reported by bench and challenge as "N names incl. aliases" -- the surface the
+    # recall numbers are quoted against. Counting entries would understate the index,
+    # and aliases are precisely where the hard matches live.
+    assert m.name_count == 3
+    assert m.name_count > len(m.entries)
 
 
 def test_below_t_lo_is_never_returned():

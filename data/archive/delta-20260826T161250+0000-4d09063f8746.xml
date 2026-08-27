@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sanctionsData xmlns="https://www.treasury.gov/ofac/DeltaFile/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.treasury.gov/ofac/DeltaFile/1.0 https://www.treasury.gov/ofac/downloads/sanctions/1.0/DeltaFile.xsd">
+  <publicationInfo>
+    <datePublished>2026-08-26T00:00:00-04:00</datePublished>
+    <publicationType>Standard Action</publicationType>
+  </publicationInfo>
+  <referenceValues>
+    <referenceValue refId="92909" action="add">
+      <type>Organization Type:</type>
+      <value>Data processing, hosting and related activities</value>
+    </referenceValue>
+  </referenceValues>
+  <featureTypes />
+  <entities>
+    <entity id="58105" action="add">
+      <generalInfo>
+        <identityId>49590</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="60700" refId="1550" datePublished="2026-08-26">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63582" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50738" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="49915" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="89851">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90538">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>PALESTINE ACTION</formattedLastName>
+              <formattedFullName>PALESTINE ACTION</formattedFullName>
+              <nameParts>
+                <namePart id="150474">
+                  <type refId="1525">Entity Name</type>
+                  <value>Palestine Action</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="89852">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90539">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>PALESTINE ACTION GROUP</formattedLastName>
+              <formattedFullName>PALESTINE ACTION GROUP</formattedFullName>
+              <nameParts>
+                <namePart id="150475">
+                  <type refId="1525">Entity Name</type>
+                  <value>Palestine Action Group</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89217">
+          <country refId="11211">United Kingdom</country>
+          <translations>
+            <translation id="68291">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="99491">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>97046</versionId>
+          <value>30 Jul 2020</value>
+          <valueDate id="153921">
+            <fromDateBegin>2020-07-30</fromDateBegin>
+            <fromDateEnd>2020-07-30</fromDateEnd>
+            <toDateBegin>2020-07-30</toDateBegin>
+            <toDateEnd>2020-07-30</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="99677">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97232</versionId>
+          <value>Transnational Terrorist Group</value>
+          <valueRefId>92791</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100786">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>98341</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+    </entity>
+    <entity id="58314" action="add">
+      <generalInfo>
+        <identityId>49801</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61017" refId="1550" datePublished="2026-08-26">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="63887" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="50987" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50179" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90226">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="90986">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>AUTISTICI INVENTATI</formattedLastName>
+              <formattedFullName>AUTISTICI INVENTATI</formattedFullName>
+              <nameParts>
+                <namePart id="151085">
+                  <type refId="1525">Entity Name</type>
+                  <value>Autistici Inventati</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89817">
+          <country refId="11113">Italy</country>
+          <translations>
+            <translation id="68600">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="124448">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Strada Statale Abetone e del Brennero 253</value>
+                </addressPart>
+                <addressPart id="124449">
+                  <type refId="1454">CITY</type>
+                  <value>San Giuliano Terme</value>
+                </addressPart>
+                <addressPart id="124451">
+                  <type refId="1456">POSTAL CODE</type>
+                  <value>56017</value>
+                </addressPart>
+                <addressPart id="124450">
+                  <type refId="1455">STATE/PROVINCE</type>
+                  <value>Province of Pisa</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100784">
+          <type featureTypeId="21">Email Address</type>
+          <versionId>98339</versionId>
+          <value>www.associazione@ai-odv.org</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100468">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>98023</versionId>
+          <value>2001</value>
+          <valueDate id="155725">
+            <fromDateBegin>2001-01-01</fromDateBegin>
+            <fromDateEnd>2001-01-01</fromDateEnd>
+            <toDateBegin>2001-12-31</toDateBegin>
+            <toDateEnd>2001-12-31</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100218">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>97773</versionId>
+          <value>Data processing, hosting and related activities</value>
+          <valueRefId>92909</valueRefId>
+          <isPrimary>true</isPrimary>
+          <reliability refId="1560">Confirmed</reliability>
+        </feature>
+        <feature id="100728">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>98283</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100469">
+          <type featureTypeId="14">Website</type>
+          <versionId>98024</versionId>
+          <value>www.autistici.org</value>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+    </entity>
+    <entity id="58462" action="add">
+      <generalInfo>
+        <identityId>49949</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61168" refId="1550" datePublished="2026-08-26">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="64092" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="51139" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50370" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90458">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91269">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>MASAR BADIL</formattedLastName>
+              <formattedFullName>MASAR BADIL</formattedFullName>
+              <nameParts>
+                <namePart id="151475">
+                  <type refId="1525">Entity Name</type>
+                  <value>Masar Badil</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90459">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91270">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>PALESTINIAN ALTERNATIVE REVOLUTIONARY PATH MOVEMENT</formattedLastName>
+              <formattedFullName>PALESTINIAN ALTERNATIVE REVOLUTIONARY PATH MOVEMENT</formattedFullName>
+              <nameParts>
+                <namePart id="151476">
+                  <type refId="1525">Entity Name</type>
+                  <value>Palestinian Alternative Revolutionary Path Movement</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89938">
+          <country refId="11052">Brazil</country>
+          <translations>
+            <translation id="68665">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+        <address id="89939">
+          <country refId="11094">Germany</country>
+          <translations>
+            <translation id="68666">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+        <address id="89964">
+          <country refId="11060">Canada</country>
+          <translations>
+            <translation id="68675">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+        <address id="89965">
+          <country refId="11045">Belgium</country>
+          <translations>
+            <translation id="68676">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+        <address id="89966">
+          <country refId="11190">Spain</country>
+          <translations>
+            <translation id="68677">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100717">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>98272</versionId>
+          <value>Oct 2021</value>
+          <valueDate id="156060">
+            <fromDateBegin>2021-10-01</fromDateBegin>
+            <fromDateEnd>2021-10-01</fromDateEnd>
+            <toDateBegin>2021-10-31</toDateBegin>
+            <toDateEnd>2021-10-31</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100718">
+          <type featureTypeId="647">Organization Type:</type>
+          <versionId>98273</versionId>
+          <value>Advocacy organization</value>
+          <valueRefId>92863</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100719">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>98274</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <relationships>
+        <relationship id="25699">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="47582">SAMIDOUN PALESTINIAN PRISONER SOLIDARITY NETWORK</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58463" action="add">
+      <generalInfo>
+        <identityId>49950</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61169" refId="1550" datePublished="2026-08-26">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="64093" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="51140" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50371" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90460">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91271">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Rawa</formattedFirstName>
+              <formattedLastName>ALSAGHEER</formattedLastName>
+              <formattedFullName>ALSAGHEER, Rawa</formattedFullName>
+              <nameParts>
+                <namePart id="151478">
+                  <type refId="1521">First Name</type>
+                  <value>Rawa</value>
+                </namePart>
+                <namePart id="151477">
+                  <type refId="1520">Last Name</type>
+                  <value>Alsagheer</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90461">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91272">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Ruwaa</formattedFirstName>
+              <formattedLastName>AL-SAGHIR</formattedLastName>
+              <formattedFullName>AL-SAGHIR, Ruwaa</formattedFullName>
+              <nameParts>
+                <namePart id="151480">
+                  <type refId="1521">First Name</type>
+                  <value>Ruwaa</value>
+                </namePart>
+                <namePart id="151479">
+                  <type refId="1520">Last Name</type>
+                  <value>al-Saghir</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89935">
+          <country refId="11052">Brazil</country>
+          <translations>
+            <translation id="68663">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100721">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>98276</versionId>
+          <value>1997</value>
+          <valueDate id="156064">
+            <fromDateBegin>1997-01-01</fromDateBegin>
+            <fromDateEnd>1997-01-01</fromDateEnd>
+            <toDateBegin>1997-12-31</toDateBegin>
+            <toDateEnd>1997-12-31</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100720">
+          <type featureTypeId="224">Gender</type>
+          <versionId>98275</versionId>
+          <value>Female</value>
+          <valueRefId>91527</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100726">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>98281</versionId>
+          <value>Palestinian</value>
+          <valueRefId>91021</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100722">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>98277</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <relationships>
+        <relationship id="25700">
+          <type refId="91725">Leader or official of</type>
+          <relatedEntity entityId="58462">MASAR BADIL</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58464" action="add">
+      <generalInfo>
+        <identityId>49951</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61170" refId="1550" datePublished="2026-08-26">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="64094" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="51141" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50372" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90462">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91273">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Zaid</formattedFirstName>
+              <formattedLastName>ABDULNASSER</formattedLastName>
+              <formattedFullName>ABDULNASSER, Zaid</formattedFullName>
+              <nameParts>
+                <namePart id="151482">
+                  <type refId="1521">First Name</type>
+                  <value>Zaid</value>
+                </namePart>
+                <namePart id="151481">
+                  <type refId="1520">Last Name</type>
+                  <value>Abdulnasser</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+        <name id="90463">
+          <isPrimary>false</isPrimary>
+          <aliasType refId="1400">A.K.A.</aliasType>
+          <isLowQuality>true</isLowQuality>
+          <translations>
+            <translation id="91274">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Zid</formattedFirstName>
+              <formattedLastName>TAMIM</formattedLastName>
+              <formattedFullName>TAMIM, Zid</formattedFullName>
+              <nameParts>
+                <namePart id="151484">
+                  <type refId="1521">First Name</type>
+                  <value>Zid</value>
+                </namePart>
+                <namePart id="151483">
+                  <type refId="1520">Last Name</type>
+                  <value>Tamim</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89937">
+          <country refId="11094">Germany</country>
+          <translations>
+            <translation id="68664">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100725">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>98280</versionId>
+          <value>1995</value>
+          <valueDate id="156068">
+            <fromDateBegin>1995-01-01</fromDateBegin>
+            <fromDateEnd>1995-01-01</fromDateEnd>
+            <toDateBegin>1995-12-31</toDateBegin>
+            <toDateEnd>1995-12-31</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100724">
+          <type featureTypeId="224">Gender</type>
+          <versionId>98279</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100727">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>98282</versionId>
+          <value>Palestinian</value>
+          <valueRefId>91021</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100723">
+          <type featureTypeId="504">Secondary sanctions risk:</type>
+          <versionId>98278</versionId>
+          <value>section 1(b) of Executive Order 13224, as amended by Executive Order 13886</value>
+          <valueRefId>92084</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <relationships>
+        <relationship id="25701">
+          <type refId="91725">Leader or official of</type>
+          <relatedEntity entityId="58462">MASAR BADIL</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+</sanctionsData>

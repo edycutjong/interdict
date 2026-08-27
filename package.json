@@ -1,0 +1,17 @@
+{
+  "name": "interdict-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "E2E and performance gates for the published surfaces in site/ — the landing page, the pitch deck, and /judge. The product itself is Python; this package exists only to hold the browser toolchain.",
+  "license": "MIT",
+  "scripts": {
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:install": "playwright install --with-deps chromium",
+    "lighthouse": "lhci autorun"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.14.0",
+    "@playwright/test": "^1.48.0"
+  }
+}

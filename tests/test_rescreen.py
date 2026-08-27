@@ -6,6 +6,7 @@ reporting success -- is a compliance breach the system would never notice.
 """
 
 from datetime import date
+from types import SimpleNamespace
 
 import psycopg
 import pytest
@@ -14,6 +15,7 @@ from interdict.adjudicator import RuleBasedAdjudicator
 from interdict.db import DSN, connect, relay, resume_point
 from interdict.matcher import Matcher
 from interdict.ofac import DeltaAction, Name, SdnEntry
+from interdict.oracle import OracleHit
 from interdict.rescreen import apply_delta_removals, open_run, rescreen_book
 
 PUBLICATION = {"publish_date": "08/07/2026", "record_count": "19199"}
@@ -78,9 +80,10 @@ def _run(conn, trigger="SCHEDULER", suffix=""):
                     record_count=19199)
 
 
-def _screen(conn, run_id, **kwargs):
+def _screen(conn, run_id, adjudicator=None, **kwargs):
     return rescreen_book(conn, run_id=run_id, matcher=_matcher(),
-                         adjudicator=RuleBasedAdjudicator(), publication=PUBLICATION,
+                         adjudicator=adjudicator or RuleBasedAdjudicator(),
+                         publication=PUBLICATION,
                          blocked_on=date(2026, 8, 17), **kwargs)
 
 
@@ -250,6 +253,178 @@ def test_empty_book_is_not_an_error(conn):
 
 
 # ---------------------------------------------------------------------------
+# The independent oracle -- graded, batched, and never fatal
+# ---------------------------------------------------------------------------
+
+class _StubOracle:
+    """Stands in for yente: records what it was asked, answers what it was told to.
+
+    Keyed by counterparty id so a verdict landing on the wrong row is visible.
+    """
+
+    def __init__(self, answers=None):
+        self._answers = answers or {}
+        self.asked: list[dict] = []
+
+    def match(self, queries):
+        self.asked.append(queries)
+        return {key: self._answers.get(int(key), []) for key in queries}
+
+
+def _hit(uid="2674", score=0.95):
+    return OracleHit(sdn_uid=uid, score=score, caption="ABBAS, Abu", canonical_id="Q1")
+
+
+def _add(conn, ref, name, entity_type="Individual", dob=None, origin="sentinel"):
+    with conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO counterparties (external_ref,name,entity_type,dob,origin,source) "
+            "VALUES (%s,%s,%s,%s,%s,'test') RETURNING id",
+            (ref, name, entity_type, dob, origin))
+        return cur.fetchone()["id"]
+
+
+def _yente_verdicts(conn):
+    """Every adjudication's recorded oracle verdict, in counterparty order."""
+    with conn.cursor() as cur:
+        cur.execute("SELECT m.counterparty_id, a.yente_verdict FROM adjudications a "
+                    "JOIN matches m ON m.id = a.match_id ORDER BY m.counterparty_id")
+        return [(r["counterparty_id"], r["yente_verdict"]) for r in cur.fetchall()]
+
+
+def test_the_oracle_verdict_is_recorded_beside_the_right_decision(conn):
+    """An oracle consulted selectively -- or misfiled -- is not an oracle.
+
+    The verdict is keyed by counterparty id, so a wrong mapping would grade one
+    grantee's decision with another's evidence.
+    """
+    _book(conn, n_hits=3, n_clean=0)
+    oracle = _StubOracle({1: [_hit(score=0.95)], 2: [_hit(uid="4715", score=0.9412)]})
+
+    _screen(conn, _run(conn), batch_size=5, oracle=oracle)
+
+    # id 3 was screened too -- the oracle simply found nothing, which is itself a
+    # recorded grade and must not be confused with "not asked".
+    assert _yente_verdicts(conn) == [
+        (1, "HIT 2674 0.950"), (2, "HIT 4715 0.941"), (3, "NO HIT")]
+
+
+def test_the_oracle_is_asked_about_the_whole_batch_at_once(conn):
+    """Batched deliberately: a per-row HTTP call is slow enough that people stop
+    grading daily, and a grade you stop collecting is worth nothing."""
+    _add(conn, "hit-0", "Abu ABBAS", dob="10 Dec 1948")
+    _add(conn, "org-0", "SHINING PATH", entity_type="Entity")
+    _add(conn, "ok-0", "Jennifer Marie Thompson", origin="ordinary")
+    oracle = _StubOracle()
+
+    _screen(conn, _run(conn), batch_size=10, oracle=oracle)
+
+    assert len(oracle.asked) == 1, "the oracle was called per row, not per batch"
+    asked = oracle.asked[0]
+    assert set(asked) == {"1", "2", "3"}
+    assert asked["1"] == {"name": "Abu ABBAS", "schema": "Person", "dob": "10 Dec 1948"}
+    # A designated organisation asked about as a Person grades against the wrong index.
+    assert asked["2"]["schema"] == "Organization"
+    assert asked["3"]["schema"] == "Person"
+
+
+def test_the_oracle_is_asked_once_per_batch(conn):
+    _book(conn, n_hits=2, n_clean=2)
+    oracle = _StubOracle()
+
+    _screen(conn, _run(conn), batch_size=2, oracle=oracle)
+
+    assert [sorted(q) for q in oracle.asked] == [["1", "2"], ["3", "4"]]
+
+
+def test_an_unreachable_oracle_never_stops_the_run(conn):
+    """The oracle is evidence, not a dependency. yente being down must not stop
+    money being held against a live sanctions list."""
+    class Down:
+        def match(self, queries):
+            raise RuntimeError("connection refused")
+
+    _book(conn, n_hits=3, n_clean=3)
+    summary = _screen(conn, _run(conn), batch_size=2, oracle=Down())
+
+    assert summary.screened == 6 and summary.holds == 3 and summary.cleared == 3
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(*) AS n FROM disbursements WHERE state='HELD'")
+        assert cur.fetchone()["n"] == 3
+    # ...and the column is simply absent. A failed lookup must never be recorded as
+    # a grade, because "NO HIT" would read as the oracle actively disagreeing.
+    assert _yente_verdicts(conn) == [(1, None), (2, None), (3, None)]
+
+
+def test_without_an_oracle_no_verdict_is_invented(conn):
+    _book(conn, n_hits=2, n_clean=0)
+    _screen(conn, _run(conn), batch_size=5)
+    assert _yente_verdicts(conn) == [(1, None), (2, None)]
+
+
+# ---------------------------------------------------------------------------
+# Progress reporting and the summary counts
+# ---------------------------------------------------------------------------
+
+def test_each_decision_is_reported_as_it_is_made(conn):
+    """A full-book run printed nothing until the closing summary, which left an
+    operator unable to tell a working run from a hung one."""
+    _book(conn, n_hits=2, n_clean=2)
+    seen = []
+
+    _screen(conn, _run(conn), batch_size=2,
+            on_decision=lambda name, d: seen.append((name, d.counterparty_id, d.verdict)))
+
+    assert [(n, i) for n, i, _ in seen] == [
+        ("Abu ABBAS", 1), ("Abu ABBAS", 2),
+        ("Jennifer Marie Thompson", 3), ("Jennifer Marie Thompson", 4)]
+    # What was reported must be what the ledger stored -- the callback reports the
+    # Decision's own fields precisely so the two cannot drift.
+    with conn.cursor() as cur:
+        cur.execute("SELECT counterparty_id FROM holds ORDER BY counterparty_id")
+        held = [r["counterparty_id"] for r in cur.fetchall()]
+    assert [i for _, i, v in seen if v == "HOLD"] == held
+
+
+def test_a_refused_verdict_is_counted_as_quarantined_not_cleared(conn):
+    """The model says CLEAR on an exact match; the guard refuses it.
+
+    Summarising that as a clear would report an unresolved escalation as a
+    successful screening -- the run would look clean while three grantees sit in
+    quarantine with their money untouched.
+    """
+    _book(conn, n_hits=3, n_clean=2)
+
+    summary = _screen(conn, _run(conn), batch_size=5,
+                      adjudicator=RuleBasedAdjudicator("CLEAR"))
+
+    assert summary.screened == 5
+    assert summary.quarantined == 3
+    assert summary.cleared == 2, "a refused verdict was summarised as a clear"
+    assert summary.holds == 0
+    assert summary.adjudicated == 3
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(*) AS n FROM quarantine")
+        assert cur.fetchone()["n"] == 3
+        cur.execute("SELECT count(*) AS n FROM disbursements WHERE state<>'QUEUED'")
+        assert cur.fetchone()["n"] == 0, "money moved on a refused verdict"
+
+
+def test_the_summary_counts_only_the_decisions_a_model_actually_made(conn):
+    """`adjudicated` is the count of decisions that cost a model call. The
+    auto-no-hit path never reaches the adjudicator and must not inflate it."""
+    _book(conn, n_hits=3, n_clean=3)
+
+    summary = _screen(conn, _run(conn), batch_size=5)
+
+    assert summary.screened == 6
+    assert summary.adjudicated == 3
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(*) AS n FROM adjudications")
+        assert cur.fetchone()["n"] == summary.adjudicated
+
+
+# ---------------------------------------------------------------------------
 # Delta removals -> release
 # ---------------------------------------------------------------------------
 
@@ -297,3 +472,36 @@ def test_no_removals_is_a_noop(conn):
     _book(conn, n_hits=2, n_clean=0)
     _screen(conn, _run(conn), batch_size=5)
     assert apply_delta_removals(conn, [], delta_source_hash="d") == []
+
+
+def test_the_second_model_reaches_the_book_and_not_just_the_unit_test(conn):
+    """The regression test for a wiring bug the unit tests could not see.
+
+    `GemmaSecondOpinion` was correct, `screen_counterparty` accepted the provider, and
+    every unit test passed -- while `run_rescreen.py` built the provider and never handed
+    it to `rescreen_book`. End to end the column stayed NULL for a whole 59-adjudication
+    run, and because the failure path was silent it read as "Gemma declined 59 times".
+
+    This asserts the seam those tests skipped: a provider given to rescreen_book must
+    arrive at every adjudication.
+    """
+    class _Stub:
+        def __init__(self):
+            self.calls = 0
+
+        def opine(self, context):
+            self.calls += 1
+            return SimpleNamespace(verdict="HOLD", rationale="r", model_id="gemma-test")
+
+    _book(conn)
+    stub = _Stub()
+    summary = _screen(conn, _run(conn), batch_size=5, second_opinion=stub)
+
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(*) AS n, count(gemma_verdict) AS g FROM adjudications")
+        row = cur.fetchone()
+
+    assert row["n"] > 0, "no adjudication happened; this test would pass vacuously"
+    assert row["g"] == row["n"], "an adjudication was written with no second opinion"
+    assert stub.calls == row["n"], "the provider was not consulted once per adjudication"
+    assert summary.holds > 0

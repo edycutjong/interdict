@@ -161,3 +161,43 @@ reproduce: install up  ## Clean-machine path: stack, index, schema, tests, the r
 	@echo
 	@echo "Reproduced. The number that matters is top-1 in PERTURBED mode:"
 	@echo "screening names that are NOT on the list character-for-character."
+
+# ─── the published surfaces in site/ ────────────────────────────────────────────
+# The product is Python and none of this ships; it exists so that /judge -- the one
+# page written for a single reader, and the link that goes in the submission entry --
+# cannot quietly break on submission day. Playwright serves site/ with python's own
+# http.server, which resolves /judge/ the same way GitHub Pages does.
+
+.PHONY: e2e-install
+e2e-install:  ## Install the browser toolchain for the site/ gates (once)
+	npm install
+	npx playwright install --with-deps chromium
+
+.PHONY: e2e
+e2e:  ## Playwright: /judge reachable unauthenticated, no dead links, no overflow
+	npx playwright test
+
+.PHONY: e2e-ui
+e2e-ui:  ## Playwright, interactive
+	npx playwright test --ui
+
+.PHONY: lighthouse
+lighthouse:  ## Lighthouse CI over the landing page, /judge and the pitch deck
+	npx lhci autorun
+
+.PHONY: security-scan
+security-scan:  ## Everything that must be clean before a private -> public flip
+	@echo "=== pip-audit (dependency CVEs) ==="
+	$(PY) -m pip_audit --requirement requirements.txt --strict
+	@echo "=== gitleaks (secrets over FULL history) ==="
+	@command -v gitleaks >/dev/null 2>&1 \
+	  && gitleaks detect --source . --redact --log-opts="--all" \
+	  || echo "gitleaks NOT INSTALLED -- history was not scanned. brew install gitleaks"
+	@echo "=== kitchen leak scan (private folders and home paths must never appear) ==="
+	@# Each alternative wraps one letter in a character class so this recipe does not
+	@# match itself -- the scanner was its own first false positive. The class still
+	@# matches the real string everywhere else, including elsewhere in this Makefile.
+	@! git grep -nIE '/Us[e]rs/|~/Hack[a]thon|_id[e]as/|_sp[e]cs/|proj[e]ct\.json' -- \
+	     ':!*.lock' ':!package-lock.json' \
+	  || (echo "LEAK: a kitchen path is present in a tracked file" && exit 1)
+	@echo "clean."

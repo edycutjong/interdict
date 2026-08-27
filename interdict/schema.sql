@@ -312,3 +312,13 @@ ALTER TABLE quarantine DROP CONSTRAINT IF EXISTS quarantine_reason_check;
 ALTER TABLE quarantine ADD CONSTRAINT quarantine_reason_check CHECK (reason IN
     ('ORACLE_DISAGREE','LOOP_CAP','SCHEMA_INVALID','NO_CITATION',
      'PARSE_ERROR','ADJUDICATOR_UNAVAILABLE'));
+
+-- Migration, idempotent. The second-model opinion (Gemma) recorded beside the external
+-- oracle's. Nullable on purpose and with no CHECK on agreement: NULL means "not asked
+-- or unreachable", never "agreed". An outage that recorded itself as agreement would be
+-- the same bug the yente path is written to avoid.
+--
+-- Deliberately NOT in the decision path. Nothing reads this column to hold, clear or
+-- quarantine; it is evidence for the human reading the console, exactly like
+-- yente_verdict above it.
+ALTER TABLE adjudications ADD COLUMN IF NOT EXISTS gemma_verdict text;

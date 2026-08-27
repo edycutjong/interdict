@@ -301,6 +301,157 @@ class GeminiAdjudicator:
         )
 
 
+    # ─── preflight ──────────────────────────────────────────────────────────────
+    # Both of these exist because of a documented limitation, not to use more of the
+    # SDK. Free-tier quota is per model per project per day, which is why decision
+    # quality is measured on a 101-row sample rather than the whole 536-row book. That
+    # ceiling used to be discovered halfway through a run; now it is a number you can
+    # read before spending any of it.
+
+    def count_prompt_tokens(self, context: dict, *, feedback: str | None = None) -> int:
+        """Exact token cost of one adjudication, from the API rather than an estimate.
+
+        `len(prompt) // 4` is the usual guess and it is wrong by enough to matter when
+        the budget decision is "does this run fit in today's quota or not".
+        """
+        resp = self._client.models.count_tokens(
+            model=self.model_id,
+            contents=render_prompt(context, feedback),
+        )
+        if resp.total_tokens is None:
+            # A budget built on a silent zero would under-count the run and hand back a
+            # quota estimate that reads as comfortable. Fail instead.
+            raise TransientAdjudicationError("count_tokens returned no total")
+        return int(resp.total_tokens)
+
+    def model_available(self) -> bool:
+        """Is the pinned model actually served to this key?
+
+        A typo in INTERDICT_MODEL currently surfaces as a failure on the first
+        adjudication -- after the run has opened, claimed batches and taken a lock.
+        Checking the served list first turns that into a refusal to start.
+        """
+        wanted = self.model_id.rsplit("/", 1)[-1]
+        return any(m.name and m.name.rsplit("/", 1)[-1] == wanted
+                   for m in self._client.models.list())
+
+
+# Free-tier Gemini serves five requests a minute. A full-book pass is therefore paced by
+# the quota, not by the work -- which is the honest reason a full run takes ~90 minutes.
+FREE_TIER_RPM = 5
+
+
+def budget_run(adjudicator: GeminiAdjudicator, contexts: list[dict], *,
+               rpm: int = FREE_TIER_RPM, sample: int = 8) -> dict:
+    """What this run will cost before it is started.
+
+    Counts tokens on a sample rather than the whole book: `count_tokens` is a network
+    call per context, and spending 536 of them to learn the cost of 536 adjudications
+    would be its own joke. The sample is taken evenly across the list so a book sorted
+    by counterparty type does not bias it.
+    """
+    if not contexts:
+        return {"contexts": 0, "tokens_total": 0, "minutes": 0.0, "sampled": 0}
+
+    step = max(1, len(contexts) // sample)
+    picked = contexts[::step][:sample]
+    counted = [adjudicator.count_prompt_tokens(c) for c in picked]
+    mean = sum(counted) / len(counted)
+
+    return {
+        "contexts": len(contexts),
+        "sampled": len(counted),
+        "tokens_per_call_mean": round(mean, 1),
+        "tokens_total": round(mean * len(contexts)),
+        # Wall clock is set by the request-per-minute ceiling, never by token count.
+        "minutes": round(len(contexts) / rpm, 1),
+        "model": adjudicator.model_id,
+    }
+
+
+# ─── the second model ───────────────────────────────────────────────────────────
+# Gemma answers the SAME question as Gemini, independently, and its answer is recorded
+# on every adjudication whether or not it agrees -- the same rule yente is held to in
+# oracle.py. An oracle consulted only where it already agrees is not an oracle, and that
+# applies to a second model exactly as it applies to an external one.
+#
+# It is deliberately NOT in the decision path. It cannot hold money, cannot clear a
+# counterparty, and cannot route anything to quarantine. Divergence between two
+# independent models is a signal for a human reading the evidence console, not a vote.
+SECOND_MODEL_ID = os.environ.get("INTERDICT_SECOND_MODEL", "gemma-4-31b-it")
+
+SECOND_OPINION_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "verdict": {"type": "STRING", "enum": ["HOLD", "CLEAR"]},
+        "rationale": {"type": "STRING"},
+    },
+    "required": ["verdict", "rationale"],
+}
+
+
+class SecondOpinionProvider(Protocol):
+    """The shape the orchestrator depends on. Keeps the decision path free of any
+    import from a specific second model, exactly as `Adjudicator` does for the first."""
+
+    def opine(self, context: dict) -> SecondOpinion | None: ...
+
+
+@dataclass(frozen=True)
+class SecondOpinion:
+    verdict: str
+    rationale: str
+    model_id: str
+
+
+class GemmaSecondOpinion:
+    """A second Google model, asked the same question and recorded either way.
+
+    Shares the client and the system instruction with the product path so the two
+    verdicts are answers to the same question rather than to two different framings.
+    Failure is never fatal: if Gemma is unreachable the adjudication proceeds and the
+    column stays NULL. An outage must not be recordable as agreement -- the same rule
+    the yente path follows.
+    """
+
+    def __init__(self, client, model_id: str = SECOND_MODEL_ID):
+        self._client = client
+        self.model_id = model_id
+
+    def opine(self, context: dict) -> SecondOpinion | None:
+        try:
+            resp = self._client.models.generate_content(
+                model=self.model_id,
+                contents=render_prompt(context),
+                config={
+                    "system_instruction": SYSTEM_INSTRUCTION,
+                    "response_mime_type": "application/json",
+                    "response_schema": SECOND_OPINION_SCHEMA,
+                    "temperature": 0.0,
+                },
+            )
+            if not resp.text:
+                return None
+            data = json.loads(resp.text)
+            return SecondOpinion(
+                verdict=data["verdict"],
+                rationale=data["rationale"],
+                model_id=self.model_id,
+            )
+        except Exception as exc:
+            # Non-fatal by design: a second opinion is additive evidence, and a transient
+            # Gemma failure must not take down a screening run that has already produced
+            # a guarded verdict. NULL reads as "not asked", never as "agreed".
+            #
+            # But it is NOT silent. An earlier revision swallowed this without a word, and
+            # a wiring bug -- the provider was constructed and then never passed down --
+            # looked exactly like "Gemma declined to answer 59 times". Logged once per
+            # failure so an empty column is always attributable.
+            logging.getLogger(__name__).warning(
+                "second opinion unavailable (%s): %s", type(exc).__name__, exc)
+            return None
+
+
 class RuleBasedAdjudicator:
     """Offline stand-in used by the test suite. NOT the product path.
 

@@ -202,12 +202,21 @@ nav.top a.repo:hover{border-color:var(--ink);background:color-mix(in srgb,var(--
    the document and pulled in with a use element. */
 .gh{width:1.05em;height:1.05em;fill:currentColor;flex:none;display:block}
 @media (max-width:760px){ nav.top a{font-size:.8rem;padding:.35em .5em} }
+/* The judge link is the single highest-value destination on this domain, so it is styled
+   as a destination rather than a section jump — and it is the one non-repo link that
+   survives the mobile collapse below. */
+nav.top a.judge{color:var(--hold);font-weight:650;border:1px solid var(--hold);
+  background:var(--hold-wash);margin-left:.35rem}
+nav.top a.judge:hover{color:#fff;background:var(--hold);border-color:var(--hold)}
+@media (prefers-color-scheme: dark){ nav.top a.judge:hover{color:var(--bg)} }
+
 /* Below this the section links wrap the header onto two rows and eat the fold.
-   The page is a linear read on a phone — keep the wordmark and the one real CTA. */
+   The page is a linear read on a phone — keep the wordmark and the two real CTAs. */
 @media (max-width:720px){
-  nav.top a:not(.repo){display:none}
-  nav.top a.repo{margin-left:0}
+  nav.top a:not(.repo):not(.judge){display:none}
+  nav.top a.judge{margin-left:0}
 }
+@media (max-width:430px){ nav.top a.repo{display:none} }
 
 /* ═══ buttons ═══ */
 .btnrow{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.9rem}
@@ -520,6 +529,7 @@ footer h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;text-tra
       <a href="#fleet">Architecture</a>
       <a href="#results">Results</a>
       <a href="#reproduce">Reproduce</a>
+      <a class="judge" href="/judge/">⚖&nbsp;For judges</a>
       <a class="repo" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Repository&nbsp;<span aria-hidden="true">↗</span></a>
     </nav>
   </div>
@@ -1126,7 +1136,7 @@ make challenge NAME="Ibrahim Al Rashid"
 make challenge NAME="Abu Abbas" DOB="3 Mar 1990"
 
 <span class="c"># Clean machine, end to end: install, bring up Postgres + yente, index the</span>
-<span class="c"># oracle, apply the schema, run 140 tests, print the perturbed screening number</span>
+<span class="c"># oracle, apply the schema, run 343 tests, print the perturbed screening number</span>
 make reproduce</code></pre>
     </div>
 
@@ -1156,7 +1166,9 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
     </figure>
 
     <div class="btnrow reveal">
-      <a class="btn btn-primary" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Read the source on GitHub <span class="arw" aria-hidden="true">↗</span></a>
+      <a class="btn btn-primary" href="/judge/">⚖&nbsp; For judges — the 30-second path <span class="arw" aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="/pitch-deck.html">The pitch deck <span class="arw" aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="https://github.com/edycutjong/interdict" target="_blank" aria-describedby="newtab-note" rel="noopener noreferrer"><svg class="gh" aria-hidden="true" focusable="false"><use href="#gh-mark"/></svg>Read the source on GitHub <span class="arw" aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
@@ -1175,7 +1187,9 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
           <code>entry_hash</code>, so the chain verifies from the cloud copy alone. Firestore is a
           mirror and never a source of truth.</li>
           <li>No hosted URL. The fleet, Postgres and yente run locally by consequence and stay local
-          by choice — <code>make reproduce</code> is the judge&rsquo;s path.</li>
+          by choice — <code>make reproduce</code> is the judge&rsquo;s path, and
+          <a href="/judge/">/judge</a> is the 30-second browser path that precedes it.
+          The same argument in slides: <a href="/pitch-deck.html">the pitch deck</a>.</li>
           <li>The release leg remains a labelled replay until a sentinel fires.</li>
         </ul>
         <p class="small"><b style="color:var(--ink)">Interdict</b> — built solo for the All Things
@@ -1246,8 +1260,16 @@ shasum -a 256 data/sentinels.csv    <span class="c"># book:     66eb151cc7473024
     window.addEventListener('resize', onScroll, { passive: true });
     //   2. printing and PDF export never scroll
     window.addEventListener('beforeprint', revealAll);
-    //   3. an absolute backstop for headless captures and embed previews
-    setTimeout(revealAll, 4000);
+    //   3. a first-frame sweep, so anything already in view never waits on an async callback
+    requestAnimationFrame(sweep);
+    //   4. a deep link (/#oracle) jumps the browser mid-document before the observer has
+    //      seen anything, and /judge/ sends judges here by anchor as step 1 of its
+    //      30-second path. Arriving with a hash reveals everything rather than guessing.
+    if (location.hash) revealAll();
+    window.addEventListener('hashchange', revealAll);
+    //   5. an absolute backstop for headless captures and embed previews. 800ms, not
+    //      4000 — four seconds of blank sections is itself the bug it was guarding against.
+    setTimeout(revealAll, 800);
   }
 
   // Copy buttons — progressive enhancement; the page is fully usable without JS.

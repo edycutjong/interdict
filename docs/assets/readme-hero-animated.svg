@@ -112,9 +112,9 @@
   <g opacity="0" data-story="beat-2">
     <animate attributeName="opacity" dur="8s" repeatCount="indefinite"
              values="0;0;1;1;0;0" keyTimes="0;0.10;0.14;0.92;0.97;1"/>
-    <rect x="795" y="62" width="172" height="27" rx="7" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.22)"/>
-    <text x="881" y="80" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#E9E7E2">OFAC delta · 18 add / 8 rm</text>
-    <path d="M905 89 V112" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <rect x="761" y="62" width="206" height="27" rx="7" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.22)"/>
+    <text x="864" y="80" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#E9E7E2">OFAC delta · 18 add / 8 rm</text>
+    <path d="M905 89 V168" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3 4"/>
   </g>
 
   <!-- beat 3: the hold bar draws itself across the rail, then lifts at beat 4 -->
@@ -151,7 +151,7 @@
              values="0;0;1;1;0;0" keyTimes="0;0.52;0.56;0.92;0.97;1"/>
     <rect x="988" y="62" width="150" height="27" rx="7" fill="rgba(84,189,143,0.08)" stroke="rgba(84,189,143,0.5)"/>
     <text x="1063" y="80" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#54BD8F">delisting · remove</text>
-    <path d="M955 89 V112" stroke="rgba(84,189,143,0.45)" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <path d="M1048 89 V168" stroke="rgba(84,189,143,0.45)" stroke-width="1.5" stroke-dasharray="3 4"/>
   </g>
   <g opacity="0" data-story="beat-4">
     <animate attributeName="opacity" dur="8s" repeatCount="indefinite"

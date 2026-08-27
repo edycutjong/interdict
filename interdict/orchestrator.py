@@ -30,6 +30,7 @@ from psycopg.rows import DictRow
 
 from .adjudicator import (
     Adjudicator,
+    SecondOpinionProvider,
     TransientAdjudicationError,
     Verdict,
     build_context,
@@ -122,19 +123,20 @@ def _persist_match(conn: psycopg.Connection[DictRow], run_id: int, counterparty_
 
 def _persist_adjudication(conn: psycopg.Connection[DictRow], match_id: int, verdict,
                           guard_result: str, round_trips: int,
-                          yente_verdict: str | None) -> int:
+                          yente_verdict: str | None,
+                          gemma_verdict: str | None = None) -> int:
     with conn.cursor() as cur:
         cur.execute(
             """
             INSERT INTO adjudications
                 (match_id, verdict, rationale, model_id, prompt_hash, context,
-                 oracle_guard_result, yente_verdict, round_trips)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                 oracle_guard_result, yente_verdict, gemma_verdict, round_trips)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             RETURNING id
             """,
             (match_id, verdict.verdict, verdict.rationale, verdict.model_id,
              verdict.prompt_hash, json.dumps(verdict.context, sort_keys=True),
-             guard_result, yente_verdict, round_trips),
+             guard_result, yente_verdict, gemma_verdict, round_trips),
         )
         return one(cur)["id"]
 
@@ -153,7 +155,8 @@ def screen_counterparty(conn: psycopg.Connection[DictRow], *, run_id: int, count
                         name: str, dob: str | None, is_person: bool,
                         matcher: Matcher, adjudicator: Adjudicator,
                         publication: dict, oracle_verdict: str | None = None,
-                        blocked_on: date | None = None) -> Decision:
+                        blocked_on: date | None = None,
+                        second_opinion: SecondOpinionProvider | None = None) -> Decision:
     """Screen one counterparty end to end and act on the result.
 
     The full path: match -> adjudicate -> guard -> (retry once) -> hold, clear, or
@@ -242,8 +245,19 @@ def screen_counterparty(conn: psycopg.Connection[DictRow], *, run_id: int, count
         return Decision(counterparty_id, match.sdn_uid, "QUARANTINE",
                         "no adjudication attempted", 0, match.score, "DISAGREE")
 
+    # The second model is asked the same question, after the guarded verdict exists and
+    # never before it. It cannot change `verdict`, `guard_result` or anything downstream
+    # -- it is recorded evidence, on the same terms as the external oracle above. A None
+    # here means "not asked or unreachable", never "agreed".
+    gemma_verdict = None
+    if second_opinion is not None:
+        op = second_opinion.opine(verdict.context)
+        if op is not None:
+            agreement = "AGREE" if op.verdict == verdict.verdict else "DISAGREE"
+            gemma_verdict = f"{op.verdict} {agreement} ({op.model_id})"
+
     adjudication_id = _persist_adjudication(
-        conn, match_id, verdict, guard_result, attempt, oracle_verdict)
+        conn, match_id, verdict, guard_result, attempt, oracle_verdict, gemma_verdict)
 
     # Still disagreeing after the cap: stop, do not guess a third time, escalate.
     if guard_result != "AGREE":

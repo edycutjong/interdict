@@ -119,7 +119,7 @@ jobs:
           # A fraction of a recorded baseline rather than a hardcoded integer: with a fixed
           # floor, adding tests elsewhere eventually lets a broken import coast in underneath
           # a number that stopped tracking reality.
-          BASELINE = 94
+          BASELINE = 110
           if collected < BASELINE * 0.9:
               sys.exit(f"FAIL: only {collected} tests collected across {len(SUITES)} suites "
                        f"against a baseline of {BASELINE} -- a suite is missing.")
@@ -180,3 +180,50 @@ jobs:
         # the committed figures it is supposed to be defending. --against makes the comparison
         # the job's name has always implied.
         run: python scripts/bench.py --runs 1 --json-out /tmp/bench.json --against data/bench.json
+
+  e2e:
+    name: e2e (published surfaces)
+    runs-on: ubuntu-latest
+    # /judge is the page the submission entry links to, and a judge page that breaks on
+    # submission day is worse than none. This job asserts it returns 200 with no
+    # credentials and no session -- the property that would silently rot if auth were
+    # ever introduced in front of it. It needs no database, no API key and no network.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Playwright
+        run: npx playwright test
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  perf:
+    name: lighthouse (perf · a11y · seo)
+    runs-on: ubuntu-latest
+    # Accessibility is asserted at 1.00, not 0.9. This is a compliance surface; a judge
+    # using a screen reader is not an edge case, and the thresholds live in
+    # lighthouserc.json so a regression fails here rather than being noticed later.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Lighthouse CI
+        run: npx lhci autorun
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci/
+          retention-days: 7

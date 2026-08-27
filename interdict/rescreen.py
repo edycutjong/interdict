@@ -128,7 +128,7 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
                   adjudicator: Adjudicator, publication: dict,
                   batch_size: int = BATCH_SIZE, blocked_on: date | None = None,
                   stop_after_batches: int | None = None,
-                  oracle=None, on_decision=None) -> RunSummary:
+                  oracle=None, on_decision=None, second_opinion=None) -> RunSummary:
     """Screen the entire counterparty book under a run.
 
     `stop_after_batches` exists for the kill-worker demo beat: it simulates a worker
@@ -179,6 +179,7 @@ def rescreen_book(conn: psycopg.Connection[DictRow], *, run_id: int, matcher: Ma
                 matcher=matcher, adjudicator=adjudicator,
                 publication=publication, blocked_on=blocked_on,
                 oracle_verdict=oracle_says.get(row["id"]),
+                second_opinion=second_opinion,
             )
             summary.screened += 1
             summary.decisions.append(decision)

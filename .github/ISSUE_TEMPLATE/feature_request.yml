@@ -1,0 +1,65 @@
+name: Feature request
+description: Propose a screening signal, invariant, or command that does not exist yet
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Interdict is deliberately narrow: one flow, from an OFAC delta landing to a
+        drafted blocking report. Proposals that widen that flow are less likely to land
+        than proposals that make the existing decisions more defensible.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What decision is wrong or missing today?
+      description: >-
+        Describe it as a screening outcome, not as a feature. "A vessel matched by IMO
+        number is scored as a name-only hit" is actionable; "add better vessel support"
+        is not.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen instead?
+      description: If it changes a score or a threshold, say which one and in which direction.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which plane does this touch?
+      options:
+        - Deterministic screening (matcher, normalize, perturb)
+        - Adjudication (the model plane)
+        - The oracle guard / quarantine
+        - Ledger, holds, or another database invariant
+        - Ingest, archive, or the unattended trigger
+        - Evidence console
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: grading
+    attributes:
+      label: How would we know it worked?
+      description: >-
+        Every decision in this system is graded against something outside it — Treasury's
+        own records, yente, or the ground-truth column the screening path cannot read.
+        What would grade this one?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: This does not require transmitting anything to OFAC (transmission stays human, by design).
+          required: true
+        - label: I have read the Known limitations section of the README.
+          required: true

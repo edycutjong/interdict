@@ -29,6 +29,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from interdict.adjudicator import FREE_TIER_RPM
 from interdict.cloud import mirror, publish_ledger, publish_run_summary
 from interdict.db import (
     connect,
@@ -76,6 +77,18 @@ def build_adjudicator(force_offline: bool):
 
     from interdict.adjudicator import GeminiAdjudicator
     adj = GeminiAdjudicator()
+
+    # Fail before the run opens rather than on the first adjudication. A typo in
+    # INTERDICT_MODEL used to surface after a run had claimed batches and taken a lock.
+    if not adj.model_available():
+        raise SystemExit(
+            f"\nModel {adj.model_id!r} is not served to this key.\n"
+            "Check INTERDICT_MODEL, or list what is available with\n"
+            "  python -c \"from google import genai,os; "
+            "print([m.name for m in genai.Client(api_key=os.environ['GEMINI_API_KEY'])"
+            ".models.list()])\"\n"
+        )
+
     print(f"adjudicator: Gemini ({adj.model_id})")
     return adj
 
@@ -92,6 +105,12 @@ def main() -> int:
     ap.add_argument("--offline", action="store_true", help="force the offline adjudicator")
     ap.add_argument("--progress", action="store_true",
                     help="print each decision as it commits, instead of only the summary")
+    ap.add_argument("--second-model", action="store_true",
+                    help="also record an independent Gemma verdict on every adjudication "
+                         "(evidence only -- it cannot change a decision)")
+    ap.add_argument("--budget-only", action="store_true",
+                    help="count tokens and print what the run would cost, then exit "
+                         "without spending any quota")
     ap.add_argument("--no-oracle", action="store_true",
                     help="skip yente grading (faster; the oracle column stays empty)")
     args = ap.parse_args()
@@ -99,6 +118,53 @@ def main() -> int:
     entries, publication = parse_sdn(args.sdn)
     matcher = Matcher(entries)
     adjudicator = build_adjudicator(args.offline)
+
+    # --budget-only: what would this run cost, before any of it is spent.
+    #
+    # The book is screened deterministically -- no model is called -- and a context is
+    # built for exactly the counterparties that would reach adjudication. That set is
+    # the real denominator: screening 536 rows does not mean 536 model calls, because
+    # anything below T_HI is decided by the deterministic plane for free.
+    if args.budget_only:
+        if args.offline:
+            raise SystemExit("--budget-only needs the real adjudicator; drop --offline.")
+        from interdict.adjudicator import budget_run, build_context
+        from interdict.matcher import T_HI
+
+        contexts = []
+        with connect() as conn, conn.cursor() as cur:
+            cur.execute("SELECT id, name, dob, entity_type FROM counterparties ORDER BY id")
+            rows = cur.fetchall()
+        for row in rows:
+            is_person = row["entity_type"] == "Individual"
+            results = matcher.screen(row["name"], row["dob"], is_person=is_person)
+            if not results:
+                continue
+            match = results[0]
+            if match.score < T_HI:
+                continue
+            contexts.append(build_context(
+                row["name"], row["dob"], "Individual" if is_person else "Entity",
+                match, matcher.entries[match.sdn_uid], publication))
+
+        b = budget_run(adjudicator, contexts)
+        print()
+        print(f"  book                 {len(rows)} counterparties")
+        print(f"  reach adjudication   {b['contexts']}  (the rest are decided for free)")
+        print(f"  tokens/call (mean)   {b.get('tokens_per_call_mean', 0)}  "
+              f"sampled {b['sampled']} via count_tokens")
+        print(f"  tokens total         {b['tokens_total']:,}")
+        print(f"  wall clock           ~{b['minutes']} min at {FREE_TIER_RPM} req/min "
+              f"(free tier paces this, not the tokens)")
+        print()
+        print("  Nothing was adjudicated and no quota was spent.")
+        return 0
+
+    second_opinion = None
+    if args.second_model and not args.offline:
+        from interdict.adjudicator import GemmaSecondOpinion
+        second_opinion = GemmaSecondOpinion(adjudicator._client)
+        print(f"second opinion: Gemma ({second_opinion.model_id}) -- recorded, never a vote")
 
     with connect() as conn:
         if args.resume:
@@ -156,6 +222,7 @@ def main() -> int:
                 publication=publication, batch_size=args.batch_size,
                 blocked_on=date(2026, 8, 17), stop_after_batches=args.kill_after,
                 oracle=oracle, on_decision=report if args.progress else None,
+                second_opinion=second_opinion,
             )
         finally:
             if oracle is not None:

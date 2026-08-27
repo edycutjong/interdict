@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — Interdict</title>
+<meta name="description" content="That page does not exist on interdict.edycu.dev. The judge page, the landing page and the repository are all one click away from here.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131417" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+
+<!-- GitHub Pages serves this file for any unmatched path on the custom domain. Without
+     it a mistyped /judge lands on GitHub's own 404, which does not link back here — and
+     the one reader this site is built for would have no route onward. -->
+<style>
+:root{
+  --bg:#faf9f6; --surface:#ffffff; --ink:#191817; --ink-soft:#3b3833; --muted:#5f5a53;
+  --line:#e3dfd7; --line-strong:#c9c3b8; --hold:#a4262c; --hold-wash:rgba(164,38,44,.07);
+  --accent:#1a4d8f; --accent-wash:rgba(26,77,143,.09);
+  --shadow:0 1px 2px rgba(25,24,23,.05), 0 8px 22px -14px rgba(25,24,23,.22);
+  --shadow-lift:0 2px 4px rgba(25,24,23,.06), 0 16px 34px -16px rgba(25,24,23,.30);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua","Times New Roman",Georgia,serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#131417; --surface:#1b1d21; --ink:#e9e7e2; --ink-soft:#cbc7c0; --muted:#a09a90;
+    --line:#2b2e34; --line-strong:#41454d; --hold:#e0776b; --hold-wash:rgba(224,119,107,.11);
+    --accent:#7aa7dd; --accent-wash:rgba(122,167,221,.13);
+    --shadow:0 1px 2px rgba(0,0,0,.34), 0 10px 26px -16px rgba(0,0,0,.7);
+    --shadow-lift:0 2px 5px rgba(0,0,0,.4), 0 18px 38px -18px rgba(0,0,0,.8); }
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:clamp(24px,6vw,64px)}
+main{max-width:60ch;width:100%}
+.code{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--hold);font-weight:700;margin:0 0 1rem}
+h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,2.9rem);line-height:1.08;
+  letter-spacing:-.012em;font-weight:600;margin:0 0 .5em}
+p{margin:0 0 1.15em;color:var(--ink-soft)}
+.small{font-size:.875rem;color:var(--muted)}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:.16em;
+  transition:color .16s var(--ease),background-color .16s var(--ease)}
+a:hover{color:var(--ink);background:var(--accent-wash);border-radius:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:3px}
+ul{list-style:none;margin:1.9rem 0 0;padding:0;display:grid;gap:10px}
+/* The description sits UNDER the title, not flung to the opposite edge — spaced apart
+   they read as two columns of a table rather than one clickable thing. The arrow is the
+   affordance: without it these are just outlined rectangles. */
+li a{display:grid;grid-template-columns:1fr auto;grid-template-areas:"t a" "w a";
+  align-items:center;gap:.2rem 1rem;
+  background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--line-strong);border-radius:11px;padding:.9rem 1.15rem;
+  text-decoration:none;color:var(--ink);font-weight:650;box-shadow:var(--shadow);
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease),
+             border-color .18s var(--ease),background-color .18s var(--ease)}
+li a:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);
+  border-left-color:var(--hold);background:var(--surface)}
+li a > span:first-child{grid-area:t}
+li a .why{grid-area:w;font-weight:400;font-size:.855rem;color:var(--muted);line-height:1.4}
+li a .arw{grid-area:a;justify-self:end;font-family:var(--mono);font-size:1.15rem;
+  color:var(--muted);transition:transform .18s var(--ease),color .18s var(--ease)}
+li a:hover .arw{transform:translateX(4px);color:var(--hold)}
+li.primary a{border-left-color:var(--hold);background:var(--hold-wash)}
+li.primary a .arw{color:var(--hold)}
+@media (prefers-reduced-motion: reduce){ li a:hover{transform:none} }
+</style>
+</head>
+<body>
+<main>
+  <p class="code">404 &middot; not found</p>
+  <h1>That page isn&rsquo;t here.</h1>
+  <p>Nothing at this address on <span style="font-family:var(--mono);font-size:.92em">interdict.edycu.dev</span>.
+  Everything the site actually holds is one click below.</p>
+
+  <ul>
+    <li class="primary"><a href="/judge/"><span>For judges &mdash; start here</span>
+      <span class="arw" aria-hidden="true">&rarr;</span>
+      <span class="why">the claim, a 30-second path, every receipt</span></a></li>
+    <li><a href="/"><span>The landing page</span>
+      <span class="arw" aria-hidden="true">&rarr;</span>
+      <span class="why">what it does and the number that matters</span></a></li>
+    <li><a href="/pitch-deck.html"><span>The pitch deck</span>
+      <span class="arw" aria-hidden="true">&rarr;</span>
+      <span class="why">the same story in slides</span></a></li>
+    <li><a href="https://github.com/edycutjong/interdict" rel="noopener noreferrer"><span>The repository</span>
+      <span class="arw" aria-hidden="true">&#8599;</span>
+      <span class="why">source, tests, and every figure quoted above</span></a></li>
+  </ul>
+
+  <p class="small" style="margin-top:1.9rem"><b style="color:var(--ink)">Interdict</b> &mdash;
+  autonomous OFAC sanctions re-screening. Built solo for the All Things Agentic Hackathon,
+  Fortified Enterprise Fleet track.</p>
+</main>
+</body>
+</html>

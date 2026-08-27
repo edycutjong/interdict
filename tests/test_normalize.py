@@ -50,6 +50,36 @@ def test_parse_dob_circa_widens():
     assert iv.start_year < 1951 < iv.end_year
 
 
+def test_parse_dob_circa_exact_date_widens_either_way():
+    # "circa 10 Dec 1948" looks precise but is not. If the day-level branch ignored the
+    # circa qualifier it would collapse to the single year 1948 and then *disconfirm* a
+    # counterparty born 1949 -- a disjoint DOB cuts the score by 45%, so this is the
+    # difference between a hit and a miss.
+    iv = parse_dob("circa 10 Dec 1948")
+    assert (iv.start_year, iv.end_year, iv.precision) == (1947, 1949, "circa")
+    assert iv.overlaps(parse_dob("1949"))
+    # The unqualified form must stay strict, or the widening means nothing.
+    assert not parse_dob("10 Dec 1948").overlaps(parse_dob("1949"))
+
+
+def test_parse_dob_month_and_year_parses_to_that_year():
+    # "Dec 1948" has no day. Returning None here would silently drop the DOB signal for
+    # every month-precision record, leaving them at 'unavailable' instead of corroborated.
+    iv = parse_dob("Dec 1948")
+    assert (iv.start_year, iv.end_year, iv.precision) == (1948, 1948, "month")
+    assert iv.overlaps(parse_dob("1948"))
+    assert not iv.overlaps(parse_dob("1947"))
+
+
+def test_circa_month_is_flagged_circa_without_widening():
+    # The qualifier is recorded (the precision label is persisted and shown to the
+    # analyst) but a month-precision date is already only a year wide, so unlike the
+    # bare-year case it is not widened further.
+    iv = parse_dob("circa Dec 1948")
+    assert iv.precision == "circa"
+    assert (iv.start_year, iv.end_year) == (1948, 1948)
+
+
 def test_parse_dob_range():
     iv = parse_dob("1948 to 1950")
     assert (iv.start_year, iv.end_year, iv.precision) == (1948, 1950, "range")
