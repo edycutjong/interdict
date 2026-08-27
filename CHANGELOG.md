@@ -12,6 +12,10 @@ fails the build if the version, this file and the package ever disagree.
 
 <!-- release-workflow inserts new sections directly below this line -->
 
+## [1.0.11] — 2026-08-27
+
+- Update the judge-page receipt assertion to the new test count
+
 ## [1.0.10] — 2026-08-27
 
 - Assert the import boundary the safety argument rests on
@@ -99,7 +103,7 @@ the working system got a version number rather than the point at which it was wr
 - The 6-hourly poll archives publications; a re-screen is started by hand, so the ledger's
   `trigger` column reads `MANUAL`.
 
-[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.10...HEAD
+[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.11...HEAD
 [1.0.0]: https://github.com/edycutjong/interdict/releases/tag/v1.0.0
 [1.0.1]: https://github.com/edycutjong/interdict/releases/tag/v1.0.1
 [1.0.2]: https://github.com/edycutjong/interdict/releases/tag/v1.0.2
@@ -111,3 +115,4 @@ the working system got a version number rather than the point at which it was wr
 [1.0.8]: https://github.com/edycutjong/interdict/releases/tag/v1.0.8
 [1.0.9]: https://github.com/edycutjong/interdict/releases/tag/v1.0.9
 [1.0.10]: https://github.com/edycutjong/interdict/releases/tag/v1.0.10
+[1.0.11]: https://github.com/edycutjong/interdict/releases/tag/v1.0.11
