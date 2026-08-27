@@ -115,6 +115,29 @@ def main() -> int:
     if missing:
         sys.exit(f"FAIL: heartbeat is missing failure counts for {', '.join(missing)}.")
 
+    # The re-screen leg, which this gate was blind to until 2026-08-27.
+    #
+    # Everything above proves the POLL is alive. None of it proved the poll ever DID anything.
+    # Between 08-15 and 08-26 the archiver polled 37 times and this check said OK every time,
+    # while both re-screens it actually attempted died on `ModuleNotFoundError: psycopg` --
+    # the launchd plist was pointing at an interpreter with no project dependencies. The
+    # closed loop the README describes had never once closed, and the gate written *because*
+    # an unattended job with no liveness check is unobserved could not see it.
+    #
+    # One failure fails the gate; no streak allowance. Attempts are rare by nature -- 2 in 37
+    # polls -- so a streak of three would need three OFAC publications, which is weeks. The
+    # first failed attempt is the signal.
+    rescreen = hb.get("rescreen")
+    if rescreen and not rescreen.get("ok", True):
+        sys.exit(
+            f"FAIL: the last attempted re-screen did not succeed -- {rescreen.get('status')!r} "
+            f"at {rescreen.get('utc')} (consecutive: {rescreen.get('consecutive_failures', 1)}).\n"
+            "The archiver is alive and capturing publications, but the action leg is not "
+            "running, so nothing is being screened. Check:\n"
+            "  tail -40 data/archive/archiver.log\n"
+            "  .venv/bin/python3 scripts/run_rescreen.py --budget-only   # does it import?"
+        )
+
     stuck = {name: n for name, n in streaks.items() if n >= MAX_FAILURE_STREAK}
     if stuck:
         detail = ", ".join(f"{name} x{n}" for name, n in sorted(stuck.items()))

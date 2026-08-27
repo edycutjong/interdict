@@ -32,10 +32,23 @@
       Pointing this at the system python is what killed every poll between 2026-08-17 and
       2026-08-22, into a log nobody was reading. archive_delta.py now refuses to start on
       the wrong interpreter, and `make archive-status` fails when the polls stop arriving.
+
+      SECOND HISTORY, 2026-08-27. The fix above pointed this at the system framework 3.11 --
+      new enough to run the archiver, and with none of this project's dependencies. Archiving
+      is pure stdlib so it kept working, but archive_delta.py spawns the re-screen with
+      sys.executable, which faithfully handed the child an interpreter that cannot
+      `import psycopg`. Both times a real publication arrived and the armed trigger fired, it
+      died on that import: 2 of 2, over eleven days, into the same log nobody was reading.
+      The closed loop the README describes had therefore never once closed.
+
+      So this is the VENV interpreter now. It is 3.11 and it is the only interpreter on the
+      machine that can actually complete a re-screen. `make install` creates it; if it is
+      missing launchd fails loudly to spawn, which is the correct outcome -- better than a
+      timer that archives forever and silently never acts.
     -->
     <key>ProgramArguments</key>
     <array>
-        <string>/Library/Frameworks/Python.framework/Versions/3.11/bin/python3</string>
+        <string>__REPO__/.venv/bin/python3</string>
         <string>scripts/archive_delta.py</string>
     </array>
 

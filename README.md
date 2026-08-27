@@ -38,7 +38,7 @@ Reproduce the whole thing with `make reproduce`.
 ![Firestore](https://img.shields.io/badge/Cloud%20Firestore-evidence%20plane-FBBC04?style=flat&logo=firebase&logoColor=white)
 ![Postgres](https://img.shields.io/badge/Postgres%2016-hash--chained%20ledger-EA4335?style=flat&logo=postgresql&logoColor=white)
 ![Python](https://img.shields.io/badge/Python%203.11-3776AB?style=flat&logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-353%20passing-success?style=flat)
+![Tests](https://img.shields.io/badge/tests-361%20passing-success?style=flat)
 ![Coverage](https://img.shields.io/badge/coverage-100%25-success?style=flat)
 [![Release](https://img.shields.io/github/v/release/edycutjong/interdict?style=flat&color=1e6f50&label=release)](https://github.com/edycutjong/interdict/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)](https://opensource.org/licenses/MIT)
@@ -175,7 +175,7 @@ pitch, and the footer names what is deliberately *not* in this repository.
 | Evidence plane | **Cloud Firestore** — committed ledger entries mirrored with `seq` and `entry_hash`, so the chain verifies from the cloud copy alone | Google Cloud |
 | Correctness core | **Postgres 16** — append-only triggers, illegal-transition checks, hash chain under an advisory lock. The constraints above *are* the product | local, Docker |
 | Messaging | transactional **outbox** relay in Postgres — single ledger writer | local |
-| Trigger | **launchd** 6h poll — a content hash we have not seen starts the re-screen itself, under a lock. Timer committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if it stops | local |
+| Trigger | **launchd** 6h poll — a content hash we have not seen starts the re-screen itself, under a lock. Timer committed at [`ops/com.interdict.ofac-archiver.plist`](ops/com.interdict.ofac-archiver.plist); `make archive-status` fails if the poll stops **or if an attempted re-screen did not succeed**. That second check is new, and the [trigger outage](#️-what-is-real-and-what-is-not) it exists because of is disclosed | local |
 | Screening | Python 3.11, rapidfuzz | local |
 | Oracle | OpenSanctions **yente**, scope-pinned to `us_ofac_sdn` | local, Docker |
 
@@ -265,7 +265,7 @@ already committed. Firestore is a mirror and never a source of truth.
 | a worker agent loops | **two round trips**, capped in code *and* as a database constraint |
 | a worker agent is simply unavailable | `PARSE_ERROR` and `ADJUDICATOR_UNAVAILABLE` are [separated](#the-model-was-wrong-and-the-model-did-not-answer-are-different-failures); only one of them spends quarantine |
 | decisions are auditable after the fact | append-only hash-chained ledger in Postgres, mirrored to Cloud Firestore |
-| the fleet runs unattended | a launchd 6h poll opens a run on any content hash it has not seen — and the [five-day outage](#️-what-is-real-and-what-is-not) in that timer is disclosed rather than hidden |
+| the fleet runs unattended | a launchd 6h poll opens a run on any content hash it has not seen — and **both** outages in that loop are disclosed rather than hidden: the [five-day poll outage](#️-what-is-real-and-what-is-not), and the armed trigger that never once completed a run until 2026-08-27 |
 
 ## 📊 Engineering Rigor
 
@@ -386,7 +386,7 @@ make oracle-index     # index us_ofac_sdn (once)
 make schema
 make fetch-sdn        # 27MB from Treasury, follows the S3 redirect
 
-make test             # 353 tests, 100% coverage
+make test             # 361 tests, 100% coverage
 make challenge-set    # the perturbed screening number
 make bench            # p50/p95
 
@@ -424,7 +424,7 @@ make challenge NAME="Abu Abbas" DOB="3 Mar 1990"     # contradicting DOB kills t
 ## 🧪 Testing & CI
 
 ```bash
-make test                       # 353 tests, 100% coverage
+make test                       # 361 tests, 100% coverage
 make verify-ledger              # hash chain, end to end
 make verify-book                # all 400 sentinels still listed in the current publication
 make archive-status             # fails if the 6h poll has stopped
@@ -495,6 +495,24 @@ nobody was reading. It is disclosed here because "unattended" is a claim this pr
 and that is what an outage in it looks like. The fix is in `git log`; the check that would
 have caught it on the first missed window is `make archive-status`, which did not exist and
 now does.
+
+**The armed trigger had never once fired a completed run**, 2026-08-15 to 08-27. The poll
+was alive the whole time — 37 of them, four real publications captured — but on both
+occasions a publication arrived and the re-screen actually started, it died at import:
+`ModuleNotFoundError: No module named 'psycopg'`. The timer's interpreter was the system
+framework Python, which is new enough to run the archiver (pure stdlib) and has none of this
+project's dependencies, and `archive_delta.py` spawns the child with `sys.executable` — so it
+faithfully handed the re-screen an interpreter that could not import its own code. Two for
+two, into the same gitignored log as last time.
+
+This is the second outage in the same loop and it is disclosed for the same reason: the
+sentence *"a content hash we have not seen starts the re-screen itself"* describes a
+mechanism that, until 08-27, had never completed. The fix points the timer at `.venv/bin/python3`
+and is in `git log`. The deeper fix is that `make archive-status` now fails on a re-screen
+that was attempted and did not succeed — it previously checked only that the *poll* was
+alive, which is how a loop that never closed looked green for eleven days. **The mechanism is
+repaired and tested; it has not yet had a live publication to fire on.** That sentence will
+stay here until it has.
 
 **Transmission to OFAC stays human.** Interdict drafts the blocking report and files it
 to the ledger. It does not submit it.

@@ -61,7 +61,7 @@ test.describe('/judge — reachable with no credentials', () => {
     const body = page.locator('body');
     // Each of these is printed by a command in DEMO.md. If a number is edited in one
     // surface and not the others, the claim stops being reproducible — fail here.
-    for (const receipt of ['0.995', '0.840', '19,199', '353', '1,181,434.51']) {
+    for (const receipt of ['0.995', '0.840', '19,199', '361', '1,181,434.51']) {
       await expect(body).toContainText(receipt);
     }
   });

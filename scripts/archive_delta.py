@@ -51,6 +51,7 @@ import subprocess
 import sys
 import urllib.request
 from pathlib import Path
+from typing import NamedTuple
 
 # A poll that dies is worse than no poll, because the log looks like it ran. This script is
 # invoked by a launchd shim whose interpreter is configured outside the repo, and when that
@@ -89,11 +90,31 @@ def already_have(index: dict, name: str, digest: str) -> bool:
     return any(e["sha256"] == digest for e in index.get(name, []))
 
 
-def trigger_rescreen(new_sources: set[str], root: Path) -> str:
+class Outcome(NamedTuple):
+    """What the trigger did, in a form the heartbeat can carry.
+
+    A status string alone was not enough, and that is not a style point. For eleven days this
+    function returned "re-screen FAILED, exit 1" into a gitignored log, twice, on the only two
+    occasions it had anything to do -- and nothing downstream could tell that apart from
+    "nothing new", because both were just text. `attempted` and `ok` are what let
+    archive_status.py fail the gate instead of a human noticing.
+
+    attempted -- a child process was actually started, or we tried and could not.
+    ok        -- nothing is known to be broken. True for the skipped cases: not armed, nothing
+                 new, and already-running are all correct behaviour, not failures.
+    """
+
+    status: str
+    attempted: bool
+    ok: bool
+
+
+def trigger_rescreen(new_sources: set[str], root: Path) -> Outcome:
     """Start a re-screen because Treasury published something we have not seen.
 
-    Returns a short status string for the poll log. Never raises: archiving is the guarantee
-    this script makes, and a re-screen that cannot start must not cost us the publication.
+    Returns an Outcome for the poll log and the heartbeat. Never raises: archiving is the
+    guarantee this script makes, and a re-screen that cannot start must not cost us the
+    publication.
 
     The lock is the reason this is safe on a six-hourly timer. A full-book re-screen against
     free-tier Gemini takes tens of minutes, so a second publication -- or a manual run -- can
@@ -103,13 +124,13 @@ def trigger_rescreen(new_sources: set[str], root: Path) -> str:
     """
     mode = os.environ.get("INTERDICT_RESCREEN_ON_NEW", "").lower()
     if mode not in {"1", "true", "yes", "dry"}:
-        return "not armed (set INTERDICT_RESCREEN_ON_NEW=1)"
+        return Outcome("not armed (set INTERDICT_RESCREEN_ON_NEW=1)", attempted=False, ok=True)
     if not new_sources:
-        return "nothing new"
+        return Outcome("nothing new", attempted=False, ok=True)
 
     cmd = [sys.executable, str(Path(__file__).with_name("run_rescreen.py")), "--trigger", "SCHEDULER"]
     if mode == "dry":
-        return "DRY RUN, would spawn: " + " ".join(cmd)
+        return Outcome("DRY RUN, would spawn: " + " ".join(cmd), attempted=False, ok=True)
 
     lock_path = root / "rescreen.lock"
     try:
@@ -118,12 +139,12 @@ def trigger_rescreen(new_sources: set[str], root: Path) -> str:
         # only ever noticed by a scanner. CodeQL py/overly-permissive-file, high.
         lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
     except OSError as exc:
-        return f"could not open {lock_path}: {exc}"
+        return Outcome(f"could not open {lock_path}: {exc}", attempted=True, ok=False)
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
         os.close(lock_fd)
-        return "a re-screen is already running; not starting a second"
+        return Outcome("a re-screen is already running; not starting a second", attempted=False, ok=True)
 
     try:
         proc = subprocess.Popen(cmd, cwd=Path(__file__).resolve().parents[1],
@@ -131,12 +152,14 @@ def trigger_rescreen(new_sources: set[str], root: Path) -> str:
     except OSError as exc:
         fcntl.flock(lock_fd, fcntl.LOCK_UN)
         os.close(lock_fd)
-        return f"failed to spawn: {exc}"
+        return Outcome(f"failed to spawn: {exc}", attempted=True, ok=False)
 
     rc = proc.wait()
     fcntl.flock(lock_fd, fcntl.LOCK_UN)
     os.close(lock_fd)
-    return f"re-screen finished, exit {rc}" if rc == 0 else f"re-screen FAILED, exit {rc}"
+    if rc == 0:
+        return Outcome(f"re-screen finished, exit {rc}", attempted=True, ok=True)
+    return Outcome(f"re-screen FAILED, exit {rc}", attempted=True, ok=False)
 
 
 def write_atomic(path: Path, text: str) -> None:
@@ -235,8 +258,32 @@ def main() -> int:
     # The loop closes here, after the heartbeat is on disk. Order matters: the re-screen can run
     # for tens of minutes, and if the heartbeat were written afterwards `make archive-status`
     # would call the archiver stale for the whole time it was doing exactly what it should.
-    status = trigger_rescreen(new_sources, root)
-    print(f"  rescreen: {status}")
+    outcome = trigger_rescreen(new_sources, root)
+    print(f"  rescreen: {outcome.status}")
+
+    # Second heartbeat write, and it has to be second. The first one above is deliberately
+    # written BEFORE the re-screen so a run that legitimately takes tens of minutes is not
+    # called stale while it works. But that ordering is also why a failed trigger left no
+    # trace anywhere a check could read: by the time the outcome existed, the heartbeat was
+    # already on disk. So the outcome is merged in afterwards, keeping every freshness field
+    # exactly as written above.
+    #
+    # Only ATTEMPTED runs move this. "not armed", "nothing new" and "already running" are
+    # correct behaviour and must not look like a fault -- a gate that cries wolf on the
+    # common path gets ignored, which is how the original failure survived eleven days.
+    if outcome.attempted:
+        try:
+            hb = json.loads(hb_path.read_text())
+        except (OSError, ValueError):
+            hb = {}
+        prev_rescreen = prev.get("rescreen") or {}
+        hb["rescreen"] = {
+            "utc": now,
+            "status": outcome.status,
+            "ok": outcome.ok,
+            "consecutive_failures": 0 if outcome.ok else int(prev_rescreen.get("consecutive_failures", 0)) + 1,
+        }
+        write_atomic(hb_path, json.dumps(hb, indent=2, sort_keys=True) + "\n")
 
     # Non-zero only if everything failed -- a partial poll is still a successful poll, and one
     # transient reset should not mark the scheduled job failed. A source that keeps failing is
