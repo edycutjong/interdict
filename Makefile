@@ -120,6 +120,14 @@ agreement:  ## Grade the book against yente, VERBATIM (near-tautological -- see 
 challenge-set:  ## Grade the book against yente on PERTURBED names -- the honest number
 	$(PY) scripts/agreement.py --perturb --json-out data/g1-perturbed.json
 
+.PHONY: bench
+# Promised by name in README.md, DEMO.md, JUDGE.md, the landing page, the judge page and
+# the Devpost testing instructions -- and missing from this file until 2026-08-27, so a
+# judge following the README hit "No rule to make target 'bench'". The script was always
+# there; only the entry point was not.
+bench:  ## p50/p95/p99 over the deterministic screening plane, 400 counterparties
+	$(PY) scripts/bench.py --runs 3 --json-out data/bench.json
+
 .PHONY: verify-ledger
 verify-ledger:  ## Verify the ledger hash chain end to end
 	@$(PY) scripts/verify_ledger.py
