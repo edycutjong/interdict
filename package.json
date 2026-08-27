@@ -1,6 +1,6 @@
 {
   "name": "interdict-site",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": true,
   "description": "E2E and performance gates for the published surfaces in site/ \u2014 the landing page, the pitch deck, and /judge. The product itself is Python; this package exists only to hold the browser toolchain.",
   "license": "MIT",
