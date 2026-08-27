@@ -12,6 +12,10 @@ fails the build if the version, this file and the package ever disagree.
 
 <!-- release-workflow inserts new sections directly below this line -->
 
+## [1.0.6] — 2026-08-27
+
+- Take @lhci/cli out of the lockfile: 12 advisories to 0
+
 ## [1.0.5] — 2026-08-27
 
 - Ship the judge surface: /judge, 404, 100% coverage, demo video, E2E and perf gates
@@ -79,10 +83,11 @@ the working system got a version number rather than the point at which it was wr
 - The 6-hourly poll archives publications; a re-screen is started by hand, so the ledger's
   `trigger` column reads `MANUAL`.
 
-[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.5...HEAD
+[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.6...HEAD
 [1.0.0]: https://github.com/edycutjong/interdict/releases/tag/v1.0.0
 [1.0.1]: https://github.com/edycutjong/interdict/releases/tag/v1.0.1
 [1.0.2]: https://github.com/edycutjong/interdict/releases/tag/v1.0.2
 [1.0.3]: https://github.com/edycutjong/interdict/releases/tag/v1.0.3
 [1.0.4]: https://github.com/edycutjong/interdict/releases/tag/v1.0.4
 [1.0.5]: https://github.com/edycutjong/interdict/releases/tag/v1.0.5
+[1.0.6]: https://github.com/edycutjong/interdict/releases/tag/v1.0.6
