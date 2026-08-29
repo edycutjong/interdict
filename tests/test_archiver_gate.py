@@ -73,6 +73,29 @@ def test_a_failed_rescreen_fails_the_gate(tmp_path):
     assert res.returncode != 0, "a failed re-screen must not pass the liveness gate"
     assert "re-screen" in (res.stdout + res.stderr).lower()
 
+    # ...and it must still fail six hours later. Failing the gate is worth nothing if the
+    # next quiet poll erases the evidence, which is exactly what happened on 2026-08-29:
+    # the 04:41 poll found nothing new, rebuilt the heartbeat without the `rescreen` key,
+    # and this gate went green over a re-screen that had died on a missing API key.
+    # Asserted here rather than in its own test because it is the same regression -- the
+    # gate catching a failure and the failure surviving to be caught are one guarantee.
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        import archive_delta
+    finally:
+        sys.path.pop(0)
+
+    prev = json.loads((archive / "last-poll.json").read_text())
+    quiet = archive_delta.build_heartbeat(
+        prev, now=datetime.now(UTC).isoformat(), invoker="launchd",
+        new_count=0, failures=0, failed=set(),
+    )
+    assert quiet["rescreen"] == prev["rescreen"], (
+        "a poll with nothing to do erased the failed re-screen -- the gate is blind again"
+    )
+    (archive / "last-poll.json").write_text(json.dumps(quiet, indent=2), encoding="utf-8")
+    assert _run(archive).returncode != 0, "the failure must outlive the poll that follows it"
+
 
 def test_a_successful_rescreen_passes(tmp_path):
     archive = _heartbeat(tmp_path, rescreen={

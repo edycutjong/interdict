@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sanctionsData xmlns="https://www.treasury.gov/ofac/DeltaFile/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.treasury.gov/ofac/DeltaFile/1.0 https://www.treasury.gov/ofac/downloads/sanctions/1.0/DeltaFile.xsd">
+  <publicationInfo>
+    <datePublished>2026-08-28T00:00:00-04:00</datePublished>
+    <publicationType>Standard Action</publicationType>
+  </publicationInfo>
+  <referenceValues />
+  <featureTypes />
+  <entities>
+    <entity id="58482" action="add">
+      <generalInfo>
+        <identityId>49969</identityId>
+        <entityType refId="600">Individual</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61188" refId="1550" datePublished="2026-08-28">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="64116" refId="91167">IFSR</sanctionsProgram>
+        <sanctionsProgram id="64112" refId="211">SDGT</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="51159" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50390" refId="1828">Executive Order 13224 (Terrorism)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90481">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91294">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedFirstName>Reza Mohammad</formattedFirstName>
+              <formattedLastName>TAEEDI</formattedLastName>
+              <formattedFullName>TAEEDI, Reza Mohammad</formattedFullName>
+              <nameParts>
+                <namePart id="151505">
+                  <type refId="1521">First Name</type>
+                  <value>Reza</value>
+                </namePart>
+                <namePart id="151504">
+                  <type refId="1520">Last Name</type>
+                  <value>Taeedi</value>
+                </namePart>
+                <namePart id="151506">
+                  <type refId="1522">Middle Name</type>
+                  <value>Mohammad</value>
+                </namePart>
+              </nameParts>
+            </translation>
+            <translation id="91295">
+              <isPrimary>false</isPrimary>
+              <script refId="20100">Arabic</script>
+              <formattedLastName>‫محمد رضا تأیدی‬</formattedLastName>
+              <formattedFullName>‫محمد رضا تأیدی‬</formattedFullName>
+              <nameParts>
+                <namePart id="151508">
+                  <type refId="1521">First Name</type>
+                  <value>محمد</value>
+                </namePart>
+                <namePart id="151507">
+                  <type refId="1520">Last Name</type>
+                  <value>تأیدی</value>
+                </namePart>
+                <namePart id="151509">
+                  <type refId="1522">Middle Name</type>
+                  <value>رضا</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89978">
+          <country refId="11210">United Arab Emirates</country>
+          <translations>
+            <translation id="68689">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="124469">
+                  <type refId="1454">CITY</type>
+                  <value>Dubai</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100792">
+          <type featureTypeId="125">Additional Sanctions Information -</type>
+          <versionId>98347</versionId>
+          <value>Subject to Secondary Sanctions</value>
+          <valueRefId>91473</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100794">
+          <type featureTypeId="8">Birthdate</type>
+          <versionId>98349</versionId>
+          <value>24 Aug 1975</value>
+          <valueDate id="156187">
+            <fromDateBegin>1975-08-24</fromDateBegin>
+            <fromDateEnd>1975-08-24</fromDateEnd>
+            <toDateBegin>1975-08-24</toDateBegin>
+            <toDateEnd>1975-08-24</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100785">
+          <type featureTypeId="224">Gender</type>
+          <versionId>98340</versionId>
+          <value>Male</value>
+          <valueRefId>91526</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+        <feature id="100793">
+          <type featureTypeId="10">Nationality Country</type>
+          <versionId>98348</versionId>
+          <value>Iran</value>
+          <valueRefId>11109</valueRefId>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="53252">
+          <type refId="1584">National ID No.</type>
+          <name nameId="90481" nameTranslationId="91294">TAEEDI, Reza Mohammad</name>
+          <documentNumber>784-1975-3624749-3</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11210">United Arab Emirates</issuingCountry>
+        </identityDocument>
+        <identityDocument id="53250">
+          <type refId="1571">Passport</type>
+          <name nameId="90481" nameTranslationId="91294">TAEEDI, Reza Mohammad</name>
+          <documentNumber>P6602606</documentNumber>
+          <isValid>true</isValid>
+        </identityDocument>
+        <identityDocument id="53251">
+          <type refId="1571">Passport</type>
+          <name nameId="90481" nameTranslationId="91294">TAEEDI, Reza Mohammad</name>
+          <documentNumber>E96037407</documentNumber>
+          <isValid>true</isValid>
+        </identityDocument>
+      </identityDocuments>
+      <relationships>
+        <relationship id="25725">
+          <type refId="15002">Acting for or on behalf of</type>
+          <relatedEntity entityId="25578">BANK MELLI IRAN</relatedEntity>
+        </relationship>
+      </relationships>
+    </entity>
+    <entity id="58485" action="add">
+      <generalInfo>
+        <identityId>49972</identityId>
+        <entityType refId="601">Entity</entityType>
+      </generalInfo>
+      <sanctionsLists>
+        <sanctionsList id="61191" refId="1550" datePublished="2026-08-28">SDN List</sanctionsList>
+      </sanctionsLists>
+      <sanctionsPrograms>
+        <sanctionsProgram id="64115" refId="91901">IRAN-EO13902</sanctionsProgram>
+      </sanctionsPrograms>
+      <sanctionsTypes>
+        <sanctionsType id="51162" refId="1705">Block</sanctionsType>
+      </sanctionsTypes>
+      <legalAuthorities>
+        <legalAuthority id="50393" refId="91902">Executive Order 13902 (Iran)</legalAuthority>
+      </legalAuthorities>
+      <names>
+        <name id="90484">
+          <isPrimary>true</isPrimary>
+          <isLowQuality>false</isLowQuality>
+          <translations>
+            <translation id="91298">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <formattedLastName>KAMENG TRADING LIMITED</formattedLastName>
+              <formattedFullName>KAMENG TRADING LIMITED</formattedFullName>
+              <nameParts>
+                <namePart id="151512">
+                  <type refId="1525">Entity Name</type>
+                  <value>Kameng Trading Limited</value>
+                </namePart>
+              </nameParts>
+            </translation>
+          </translations>
+        </name>
+      </names>
+      <addresses>
+        <address id="89976">
+          <country refId="11065">China</country>
+          <translations>
+            <translation id="68687">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="124551">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Room 701, Unit 108,7/F, Tower B</value>
+                </addressPart>
+                <addressPart id="124552">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>New Mandarin Plaza, 14 Science Museum Road</value>
+                </addressPart>
+                <addressPart id="124553">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Tsim Sha Tsui, Kowloon</value>
+                </addressPart>
+                <addressPart id="124554">
+                  <type refId="1454">CITY</type>
+                  <value>Hong Kong</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+        <address id="89977">
+          <country refId="11065">China</country>
+          <translations>
+            <translation id="68688">
+              <isPrimary>true</isPrimary>
+              <script refId="20122">Latin</script>
+              <addressParts>
+                <addressPart id="124481">
+                  <type refId="1451">ADDRESS1</type>
+                  <value>Unit 89, 3F, Yau Lee Centre, No. 45</value>
+                </addressPart>
+                <addressPart id="124482">
+                  <type refId="1452">ADDRESS2</type>
+                  <value>Hoi Yuen Rd</value>
+                </addressPart>
+                <addressPart id="124483">
+                  <type refId="1453">ADDRESS3</type>
+                  <value>Kwun Tong</value>
+                </addressPart>
+                <addressPart id="124484">
+                  <type refId="1454">CITY</type>
+                  <value>Hong Kong</value>
+                </addressPart>
+              </addressParts>
+            </translation>
+          </translations>
+        </address>
+      </addresses>
+      <features>
+        <feature id="100790">
+          <type featureTypeId="646">Organization Established Date</type>
+          <versionId>98345</versionId>
+          <value>24 Jul 2024</value>
+          <valueDate id="156183">
+            <fromDateBegin>2024-07-24</fromDateBegin>
+            <fromDateEnd>2024-07-24</fromDateEnd>
+            <toDateBegin>2024-07-24</toDateBegin>
+            <toDateEnd>2024-07-24</toDateEnd>
+            <isApproximate>false</isApproximate>
+            <isDateRange>false</isDateRange>
+          </valueDate>
+          <isPrimary>true</isPrimary>
+        </feature>
+      </features>
+      <identityDocuments>
+        <identityDocument id="53249">
+          <type refId="91760">Business Registration Number</type>
+          <name nameId="90484" nameTranslationId="91298">KAMENG TRADING LIMITED</name>
+          <documentNumber>76846373</documentNumber>
+          <isValid>true</isValid>
+          <issuingCountry refId="11247">Hong Kong</issuingCountry>
+        </identityDocument>
+      </identityDocuments>
+    </entity>
+  </entities>
+</sanctionsData>

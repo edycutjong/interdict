@@ -21,6 +21,7 @@ import os
 import re
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Protocol
 
 from .matcher import T_HI, Match
@@ -35,6 +36,54 @@ from .matcher import T_HI, Match
 # checks every answer before it can move money, so the smaller model is doing work it is
 # well suited to. Set INTERDICT_MODEL=gemini-3.5-flash on a billed project.
 MODEL_ID = os.environ.get("INTERDICT_MODEL", "gemini-3.5-flash-lite")
+
+# Where a key lives when nobody is there to export one.
+#
+# The environment always wins -- CI, a shell, `make demo` all keep working exactly as before.
+# This is the fallback underneath it, and it exists because of a specific failure. launchd
+# starts the archiver with no user environment at all: no shell profile, no PATH, no exports.
+# So the unattended trigger -- the one leg of this system whose entire claim is that it runs
+# with nobody watching -- was the one leg that could never see a key. On 2026-08-28 Treasury
+# published, the timer fired the re-screen, and the child exited on "No GEMINI_API_KEY set"
+# while three working keys sat in this file. Telling the timer to carry a secret in its plist
+# would have put the key in version control, so the key stays where credentials belong and
+# the code learns to look there.
+CREDENTIALS_PATH = Path.home() / ".config" / "gemini" / "credentials.json"
+
+
+def resolve_api_key() -> str | None:
+    """Return a Gemini API key from the environment, or from the user credentials file.
+
+    Returns None rather than raising: the callers differ on what a missing key means. The
+    adjudicator treats it as a hard error, `--offline` treats it as expected, and the CLI
+    preflight wants to print its own message. A resolver that raised would force all three
+    into the same shape.
+
+    Malformed or unreadable credentials are treated as no key at all. A half-written JSON
+    file must not become a traceback from inside a six-hourly background job -- the caller's
+    "no key" path already says something useful, and this one would say it from a stack
+    frame nobody is reading.
+    """
+    for var in ("GEMINI_API_KEY", "GOOGLE_API_KEY"):
+        key = os.environ.get(var)
+        if key:
+            return key
+    try:
+        blob = json.loads(CREDENTIALS_PATH.read_text())
+    except (OSError, ValueError):
+        return None
+    keys = blob.get("keys")
+    if not isinstance(keys, list):
+        return None
+    # "primary" by name if it is there, otherwise the first usable entry. Named rather than
+    # positional because the file is hand-edited and the backups are there to be rotated
+    # into place; order in the list is not a statement about which key to prefer.
+    entries = [k for k in keys if isinstance(k, dict) and k.get("key")]
+    for entry in entries:
+        if entry.get("name") == "primary":
+            return entry["key"]
+    return entries[0]["key"] if entries else None
+
 
 # Structured output. The adjudicator does not get to reply in prose: a free-text verdict
 # cannot be guarded, cannot be diffed against the oracle, and cannot be replayed.
@@ -237,11 +286,12 @@ class GeminiAdjudicator:
     def __init__(self, model_id: str = MODEL_ID, api_key: str | None = None):
         from google import genai  # imported lazily: no key, no import
 
-        key = api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        key = api_key or resolve_api_key()
         if not key:
             raise RuntimeError(
                 "No Gemini API key. Set GEMINI_API_KEY (a free AI Studio key at "
-                "https://aistudio.google.com/apikey needs no billing account)."
+                "https://aistudio.google.com/apikey needs no billing account), or put one "
+                f"in {CREDENTIALS_PATH} as {{\"keys\": [{{\"name\": \"primary\", \"key\": \"...\"}}]}}."
             )
         # The SDK logs a four-line advisory on every generate_content call, telling us to
         # use Chat.send_message for automatic function calling. This adjudicator issues

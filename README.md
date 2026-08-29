@@ -265,7 +265,7 @@ already committed. Firestore is a mirror and never a source of truth.
 | a worker agent loops | **two round trips**, capped in code *and* as a database constraint |
 | a worker agent is simply unavailable | `PARSE_ERROR` and `ADJUDICATOR_UNAVAILABLE` are [separated](#the-model-was-wrong-and-the-model-did-not-answer-are-different-failures); only one of them spends quarantine |
 | decisions are auditable after the fact | append-only hash-chained ledger in Postgres, mirrored to Cloud Firestore |
-| the fleet runs unattended | a launchd 6h poll opens a run on any content hash it has not seen — and **both** outages in that loop are disclosed rather than hidden: the [five-day poll outage](#️-what-is-real-and-what-is-not), and the armed trigger that never once completed a run until 2026-08-27 |
+| the fleet runs unattended | a launchd 6h poll opens a run on any content hash it has not seen — and **all three** outages in that loop are disclosed rather than hidden: the [five-day poll outage](#️-what-is-real-and-what-is-not), the armed trigger that never once completed a run until 2026-08-27, and the 2026-08-28 publication where the repaired trigger fired and died on an empty launchd environment |
 
 ## 📊 Engineering Rigor
 
@@ -510,9 +510,31 @@ sentence *"a content hash we have not seen starts the re-screen itself"* describ
 mechanism that, until 08-27, had never completed. The fix points the timer at `.venv/bin/python3`
 and is in `git log`. The deeper fix is that `make archive-status` now fails on a re-screen
 that was attempted and did not succeed — it previously checked only that the *poll* was
-alive, which is how a loop that never closed looked green for eleven days. **The mechanism is
-repaired and tested; it has not yet had a live publication to fire on.** That sentence will
-stay here until it has.
+alive, which is how a loop that never closed looked green for eleven days.
+
+**Then there was a third one, and the gate above is the thing that failed.** On
+2026-08-28T22:35Z Treasury published — the first live publication since the fix — and the
+repaired trigger fired exactly as designed. The re-screen died anyway, on
+`No GEMINI_API_KEY set`. launchd starts a job with no environment at all: no profile, no
+exports, nothing. So the one leg of this system whose entire claim is that it runs with
+nobody watching was the only leg that could never see a key, while working keys sat in
+`~/.config/gemini/credentials.json`. Putting the key in the plist would have committed a
+secret, so the resolver now reads that file when the environment is empty
+(`interdict/adjudicator.py::resolve_api_key`).
+
+The worse half is what the gate did. `make archive-status` printed **OK** six hours later.
+The heartbeat is written *before* the re-screen so a legitimate half-hour run is not called
+stale, and the outcome is merged back afterwards *only if an attempt happened* — so the
+04:41Z poll on 08-29, finding nothing new, rebuilt the heartbeat from scratch and dropped the
+failure record on the floor. Two individually correct decisions composed into a gate that
+erases the evidence it exists to read. The record is sticky now: it clears when an attempt
+succeeds, not when a quiet poll follows one. Both fixes are pinned in
+`tests/test_archiver_gate.py` and `tests/test_adjudicator.py`.
+
+Three outages in one loop — wrong interpreter, wrong venv, empty environment — and all three
+were invisible for the same reason rather than for three different ones. **As of 2026-08-29
+the mechanism has fired on a real publication and has not yet completed a run.** That
+sentence will stay here until it has.
 
 **Transmission to OFAC stays human.** Interdict drafts the blocking report and files it
 to the ledger. It does not submit it.

@@ -22,7 +22,6 @@ this machine.
 from __future__ import annotations
 
 import argparse
-import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -63,14 +62,22 @@ def build_adjudicator(force_offline: bool):
         print("!" * 72)
         return RuleBasedAdjudicator()
 
-    if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
+    # Resolved rather than read straight off the environment, because this preflight runs
+    # under launchd as well as in a shell, and launchd hands a job no environment at all.
+    # See interdict.adjudicator.resolve_api_key.
+    from interdict.adjudicator import CREDENTIALS_PATH, resolve_api_key
+
+    if not resolve_api_key():
         raise SystemExit(
-            "\nNo GEMINI_API_KEY set.\n\n"
+            "\nNo Gemini API key.\n\n"
             "The adjudication plane is half of this system and Gemini is required tech\n"
             "for this hackathon, so this command will not silently substitute a test\n"
             "double for it.\n\n"
             "  Free key, no billing account needed: https://aistudio.google.com/apikey\n"
             "  export GEMINI_API_KEY=...\n\n"
+            f"Unattended runs read {CREDENTIALS_PATH} instead, because launchd starts a\n"
+            "job with no environment to export into:\n"
+            '  {"keys": [{"name": "primary", "key": "..."}]}\n\n'
             "To run the deterministic plane alone -- useful for CI, and the only honest\n"
             "way to describe such a run -- pass --offline explicitly.\n"
         )

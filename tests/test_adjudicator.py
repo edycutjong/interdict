@@ -86,7 +86,7 @@ def _response(body):
 
 
 @pytest.fixture
-def sdk(monkeypatch):
+def sdk(monkeypatch, tmp_path):
     """Fakes genai.Client, silences real sleeping, and records the backoff waits."""
     state = SimpleNamespace(script=[_response(GOOD_BODY)], clients=[], slept=[])
 
@@ -97,6 +97,11 @@ def sdk(monkeypatch):
 
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    # Point the credentials fallback at an empty tmp dir. Without this, "no key" tests pass
+    # on CI and fail on any developer machine that actually has a key on disk -- and the
+    # more dangerous direction is the same test silently exercising a real credential.
+    state.credentials = tmp_path / "credentials.json"
+    monkeypatch.setattr(adj, "CREDENTIALS_PATH", state.credentials)
     monkeypatch.setattr(adj.time, "sleep", state.slept.append)
     monkeypatch.setattr(genai, "Client", fake_client)
 
@@ -298,6 +303,43 @@ def test_no_key_at_all_fails_loudly_before_any_client_is_built(sdk):
     with pytest.raises(RuntimeError, match="GEMINI_API_KEY"):
         sdk.build(api_key=None)
     assert sdk.clients == []
+
+    # The credentials file underneath the environment, and why it is not a convenience.
+    # launchd starts the archiver with no environment at all, so on 2026-08-28 the one leg
+    # of this system that is supposed to run unattended was the only leg that could never
+    # see a key: Treasury published, the trigger fired, and the re-screen died on "No
+    # GEMINI_API_KEY set" with working keys sitting in ~/.config/gemini. Pinned in the same
+    # test as its absence because the two are one rule -- where a key may come from.
+    sdk.credentials.write_text(json.dumps({"keys": [
+        {"name": "backup", "key": "from-file-backup"},
+        {"name": "primary", "key": "from-file-primary"},
+    ]}), encoding="utf-8")
+    sdk.build(api_key=None)
+    assert sdk.clients[-1].api_key == "from-file-primary", (
+        "'primary' must win by name, not by position -- the backups exist to be rotated"
+    )
+
+    # The environment still outranks the file, so CI and a shell are unaffected by it.
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("GEMINI_API_KEY", "from-env")
+        sdk.build(api_key=None)
+    assert sdk.clients[-1].api_key == "from-env"
+
+    # No "primary" in the file: take the first usable entry rather than refusing. Rotating a
+    # backup into place by deleting the dead key is the obvious thing to do by hand, and it
+    # must not leave the unattended trigger with no key at all.
+    sdk.credentials.write_text(json.dumps({"keys": [
+        {"name": "backup2", "key": "only-a-backup"},
+    ]}), encoding="utf-8")
+    sdk.build(api_key=None)
+    assert sdk.clients[-1].api_key == "only-a-backup"
+
+    # A half-written or hand-mangled credentials file must read as "no key", not as a
+    # traceback out of a six-hourly background job nobody is watching.
+    for mangled in ('{not json', json.dumps({"model": "gemini-3.5-flash"}), json.dumps({"keys": {}})):
+        sdk.credentials.write_text(mangled, encoding="utf-8")
+        with pytest.raises(RuntimeError, match="GEMINI_API_KEY"):
+            sdk.build(api_key=None)
 
 
 def test_the_automatic_function_calling_advisory_is_filtered_but_other_logs_survive(sdk):

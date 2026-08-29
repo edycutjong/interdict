@@ -162,6 +162,51 @@ def trigger_rescreen(new_sources: set[str], root: Path) -> Outcome:
     return Outcome(f"re-screen FAILED, exit {rc}", attempted=True, ok=False)
 
 
+def build_heartbeat(prev: dict, *, now: str, invoker: str, new_count: int,
+                    failures: int, failed: set[str]) -> dict:
+    """Build the heartbeat for this poll, carrying forward what must outlive it.
+
+    Split out of main() to be testable. It is pure -- no clock, no environment, no disk --
+    because the bug it now guards against is a state transition between two polls, and a
+    function that reached for the real clock could not express "the next poll, six hours
+    later, found nothing to do".
+
+    THE CARRY-FORWARD, and why it is the third act of the same bug. This heartbeat is written
+    BEFORE the re-screen runs, deliberately: a re-screen takes tens of minutes and the gate
+    must not call the archiver stale while it works. The outcome is merged in afterwards --
+    but only `if attempted`, because "nothing new" must never look like a fault. Those two
+    correct decisions compose into a wrong one. A failed re-screen survived only until the
+    next poll with nothing to do, and then this rebuild dropped it on the floor.
+
+    That is not hypothetical. On 2026-08-28T22:35Z Treasury published, the armed trigger
+    fired, and the child died on a missing Gemini API key. At 2026-08-29T04:41Z the next
+    scheduled poll found nothing new and erased the record, and `make archive-status` printed
+    OK over an unresolved failure -- the third time this loop has been broken and green at the
+    same time, after a wrong interpreter and a wrong venv.
+
+    So the record is sticky. It clears when an attempt SUCCEEDS, not when time passes and not
+    when a later poll finds nothing to do: a quiet poll is not evidence that the action leg
+    was repaired, and reading it as such is the exact silence this gate exists to break.
+    Absent stays absent -- a heartbeat with no `rescreen` key still means "never attempted",
+    which remains the honest reading of nothing having happened yet.
+    """
+    streaks = prev.get("consecutive_failures", {})
+    heartbeat = {
+        "utc": now,
+        "invoked_by": invoker,
+        "last_scheduled_utc": now if invoker == "launchd" else prev.get("last_scheduled_utc"),
+        "new": new_count,
+        "failures": failures,
+        "sources": sorted(SOURCES),
+        "consecutive_failures": {
+            name: (streaks.get(name, 0) + 1 if name in failed else 0) for name in SOURCES
+        },
+    }
+    if "rescreen" in prev:
+        heartbeat["rescreen"] = prev["rescreen"]
+    return heartbeat
+
+
 def write_atomic(path: Path, text: str) -> None:
     """Write via a temp file and rename, so a full disk cannot leave a half-written manifest.
 
@@ -234,26 +279,11 @@ def main() -> int:
             prev = json.loads(hb_path.read_text())
         except (OSError, ValueError):
             prev = {}
-    streaks = prev.get("consecutive_failures", {})
     invoker = os.environ.get("INTERDICT_ARCHIVER_INVOKER", "manual")
-    write_atomic(
-        hb_path,
-        json.dumps(
-            {
-                "utc": now,
-                "invoked_by": invoker,
-                "last_scheduled_utc": now if invoker == "launchd" else prev.get("last_scheduled_utc"),
-                "new": new_count,
-                "failures": failures,
-                "sources": sorted(SOURCES),
-                "consecutive_failures": {
-                    name: (streaks.get(name, 0) + 1 if name in failed else 0) for name in SOURCES
-                },
-            },
-            indent=2, sort_keys=True,
-        )
-        + "\n",
+    heartbeat = build_heartbeat(
+        prev, now=now, invoker=invoker, new_count=new_count, failures=failures, failed=failed
     )
+    write_atomic(hb_path, json.dumps(heartbeat, indent=2, sort_keys=True) + "\n")
 
     # The loop closes here, after the heartbeat is on disk. Order matters: the re-screen can run
     # for tens of minutes, and if the heartbeat were written afterwards `make archive-status`
