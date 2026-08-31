@@ -12,6 +12,10 @@ fails the build if the version, this file and the package ever disagree.
 
 <!-- release-workflow inserts new sections directly below this line -->
 
+## [1.0.15] — 2026-08-31
+
+- Make the gate check the services the re-screen actually needs
+
 ## [1.0.14] — 2026-08-29
 
 - Give the unattended leg a key, and stop the gate erasing its own evidence
@@ -115,7 +119,7 @@ the working system got a version number rather than the point at which it was wr
 - The 6-hourly poll archives publications; a re-screen is started by hand, so the ledger's
   `trigger` column reads `MANUAL`.
 
-[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.14...HEAD
+[Unreleased]: https://github.com/edycutjong/interdict/compare/v1.0.15...HEAD
 [1.0.0]: https://github.com/edycutjong/interdict/releases/tag/v1.0.0
 [1.0.1]: https://github.com/edycutjong/interdict/releases/tag/v1.0.1
 [1.0.2]: https://github.com/edycutjong/interdict/releases/tag/v1.0.2
@@ -131,3 +135,4 @@ the working system got a version number rather than the point at which it was wr
 [1.0.12]: https://github.com/edycutjong/interdict/releases/tag/v1.0.12
 [1.0.13]: https://github.com/edycutjong/interdict/releases/tag/v1.0.13
 [1.0.14]: https://github.com/edycutjong/interdict/releases/tag/v1.0.14
+[1.0.15]: https://github.com/edycutjong/interdict/releases/tag/v1.0.15
