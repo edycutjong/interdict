@@ -21,9 +21,22 @@ heartbeat rather than index.json because index.json only changes when OFAC publi
 new, and OFAC publishes irregularly -- days of no new entries is normal and says nothing about
 whether the poller is alive.
 
+It has since been wrong twice more, both times in the same direction: it kept proving that
+the poll was alive while the thing the poll exists to trigger could not run. 2026-08-27 added
+the re-screen leg (37 green polls over two failed re-screens). 2026-08-31 added the
+dependency probe below, after the entire docker stack was found stopped -- postgres included,
+which is the ledger -- with this gate still printing OK, because archiving is pure stdlib and
+polls kept arriving perfectly with the whole data plane down.
+
+The through-line worth keeping: every one of the four outages was invisible for the *same*
+reason rather than four different ones. Each check here proves one more link of the chain is
+alive, and the honest reading of that history is that the chain probably has another link
+nobody has thought to check yet.
+
 USAGE
     python3 scripts/archive_status.py             # `make archive-status`
     python3 scripts/archive_status.py --max-age 24
+    python3 scripts/archive_status.py --no-check-deps   # heartbeat only, ignore the host
 """
 
 from __future__ import annotations
@@ -31,8 +44,11 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
+import socket
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,11 +59,45 @@ DEFAULT_MAX_AGE_H = 12
 # that it is Treasury or the network having a moment, which the poller is designed to ride out.
 MAX_FAILURE_STREAK = 3
 
+# Localhost TCP. Long enough to survive a busy laptop, short enough that the gate stays instant.
+DEP_TIMEOUT_S = 2.0
+DEFAULT_DSN = "postgresql://interdict:interdict@localhost:5433/interdict"
+DEFAULT_YENTE = "http://localhost:8000"
+
+
+def _reachable(host: str, port: int) -> bool:
+    """TCP-connect only. Whether the service is *listening*, not whether it is happy.
+
+    Deliberately not a query or an HTTP GET: this gate must not need psycopg, a running
+    event loop, or credentials, and a socket is the one check that cannot itself fail for
+    a reason unrelated to the thing being checked.
+    """
+    try:
+        with socket.create_connection((host, port), timeout=DEP_TIMEOUT_S):
+            return True
+    except OSError:
+        return False
+
+
+def _dep_targets() -> tuple[tuple[str, int], tuple[str, int]]:
+    """(postgres, yente) as (host, port), read from the same env the re-screen reads."""
+    dsn = urlparse(os.environ.get("INTERDICT_DSN", DEFAULT_DSN))
+    yente = urlparse(os.environ.get("YENTE_URL", DEFAULT_YENTE))
+    return (
+        (dsn.hostname or "localhost", dsn.port or 5432),
+        (yente.hostname or "localhost", yente.port or 80),
+    )
+
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--archive", type=Path, default=ROOT / "data" / "archive")
     ap.add_argument("--max-age", type=float, default=DEFAULT_MAX_AGE_H, help="hours")
+    # On by default: the whole point is that the real invocation (`make archive-status`) checks
+    # this without anyone remembering to ask. Off for the heartbeat tests, which are about the
+    # heartbeat and must not depend on what happens to be running on the host.
+    ap.add_argument("--no-check-deps", dest="check_deps", action="store_false",
+                    help="skip the postgres/yente reachability probe")
     args = ap.parse_args()
 
     hb_path = args.archive / "last-poll.json"
@@ -146,8 +196,43 @@ def main() -> int:
             "because the other source succeeds, so nothing else would have told you."
         )
 
+    # The dependencies, which this gate was blind to until 2026-08-31.
+    #
+    # Fourth outage, same shape as the other three. On 08-31 the entire docker stack was
+    # stopped -- postgres, elasticsearch, yente -- and this gate printed OK, because archiving
+    # is pure stdlib and the polls kept arriving perfectly with the whole data plane down.
+    # Every check above proves the poll is alive and that no re-screen has failed. None of
+    # them notices that the next re-screen CANNOT run: it would die at connect()
+    # (run_rescreen.py:142) before ever reaching open_run() (:193), and only then would the
+    # rescreen check above have anything to look at. This makes the failure visible BEFORE a
+    # publication is lost to it, rather than after.
+    #
+    # Severity is not symmetric, and the gate must not pretend it is:
+    #   postgres unreachable -> FAIL. It is the ledger; the re-screen cannot open a run.
+    #   yente unreachable    -> warn. run_rescreen.py:210 degrades to an ungraded oracle
+    #                           column and still completes. Failing here would cry wolf, and
+    #                           a gate that cries wolf gets ignored -- which is how the
+    #                           original bug survived five days.
+    if args.check_deps:
+        (pg_host, pg_port), (ye_host, ye_port) = _dep_targets()
+        if not _reachable(pg_host, pg_port):
+            sys.exit(
+                f"FAIL: the ledger is unreachable at {pg_host}:{pg_port}. The archiver is alive "
+                "and will keep capturing publications, but the next re-screen dies at connect() "
+                "before it can open a run -- and a publication missed this way cannot be "
+                "backfilled, because `changes/latest` only ever holds the latest delta.\n"
+                "  docker compose -f ops/docker-compose.yml up -d\n"
+                "  pg_isready -h localhost -p 5433"
+            )
+        oracle_down = not _reachable(ye_host, ye_port)
+    else:
+        oracle_down = False
+
     print(f"OK   last scheduled poll {age_h:.1f}h ago ({scheduled}), new={hb['new']}, "
           f"failures={hb['failures']}")
+    if oracle_down:
+        print(f"     WARN oracle unreachable at {ye_host}:{ye_port} -- a re-screen would still "
+              "complete, but every decision it commits would be ungraded.")
     if hb.get("utc") != scheduled:
         print(f"     (most recent poll {hb.get('utc')} was invoked by '{hb.get('invoked_by')}')")
     if any(streaks.values()):

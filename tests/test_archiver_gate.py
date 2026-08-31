@@ -19,6 +19,8 @@ The gate is run as a subprocess rather than imported, because its contract is th
 from __future__ import annotations
 
 import json
+import os
+import socket
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -49,11 +51,22 @@ def _heartbeat(tmp_path: Path, **overrides) -> Path:
     return archive
 
 
-def _run(archive: Path) -> subprocess.CompletedProcess:
+def _run(archive: Path, *extra: str, env: dict | None = None) -> subprocess.CompletedProcess:
+    """Heartbeat tests pass --no-check-deps: they are about the heartbeat, and must not
+    pass or fail depending on whether docker happens to be up on the machine running them."""
     return subprocess.run(
-        [sys.executable, str(GATE), "--archive", str(archive)],
+        [sys.executable, str(GATE), "--archive", str(archive), "--no-check-deps", *extra],
         capture_output=True, text=True, check=False,
+        env={**os.environ, **(env or {})},
     )
+
+
+def _free_port() -> int:
+    """A port with nothing on it. Bind, read the number back, close -- so the probe under
+    test gets a refused connection rather than a timeout against something real."""
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
 
 
 def test_a_healthy_archiver_passes(tmp_path):
@@ -173,3 +186,56 @@ def test_a_real_attempt_that_fails_is_marked_attempted_and_not_ok(
     assert outcome.attempted is True
     assert outcome.ok is False
     assert "failed to spawn" in outcome.status
+
+
+# --- The dependency probe (outage #4, 2026-08-31) ---------------------------------------
+#
+# On 08-31 the whole docker stack was found stopped and this gate printed OK. Archiving is
+# pure stdlib, so the polls kept arriving flawlessly while the ledger the re-screen writes to
+# was not listening. The checks above could not see it: they prove the poll is alive and that
+# no re-screen has *already* failed, and the next re-screen would have died at connect()
+# before producing the failed attempt they watch for. These pin the layer that closes that.
+
+
+def _run_with_deps(archive: Path, **env) -> subprocess.CompletedProcess:
+    """The probe ON -- the real `make archive-status` path, which has no --no-check-deps."""
+    return subprocess.run(
+        [sys.executable, str(GATE), "--archive", str(archive)],
+        capture_output=True, text=True, check=False,
+        env={**os.environ, **env},
+    )
+
+
+def test_an_unreachable_ledger_fails_the_gate(tmp_path):
+    """THE regression for 08-31. A dead ledger means the next re-screen cannot open a run."""
+    result = _run_with_deps(
+        _heartbeat(tmp_path),
+        INTERDICT_DSN=f"postgresql://u:p@localhost:{_free_port()}/interdict",
+    )
+    assert result.returncode != 0, "a stopped ledger must not pass the liveness gate"
+    assert "ledger is unreachable" in result.stderr
+
+
+def test_an_unreachable_oracle_only_warns(tmp_path):
+    """yente down is NOT a failure: run_rescreen.py:210 degrades to an ungraded oracle column
+    and the run still completes. A gate that fails here cries wolf, and a gate that cries wolf
+    is how the original five-day outage survived."""
+    with socket.socket() as pg:
+        pg.bind(("127.0.0.1", 0))
+        pg.listen(1)  # a real listener, so only the oracle leg is down
+        result = _run_with_deps(
+            _heartbeat(tmp_path),
+            INTERDICT_DSN=f"postgresql://u:p@localhost:{pg.getsockname()[1]}/interdict",
+            YENTE_URL=f"http://localhost:{_free_port()}",
+        )
+    assert result.returncode == 0, "yente down must not fail the gate"
+    assert "WARN oracle unreachable" in result.stdout
+
+
+def test_the_probe_can_be_switched_off(tmp_path):
+    """--no-check-deps is what lets the heartbeat tests run on a machine with no docker.
+    If this regresses, every other test in this file starts depending on the host."""
+    result = _run(_heartbeat(tmp_path),
+                  env={"INTERDICT_DSN": f"postgresql://u:p@localhost:{_free_port()}/x"})
+    assert result.returncode == 0
+    assert "unreachable" not in result.stdout
