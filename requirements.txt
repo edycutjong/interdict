@@ -15,8 +15,8 @@ httpx==0.28.1
 # google-adk was listed here for a while and never imported by a single line of this
 # codebase. A dependency that exists only to be named in a stack table is worse than no
 # dependency, so it is gone; the GenAI SDK below is what the adjudicator actually uses.
-google-genai==2.19.0
+google-genai==2.20.0
 
 # Evidence plane -- Cloud Firestore. The only GCP SDK in the tree, confined to
 # interdict/cloud.py and inert unless INTERDICT_FIRESTORE_PROJECT is set.
-google-cloud-firestore==2.28.1
+google-cloud-firestore==2.29.0
