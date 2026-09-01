@@ -34,7 +34,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The og:image is declared as exactly 1200x630 in both pages' metadata.
       # Platforms resample anything else themselves, so a drift here silently
