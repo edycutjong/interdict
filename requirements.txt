@@ -1,8 +1,8 @@
 # Screening plane. Deliberately small and cloud-agnostic: the matching, scoring and
 # ledger code imports no cloud SDK at all, so the correctness core is testable and
 # reproducible with no credentials of any kind.
-rapidfuzz==3.14.5
-psycopg[binary]==3.3.4
+rapidfuzz==3.14.6
+psycopg[binary]==3.3.6
 httpx==0.28.1
 
 # Adjudication plane -- the Google GenAI SDK, and the only model dependency.
@@ -15,8 +15,8 @@ httpx==0.28.1
 # google-adk was listed here for a while and never imported by a single line of this
 # codebase. A dependency that exists only to be named in a stack table is worse than no
 # dependency, so it is gone; the GenAI SDK below is what the adjudicator actually uses.
-google-genai==2.19.0
+google-genai==2.25.0
 
 # Evidence plane -- Cloud Firestore. The only GCP SDK in the tree, confined to
 # interdict/cloud.py and inert unless INTERDICT_FIRESTORE_PROJECT is set.
-google-cloud-firestore==2.28.1
+google-cloud-firestore==2.32.0
